@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 # Stage 1 go/no-go: does any coarse-to-fine path beat the atomwise baseline?
 #
-#   cgfm/scripts/sweep_eta.sh [extra CLI arguments...]
+#   cgfm/scripts/sweep_eta.sh [kmedoids|learned] [extra CLI arguments...]
 #
-# Trains the k-medoids arm at eta in {0, 0.25, 0.5, 0.75} on MP-20 at reduced budget, then reports the best validation
-# match rate of each. If no eta beats atomwise, the MPTS-52 budget is not spent.
+# Trains one coarse-grained arm on MP-20 at reduced budget, then reports the best validation match rate of each eta.
+# K-medoids defaults to eta in {0, 0.25, 0.5, 0.75}; learned defaults to {0.25, 0.5, 0.75} and reuses the atomwise
+# result from the k-medoids sweep. CGFM_SWEEP_ETAS overrides either default.
 #
 # eta = 0 is the atomwise baseline rather than a k-medoids run, because at eta = 0 the grouping has no effect on the
 # path at all: the arm factory rejects that combination instead of silently accepting a partition it would ignore.
@@ -13,10 +14,27 @@
 
 set -euo pipefail
 
+ARM="${CGFM_SWEEP_ARM:-kmedoids}"
+if [[ $# -gt 0 ]] && [[ "$1" == "kmedoids" || "$1" == "learned" ]]; then
+    ARM="$1"
+    shift
+fi
+if [[ "${ARM}" != "kmedoids" && "${ARM}" != "learned" ]]; then
+    echo "unknown arm '${ARM}', expected kmedoids or learned" >&2
+    exit 2
+fi
+
 CONFIG_DIR="${CGFM_CONFIG_DIR:-cgfm/configs}"
 BASE_CONFIG="${CGFM_BASE_CONFIG:-${CONFIG_DIR}/base_mpts52.yaml}"
-SWEEP_ROOT="${CGFM_SWEEP_ROOT:-sweeps}"
-ETAS="${CGFM_SWEEP_ETAS:-0 0.25 0.5 0.75}"
+if [[ "${ARM}" == "learned" ]]; then
+    DEFAULT_SWEEP_ROOT="sweeps-learned"
+    DEFAULT_ETAS="0.25 0.5 0.75"
+else
+    DEFAULT_SWEEP_ROOT="sweeps"
+    DEFAULT_ETAS="0 0.25 0.5 0.75"
+fi
+SWEEP_ROOT="${CGFM_SWEEP_ROOT:-${DEFAULT_SWEEP_ROOT}}"
+ETAS="${CGFM_SWEEP_ETAS:-${DEFAULT_ETAS}}"
 SEED="${CGFM_SWEEP_SEED:-0}"
 WORKERS="${CGFM_PRECOMPUTE_WORKERS:-8}"
 WANDB_PROJECT="${CGFM_WANDB_PROJECT:-cgfm-s1}"
@@ -38,8 +56,10 @@ done
 for ETA in ${ETAS}; do
     if [[ "${ETA}" == "0" || "${ETA}" == "0.0" ]]; then
         ARM_CONFIG="${CONFIG_DIR}/arm_atomwise.yaml"
+        RUN_ARM="atomwise"
     else
-        ARM_CONFIG="${CONFIG_DIR}/arm_kmedoids.yaml"
+        ARM_CONFIG="${CONFIG_DIR}/arm_${ARM}.yaml"
+        RUN_ARM="${ARM}"
     fi
     RUN_DIR="${SWEEP_ROOT}/${DATASET}/eta${ETA}"
     mkdir -p "${RUN_DIR}"
@@ -48,7 +68,7 @@ for ETA in ${ETAS}; do
         {\"class_path\":\"lightning.pytorch.loggers.CSVLogger\",
          \"init_args\":{\"save_dir\":\"${RUN_DIR}\",\"name\":\"\"}},
         {\"class_path\":\"lightning.pytorch.loggers.WandbLogger\",
-         \"init_args\":{\"name\":\"mp20-eta${ETA}-seed${SEED}\",
+         \"init_args\":{\"name\":\"mp20-${RUN_ARM}-eta${ETA}-seed${SEED}\",
                       \"project\":\"${WANDB_PROJECT}\",\"entity\":\"${WANDB_ENTITY}\",
                       \"save_dir\":\"${RUN_DIR}\",\"log_model\":false}}
     ]"

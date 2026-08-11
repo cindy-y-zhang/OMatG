@@ -68,7 +68,8 @@ partitions if needed. `eta = 0` runs the atomwise arm, since a grouping has no e
 and to the `cindyz/cgfm-s1` Weights & Biases project.
 
 ```bash
-cgfm/scripts/sweep_eta.sh
+cgfm/scripts/sweep_eta.sh kmedoids  # eta = 0, 0.25, 0.5, 0.75
+cgfm/scripts/sweep_eta.sh learned   # eta = 0.25, 0.5, 0.75; reuses the atomwise result above
 ```
 
 If no `eta` beats atomwise, stop.
