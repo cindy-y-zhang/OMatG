@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+# Stage 1 go/no-go: does any coarse-to-fine path beat the atomwise baseline?
+#
+#   cgfm/scripts/sweep_eta.sh <perov5|mp20|all> [extra CLI arguments...]
+#
+# Trains the k-medoids arm at eta in {0, 0.25, 0.5, 0.75} on a smaller dataset at reduced budget, then reports the best
+# validation match rate of each. The plan's kill criterion is that if no eta beats atomwise on MP-20, the MPTS-52 budget
+# is not spent.
+#
+# eta = 0 is the atomwise baseline rather than a k-medoids run, because at eta = 0 the grouping has no effect on the
+# path at all: the arm factory rejects that combination instead of silently accepting a partition it would ignore.
+#
+# Runs land in sweeps/<dataset>/eta<value>/. Run from the repository root.
+
+set -euo pipefail
+
+if [[ $# -lt 1 ]]; then
+    echo "usage: $0 <perov5|mp20|all> [extra CLI arguments...]" >&2
+    exit 2
+fi
+
+TARGET="$1"
+shift
+
+case "${TARGET}" in
+    perov5) DATASETS=(perov5) ;;
+    mp20)   DATASETS=(mp20) ;;
+    all)    DATASETS=(perov5 mp20) ;;
+    *)      echo "unknown target '${TARGET}', expected perov5, mp20 or all" >&2; exit 2 ;;
+esac
+
+CONFIG_DIR="${CGFM_CONFIG_DIR:-cgfm/configs}"
+BASE_CONFIG="${CGFM_BASE_CONFIG:-${CONFIG_DIR}/base_mpts52.yaml}"
+SWEEP_ROOT="${CGFM_SWEEP_ROOT:-sweeps}"
+ETAS="${CGFM_SWEEP_ETAS:-0 0.25 0.5 0.75}"
+SEED="${CGFM_SWEEP_SEED:-0}"
+WORKERS="${CGFM_PRECOMPUTE_WORKERS:-8}"
+
+# Directory name of each dataset, which is also the name its group files live under.
+declare -A DATA_DIR=([perov5]=perov_5 [mp20]=mp_20)
+
+for DATASET in "${DATASETS[@]}"; do
+    DATA_NAME="${DATA_DIR[${DATASET}]}"
+    GROUP_DIR="cgfm/groups/${DATA_NAME}"
+
+    # The sweep only uses the k-medoids partition, but precompute writes both fixed partitions together and the data
+    # module loads both so the diagnostics can compare against each.
+    for SPLIT in train val; do
+        if [[ ! -f "${GROUP_DIR}/${SPLIT}.kmedoids.npz" ]]; then
+            echo "Precomputing ${DATA_NAME} ${SPLIT} partitions."
+            python -m cgfm.scripts.precompute_groups \
+                --data "omg/data/${DATA_NAME}/${SPLIT}.lmdb" --out-dir "${GROUP_DIR}" --workers "${WORKERS}"
+        fi
+    done
+
+    for ETA in ${ETAS}; do
+        if [[ "${ETA}" == "0" || "${ETA}" == "0.0" ]]; then
+            ARM_CONFIG="${CONFIG_DIR}/arm_atomwise.yaml"
+        else
+            ARM_CONFIG="${CONFIG_DIR}/arm_kmedoids.yaml"
+        fi
+        RUN_DIR="${SWEEP_ROOT}/${DATASET}/eta${ETA}"
+        mkdir -p "${RUN_DIR}"
+        echo "Training ${DATASET} at eta ${ETA} into ${RUN_DIR}."
+        # The dataset overlay is applied after the arm overlay, because the arm overlay names the MPTS-52 group files
+        # and the sweep has to redirect those to the group files of the dataset being swept.
+        python -m cgfm.main fit \
+            --config "${BASE_CONFIG}" \
+            --config "${ARM_CONFIG}" \
+            --config "${CONFIG_DIR}/sweep_${DATASET}.yaml" \
+            --seed_everything "${SEED}" \
+            --model.si.init_args.eta "${ETA}" \
+            --trainer.default_root_dir "${RUN_DIR}" \
+            --trainer.logger.init_args.save_dir "${RUN_DIR}" \
+            "$@" 2>&1 | tee -a "${RUN_DIR}/train.log"
+    done
+done
+
+echo
+echo "Sweep finished. Comparing best validation match rate per eta:"
+python -m cgfm.scripts.collect_results --runs "${SWEEP_ROOT}" --source validation

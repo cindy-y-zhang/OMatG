@@ -65,6 +65,12 @@ class ValidAtoms(object):
         Whether to skip the expensive composition and fingerprint validations and automatically set them to True.
         Defaults to False.
     :type skip_validation: bool
+    :param compute_fingerprints:
+        Whether to compute CrystalNN and Magpie fingerprints during validation. CSP validity metrics only require the
+        structural and compositional checks, so disabling this avoids an expensive calculation that does not affect
+        those definitions.
+        Defaults to True.
+    :type compute_fingerprints: bool
     :param upper_narity_limit:
         The upper limit for the n-arity of the composition.
         Compositions with a higher n-arity are automatically considered invalid in the SMACT check.
@@ -80,7 +86,8 @@ class ValidAtoms(object):
 
     def __init__(self, atoms: Atoms, volume_check_cutoff: float = 0.1, structure_check_cutoff: float = 0.5,
                  polar_sine_cutoff: float = 1.0e-3, use_pauling_test: bool = True, include_alloys: bool = True,
-                 skip_validation: bool = False, upper_narity_limit: Optional[int] = None) -> None:
+                 skip_validation: bool = False, upper_narity_limit: Optional[int] = None,
+                 compute_fingerprints: bool = True) -> None:
         """Constructor of the ValidAtoms class."""
         if upper_narity_limit is not None and upper_narity_limit < 1:
             raise ValueError("The upper n-arity limit must be at least 1.")
@@ -106,15 +113,19 @@ class ValidAtoms(object):
                                                                 self._include_alloys, self._upper_narity_limit)
                 except TypeError:
                     self._composition_valid = False
-                with warnings.catch_warnings():
-                    warnings.simplefilter("ignore")
-                    try:
-                        self._composition_fingerprint, self._structure_fingerprint = self._get_fingerprints(
-                            self._composition, self._structure)
-                        self._fingerprint_valid = True
-                    except (ValueError, TypeError):
-                        self._composition_fingerprint, self._structure_fingerprint = None, None
-                        self._fingerprint_valid = False
+                if compute_fingerprints:
+                    with warnings.catch_warnings():
+                        warnings.simplefilter("ignore")
+                        try:
+                            self._composition_fingerprint, self._structure_fingerprint = self._get_fingerprints(
+                                self._composition, self._structure)
+                            self._fingerprint_valid = True
+                        except (ValueError, TypeError):
+                            self._composition_fingerprint, self._structure_fingerprint = None, None
+                            self._fingerprint_valid = False
+                else:
+                    self._composition_fingerprint, self._structure_fingerprint = None, None
+                    self._fingerprint_valid = True
             else:
                 self._composition_valid = False
                 self._fingerprint_valid = False
@@ -125,7 +136,8 @@ class ValidAtoms(object):
                         polar_sine_cutoff: float = 1.0e-3, use_pauling_test: bool = True, include_alloys: bool = True,
                         desc: Optional[str] = None, skip_validation: bool = False, number_cpus: Optional[int] = None,
                         enable_progress_bar: bool = True,
-                        upper_narity_limit: Optional[None] = None) -> List["ValidAtoms"]:
+                        upper_narity_limit: Optional[None] = None,
+                        compute_fingerprints: bool = True) -> List["ValidAtoms"]:
         """
         Generate a list of ValidAtoms instances from a list of Atoms instances in parallel.
 
@@ -173,6 +185,10 @@ class ValidAtoms(object):
             If None, no limit is set.
             Defaults to None.
         :type upper_narity_limit: Optional[int]
+        :param compute_fingerprints:
+            Whether to compute CrystalNN and Magpie fingerprints during validation.
+            Defaults to True.
+        :type compute_fingerprints: bool
 
         :return:
             The list of ValidAtoms instances.
@@ -186,12 +202,14 @@ class ValidAtoms(object):
                                       structure_check_cutoff=structure_check_cutoff,
                                       polar_sine_cutoff=polar_sine_cutoff, use_pauling_test=use_pauling_test,
                                       include_alloys=include_alloys, skip_validation=skip_validation,
-                                      upper_narity_limit=upper_narity_limit) for a in atoms]
+                                      upper_narity_limit=upper_narity_limit,
+                                      compute_fingerprints=compute_fingerprints) for a in atoms]
         else:
             constructor = partial(ValidAtoms, volume_check_cutoff=volume_check_cutoff,
                                   structure_check_cutoff=structure_check_cutoff, polar_sine_cutoff=polar_sine_cutoff,
                                   use_pauling_test=use_pauling_test, include_alloys=include_alloys,
-                                  skip_validation=skip_validation, upper_narity_limit=upper_narity_limit)
+                                  skip_validation=skip_validation, upper_narity_limit=upper_narity_limit,
+                                  compute_fingerprints=compute_fingerprints)
             cpu_count = number_cpus if number_cpus is not None else os.cpu_count()
             if cpu_count > 1:
                 valid_atoms = process_map(constructor, atoms, desc=desc,

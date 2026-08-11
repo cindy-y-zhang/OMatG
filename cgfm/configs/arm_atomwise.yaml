@@ -1,0 +1,15 @@
+# Arm 1 of 4: atomwise periodic linear flow, the OMatG baseline.
+#
+# With eta = 0 the coarse-to-fine term is exactly the float zero, so this reproduces OMatG's PeriodicLinearInterpolant
+# bit for bit; tests/test_interpolant.py asserts that. Running the baseline through the same interpolant class rather
+# than through the stock one means the baseline shares every code path with the other arms, so a bug in the plumbing
+# cannot masquerade as an effect of coarse-graining.
+#
+# The group file is still loaded and still ignored, so that the data pipeline matches the other arms exactly.
+
+model:
+  si:
+    class_path: cgfm.arms.ArmStochasticInterpolants
+    init_args:
+      grouping_kind: "none"
+      eta: 0.0

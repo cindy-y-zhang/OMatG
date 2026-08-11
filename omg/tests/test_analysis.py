@@ -56,5 +56,14 @@ def test_match_rate(c1, c2, c3, c4):
         enable_progress_bar=False)[4]) == 2
 
 
+def test_valid_atoms_can_skip_fingerprints():
+    atoms = ValidAtoms(bulk("Cu", "fcc", a=3.6), compute_fingerprints=False)
+
+    assert atoms.valid
+    assert atoms.fingerprint_valid
+    assert atoms.composition_fingerprint is None
+    assert atoms.structure_fingerprint is None
+
+
 if __name__ == '__main__':
     pytest.main([__file__])

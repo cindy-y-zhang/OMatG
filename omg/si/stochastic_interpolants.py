@@ -114,10 +114,12 @@ class StochasticInterpolants(object):
             assert data_field.name in x_t_dict
             reshaped_t = reshape_t(t, n_atoms, data_field)
             assert reshaped_t.shape == x_0_dict[data_field.name].shape
+            # Interpolants whose path couples several atoms of the same structure need the full data sample.
+            aux = {"aux": x_1} if stochastic_interpolant.requires_aux else {}
             # Cell data requires different batch indices.
             interpolated_x_t, z = stochastic_interpolant.interpolate(
                 reshaped_t, x_0_dict[data_field.name], x_1_dict[data_field.name],
-                x_0.batch if data_field != DataField.cell else torch.arange(len(x_0.n_atoms)))
+                x_0.batch if data_field != DataField.cell else torch.arange(len(x_0.n_atoms)), **aux)
             # Assignment does not update x_t.
             x_t_dict[data_field.name].copy_(interpolated_x_t)
             assert data_field.name not in z_data
@@ -191,11 +193,13 @@ class StochasticInterpolants(object):
 
             assert data_field.name in z_dict
             assert "loss_" + data_field.name not in losses
+            # Interpolants whose path couples several atoms of the same structure need the full data sample.
+            aux = {"aux": x_1} if stochastic_interpolant.requires_aux else {}
             # Cell data requires different batch indices.
             l = stochastic_interpolant.loss(
                 model_prediction_fn, reshaped_t, x_0_dict[data_field.name], x_1_dict[data_field.name],
                 x_t_dict[data_field.name], z[data_field.name],
-                x_0.batch if data_field != DataField.cell else torch.arange(len(x_0.n_atoms)))
+                x_0.batch if data_field != DataField.cell else torch.arange(len(x_0.n_atoms)), **aux)
             for l_key, l_value in l.items():
                 assert l_key not in losses
                 losses[f"{data_field.name}_{l_key}"] = l_value

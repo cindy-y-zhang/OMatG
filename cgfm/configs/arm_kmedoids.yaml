@@ -1,0 +1,16 @@
+# Arm 2 of 4: fixed local coarse-graining by periodic k-medoids.
+#
+# Groups are purely geometric clusters under the minimum-image metric, at the same per-structure group count as the
+# coordination-shell arm. This isolates how much of any gain comes from coarse-graining as such, independently of
+# whether the groups are chemically meaningful.
+
+model:
+  si:
+    class_path: cgfm.arms.ArmStochasticInterpolants
+    init_args:
+      grouping_kind: "precomputed"
+      eta: 0.5
+
+data:
+  train_group_file: "cgfm/groups/mpts_52/train.kmedoids.npz"
+  val_group_file: "cgfm/groups/mpts_52/val.kmedoids.npz"

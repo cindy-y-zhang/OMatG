@@ -1,0 +1,56 @@
+# Arm 4 of 4: coarse-graining learned end to end through the flow-matching loss.
+#
+# The grouping network is trained by the flow-matching loss alone, with the same optimiser and learning rate as the
+# denoiser and no auxiliary objective.
+#
+# The k-medoids group file is loaded for two reasons. It supplies the per-structure group count, so this arm compresses
+# each structure exactly as much as the fixed arms do. It also supplies the reference partition against which the
+# adjusted Rand index is logged during training, which is the diagnostic for the main failure mode: the flow-matching
+# loss can be lowered by shrinking the within-group residual, and the partition that minimises that residual at a fixed
+# group count is geometric clustering. An adjusted Rand index that climbs towards one means this arm has rediscovered
+# k-medoids rather than learned anything. Comparison against the coordination shells is done offline by
+# cgfm/scripts/analyse_groups.py.
+#
+# The membership temperature is annealed towards a hard partition so that the coarse and fine schedules become exact
+# and the final partition can be compared with coordination environments.
+
+model:
+  si:
+    class_path: cgfm.arms.ArmStochasticInterpolants
+    init_args:
+      grouping_kind: "learned"
+      eta: 0.5
+      grouper_kwargs:
+        hidden_dim: 128
+        num_layers: 3
+        num_basis: 32
+        cutoff: 6.0
+        max_neighbours: 24
+        locality_radius: 5.0
+        temperature: 1.0
+
+data:
+  train_group_file: "cgfm/groups/mpts_52/train.kmedoids.npz"
+  val_group_file: "cgfm/groups/mpts_52/val.kmedoids.npz"
+
+trainer:
+  callbacks:
+    - class_path: lightning.pytorch.callbacks.ModelCheckpoint
+      init_args:
+        filename: "best_match_rate"
+        save_top_k: 1
+        monitor: "match_rate"
+        mode: "max"
+        save_weights_only: false
+    - class_path: lightning.pytorch.callbacks.ModelCheckpoint
+      init_args:
+        filename: "last"
+        save_top_k: 1
+        every_n_epochs: 50
+        save_weights_only: false
+    - class_path: cgfm.diagnostics.CoarseToFineDiagnostics
+    - class_path: cgfm.diagnostics.GroupingTemperatureSchedule
+      init_args:
+        start: 1.0
+        end: 0.1
+        anneal_epochs: 1000

@@ -1,0 +1,16 @@
+# Arm 3 of 4: fixed coarse-graining by CrystalNN coordination shells.
+#
+# This is the hypothesis stated directly: groups are coordination polyhedra, peeled greedily into a partition. It is the
+# upper reference for the learned arm. If the learned partition cannot beat this, the useful conclusion is that
+# coordination motifs are worth supplying rather than worth discovering.
+
+model:
+  si:
+    class_path: cgfm.arms.ArmStochasticInterpolants
+    init_args:
+      grouping_kind: "precomputed"
+      eta: 0.5
+
+data:
+  train_group_file: "cgfm/groups/mpts_52/train.shells.npz"
+  val_group_file: "cgfm/groups/mpts_52/val.shells.npz"

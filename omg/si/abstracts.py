@@ -279,6 +279,18 @@ class StochasticInterpolant(ABC, TimeChecker):
     p_1 at times t.
     """
 
+    requires_aux: bool = False
+    """
+    Whether the interpolate and loss methods accept an additional aux keyword argument holding the full data sample x_1
+    as a torch_geometric.data.Data object.
+
+    Interpolants that act elementwise (all interpolants shipped with OMatG) only need the tensor of the interpolated
+    data field and therefore leave this as False. Interpolants whose path couples several atoms of the same structure
+    need per-atom attributes beyond the interpolated data field. The StochasticInterpolants collection only passes the
+    aux keyword argument when this attribute is True, so that subclasses which do not need it keep their signatures
+    unchanged.
+    """
+
     @abstractmethod
     def interpolate(self, t: torch.Tensor, x_0: torch.Tensor, x_1: torch.Tensor,
                     batch_indices: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:

@@ -1,0 +1,47 @@
+# Overlay that shrinks any arm to something that finishes in a minute on a laptop.
+#
+# Applied last, after the base configuration and the arm overlay, by cgfm/scripts/smoke.sh. It swaps in the tiny split
+# that cgfm/scripts/make_subset.py writes and cuts the schedule down to a couple of steps. Its only job is to prove that
+# the pipeline runs end to end; nothing it produces is meaningful.
+
+model:
+  # Kept at match_rate, as in the real runs, so the smoke test exercises the metric that selects checkpoints and that
+  # the eta sweep is judged on. smoke.sh cuts the integrator down to a few steps to make it affordable.
+  validation_mode: "match_rate"
+  number_cpus: 1
+
+data:
+  train_dataset:
+    class_path: omg.datamodule.StructureDataset
+    init_args:
+      file_path: "cgfm/smoke_data/train.lmdb"
+      lazy_storage: True
+      niggli_reduce: False
+  val_dataset:
+    class_path: omg.datamodule.StructureDataset
+    init_args:
+      file_path: "cgfm/smoke_data/val.lmdb"
+      lazy_storage: True
+      niggli_reduce: False
+  pred_dataset:
+    class_path: omg.datamodule.StructureDataset
+    init_args:
+      file_path: "cgfm/smoke_data/test.lmdb"
+      lazy_storage: True
+      niggli_reduce: False
+  batch_size: 8
+  num_workers: 0
+
+trainer:
+  max_epochs: 2
+  check_val_every_n_epoch: 1
+  limit_train_batches: 3
+  limit_val_batches: 2
+  # Two batches of eight covers the whole tiny test split, which the metrics command compares against in full.
+  limit_predict_batches: 2
+  accelerator: "cpu"
+  # The CSV logger from the base configuration is kept, so the smoke test also exercises reading the validation match
+  # rate back out of metrics.csv.
+  enable_checkpointing: false
+  callbacks:
+    - class_path: cgfm.diagnostics.CoarseToFineDiagnostics

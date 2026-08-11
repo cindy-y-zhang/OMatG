@@ -1,0 +1,119 @@
+# Shared configuration for every arm of the coarse-to-fine experiment on MPTS-52.
+#
+# This file fixes everything the arms must have in common: the denoiser, the sampler, the optimiser, the schedule and
+# the data. An arm overlay is applied on top of it and may only change model.si and the two group files, which is the
+# whole of the intervention being tested.
+#
+#   python -m cgfm.main fit --config cgfm/configs/base_mpts52.yaml --config cgfm/configs/arm_shells.yaml
+#
+# The denoiser, integrator, annealing factors, optimiser and batch size are taken from OMatG's tuned
+# crystal-structure-prediction configuration omg/conf_examples/csp_linear_ode_mp_20.yaml, which was tuned on MP-20
+# rather than MPTS-52. That biases all four arms identically, so the comparison between them is unaffected, but the
+# absolute numbers should not be read as tuned MPTS-52 results.
+
+seed_everything: 0
+
+model:
+  # Overridden by the arm overlay. The default here is the atomwise baseline.
+  si:
+    class_path: cgfm.arms.ArmStochasticInterpolants
+    init_args:
+      grouping_kind: "none"
+      eta: 0.0
+  relative_si_costs:
+    species_loss: 0.0
+    pos_loss_b: 0.9994149341846618
+    cell_loss_b: 0.0005850658153382233
+  sampler:
+    class_path: omg.sampler.IndependentSampler
+    init_args:
+      pos_distribution:
+        class_path: omg.sampler.position_distributions.UniformPositionDistribution
+      cell_distribution:
+        class_path: omg.sampler.cell_distributions.InformedLatticeDistribution
+        init_args:
+          dataset_name: mpts_52
+      species_distribution:
+        class_path: omg.sampler.species_distributions.MirrorSpecies
+  model:
+    class_path: omg.model.model.Model
+    init_args:
+      encoder:
+        class_path: omg.model.encoders.cspnet_full.CSPNetFull
+      head:
+        class_path: omg.model.heads.pass_through.PassThrough
+      time_embedder:
+        class_path: omg.model.model_utils.SinusoidalTimeEmbeddings
+        init_args:
+          dim: 256
+  use_min_perm_dist: False
+  float_32_matmul_precision: "high"
+  # One structure is generated per validation composition, so match_rate is the one-shot match rate and corr_rmsd is
+  # the corresponding corrected RMSD. Checkpoints are selected on match_rate, never on the training loss, which is not
+  # comparable across arms because the arms define different conditional velocity distributions.
+  validation_mode: "match_rate"
+  dataset_name: "mpts_52"
+  number_cpus: 16
+
+data:
+  train_dataset:
+    class_path: omg.datamodule.StructureDataset
+    init_args:
+      file_path: "data/mpts_52/train.lmdb"
+      lazy_storage: True
+      niggli_reduce: False
+  val_dataset:
+    class_path: omg.datamodule.StructureDataset
+    init_args:
+      file_path: "data/mpts_52/val.lmdb"
+      lazy_storage: True
+      niggli_reduce: False
+  pred_dataset:
+    class_path: omg.datamodule.StructureDataset
+    init_args:
+      file_path: "data/mpts_52/test.lmdb"
+      lazy_storage: True
+      niggli_reduce: False
+  # Overridden by the arm overlay. Every arm loads a group file, including the atomwise baseline, so that the data
+  # pipeline is byte-identical across arms.
+  train_group_file: "cgfm/groups/mpts_52/train.kmedoids.npz"
+  val_group_file: "cgfm/groups/mpts_52/val.kmedoids.npz"
+  batch_size: 1024
+  num_workers: 8
+
+trainer:
+  # Pinned rather than left to Lightning's default, which would pick tensorboardX here and write binary event files.
+  # The collapse diagnostics only do their job if they can be read directly, and cgfm/scripts/collect_results.py reads
+  # the best validation match rate out of this file. The scripts override save_dir with the run directory.
+  logger:
+    class_path: lightning.pytorch.loggers.CSVLogger
+    init_args:
+      save_dir: "."
+      name: ""
+  callbacks:
+    - class_path: lightning.pytorch.callbacks.ModelCheckpoint
+      init_args:
+        filename: "best_match_rate"
+        save_top_k: 1
+        monitor: "match_rate"
+        mode: "max"
+        save_weights_only: false
+    - class_path: lightning.pytorch.callbacks.ModelCheckpoint
+      init_args:
+        filename: "last"
+        save_top_k: 1
+        every_n_epochs: 50
+        save_weights_only: false
+    - class_path: cgfm.diagnostics.CoarseToFineDiagnostics
+  gradient_clip_val: 0.5
+  num_sanity_val_steps: 0
+  precision: "32-true"
+  max_epochs: 2000
+  # Generating and matching the whole validation split is expensive, so it is not done every epoch.
+  check_val_every_n_epoch: 50
+  enable_progress_bar: true
+
+optimizer:
+  class_path: torch.optim.Adam
+  init_args:
+    lr: 0.0006689636445843722

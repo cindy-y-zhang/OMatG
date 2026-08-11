@@ -1,0 +1,5 @@
+# Precomputed partitions and smoke-test artefacts are derived from the datasets and are cheap to regenerate.
+groups/
+smoke_data/
+smoke_groups/
+smoke_runs/

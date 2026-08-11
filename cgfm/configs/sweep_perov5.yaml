@@ -1,0 +1,53 @@
+# Stage 1 go/no-go overlay: perov-5 at reduced budget.
+#
+# Applied on top of base_mpts52.yaml, which supplies the denoiser, optimiser and everything else the arms must share,
+# and after the arm overlay, whose group-file paths this file has to redirect away from MPTS-52:
+#
+#   python -m cgfm.main fit --config cgfm/configs/base_mpts52.yaml --config cgfm/configs/arm_kmedoids.yaml \
+#       --config cgfm/configs/sweep_perov5.yaml
+#
+# perov-5 is the easy end of the ladder. Every structure has five atoms, so at the shared per-structure group count
+# there is very little room between one group and five singletons. A coarse-to-fine path therefore has the least to do
+# here, which is exactly why it is worth checking: a gain on perov-5 would be surprising, and its absence is not
+# evidence against the hypothesis. MP-20 is the informative half of this sweep.
+
+model:
+  dataset_name: "perov_5"
+  sampler:
+    class_path: omg.sampler.IndependentSampler
+    init_args:
+      pos_distribution:
+        class_path: omg.sampler.position_distributions.UniformPositionDistribution
+      cell_distribution:
+        class_path: omg.sampler.cell_distributions.InformedLatticeDistribution
+        init_args:
+          dataset_name: perov_5
+      species_distribution:
+        class_path: omg.sampler.species_distributions.MirrorSpecies
+
+data:
+  train_dataset:
+    class_path: omg.datamodule.StructureDataset
+    init_args:
+      file_path: "data/perov_5/train.lmdb"
+      lazy_storage: True
+      niggli_reduce: False
+  val_dataset:
+    class_path: omg.datamodule.StructureDataset
+    init_args:
+      file_path: "data/perov_5/val.lmdb"
+      lazy_storage: True
+      niggli_reduce: False
+  pred_dataset:
+    class_path: omg.datamodule.StructureDataset
+    init_args:
+      file_path: "data/perov_5/test.lmdb"
+      lazy_storage: True
+      niggli_reduce: False
+  train_group_file: "cgfm/groups/perov_5/train.kmedoids.npz"
+  val_group_file: "cgfm/groups/perov_5/val.kmedoids.npz"
+
+trainer:
+  # A fifth of the full schedule. This decides whether to spend the MPTS-52 budget, not what to report.
+  max_epochs: 400
+  check_val_every_n_epoch: 25

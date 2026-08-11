@@ -631,7 +631,8 @@ class OMGTrainer(Trainer):
                     skip_match: bool = False, ltol: float = 0.3, stol: float = 0.5, angle_tol: float = 10.0,
                     metre: bool = False, number_cpus: Optional[int] = None, upper_narity_limit: Optional[int] = None,
                     xyz_file_prediction_data: Optional[str] = None, check_reduced: bool = True,
-                    result_name: str = "csp_metrics.json", plot_name: str = "rmsds.pdf") -> None:
+                    result_name: str = "csp_metrics.json", plot_name: str = "rmsds.pdf",
+                    compute_fingerprints: bool = True) -> None:
         """
         Compute the crystal-structure prediction (CSP) metrics for the generated structures.
 
@@ -743,6 +744,12 @@ class OMGTrainer(Trainer):
             Defaults to "rmsds.pdf".
             This argument can be optionally set on the command line.
         :type plot_name: str
+        :param compute_fingerprints:
+            Whether to compute CrystalNN and Magpie fingerprints while validating structures. These fingerprints are
+            not part of the CSP structural and compositional validity definitions and can be disabled to avoid their
+            substantial cost.
+            Defaults to True for backward compatibility.
+        :type compute_fingerprints: bool
 
         :raises FileNotFoundError:
             If the prediction data file does not exist.
@@ -772,10 +779,12 @@ class OMGTrainer(Trainer):
 
         gen_valid_atoms = ValidAtoms.get_valid_atoms(gen_atoms, desc="Validating generated structures",
                                                      skip_validation=skip_validation, number_cpus=number_cpus,
-                                                     upper_narity_limit=upper_narity_limit)
+                                                     upper_narity_limit=upper_narity_limit,
+                                                     compute_fingerprints=compute_fingerprints)
         ref_valid_atoms = ValidAtoms.get_valid_atoms(ref_atoms, desc="Validating reference structures",
                                                      skip_validation=skip_validation, number_cpus=number_cpus,
-                                                     upper_narity_limit=upper_narity_limit)
+                                                     upper_narity_limit=upper_narity_limit,
+                                                     compute_fingerprints=compute_fingerprints)
 
         if not skip_validation:
             print(f"Rate of valid structures in reference dataset: "
