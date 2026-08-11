@@ -241,3 +241,6 @@ cache/
 .lr_find*
 *.xyz
 *.out
+
+# Experiment outputs
+/sweeps/

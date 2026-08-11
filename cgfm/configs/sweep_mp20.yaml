@@ -48,6 +48,20 @@ data:
   val_group_file: "cgfm/groups/mp_20/val.kmedoids.npz"
 
 trainer:
+  # Keep CSV logs for the local go/no-go table and mirror every metric to Weights & Biases.
+  logger:
+    - class_path: lightning.pytorch.loggers.CSVLogger
+      init_args:
+        save_dir: "."
+        name: ""
+    - class_path: lightning.pytorch.loggers.WandbLogger
+      init_args:
+        project: "cgfm-s1"
+        entity: "cindyz"
+        save_dir: "."
+        log_model: false
   # A fifth of the full schedule. This decides whether to spend the MPTS-52 budget, not what to report.
   max_epochs: 400
   check_val_every_n_epoch: 25
+  # MP-20 has 27 training batches per epoch, so the default interval of 50 would suppress step metrics.
+  log_every_n_steps: 10

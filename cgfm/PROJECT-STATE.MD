@@ -23,7 +23,8 @@ prediction, three seeds each, identical in everything except the path for fracti
 - The learned grouping network, registered so Lightning trains, moves and checkpoints it.
 - Collapse diagnostics and temperature annealing as Lightning callbacks, with the adjusted Rand index reported against
   both fixed partitions.
-- Configuration for MPTS-52, one overlay per arm, two reduced-budget overlays for the Stage 1 sweep, one smoke overlay.
+- Configuration for MPTS-52, one overlay per arm, an MP-20 reduced-budget overlay for the Stage 1 sweep, and one smoke
+  overlay.
 - Scripts to precompute, sweep, launch, evaluate, score, collect, analyse and smoke-test.
 - 60 tests, all passing.
 
@@ -116,9 +117,9 @@ identically, so the comparison holds, but the absolute numbers should not be rep
 1. **Validation cadence.** `check_val_every_n_epoch: 50` with `validation_mode: "match_rate"` generates and matches the
    whole 5,000-structure validation split forty times over 2,000 epochs. The matching is CPU-bound and may dominate
    wall-clock time. If it does, either raise the interval or add a validation subset.
-2. **`eta = 0.5` is unswept for the full runs.** The Stage 1 sweep tunes it on perov-5 and MP-20 at reduced budget, but
-   the value carried into MPTS-52 is currently the specified 0.5 regardless of what the sweep finds. Decide whether to
-   carry the sweep's best value across.
+2. **`eta = 0.5` is unswept for the full runs.** The Stage 1 sweep tunes it on MP-20 at reduced budget, but the value
+   carried into MPTS-52 is currently the specified 0.5 regardless of what the sweep finds. Decide whether to carry the
+   sweep's best value across.
 3. **`max_epochs: 2000`** is OMatG's MP-20 value. MPTS-52 has 27,380 training structures, so at batch 1024 this is
    roughly 54,000 steps. Worth confirming against the loss curve of the baseline arm.
 4. **Whether the learned grouping deserves its own learning rate.** It currently shares the denoiser's. The
@@ -142,7 +143,7 @@ Decided in advance, so that a null result stays reportable.
 
 ## Next actions
 
-1. Run `cgfm/scripts/sweep_eta.sh all`. This is the go/no-go and it precomputes the perov-5 and MP-20 partitions itself.
+1. Run `cgfm/scripts/sweep_eta.sh`. This is the go/no-go and it precomputes the MP-20 partitions itself.
 2. If MP-20 clears, precompute the MPTS-52 partitions and launch the twelve jobs. Check after the first few validation
    epochs that `cg_fine_energy_fraction` is not already collapsing in the learned arm.
 3. Evaluate every finished run with `evaluate.sh`, then `nfe_curve.sh` for the results-versus-cost curve.

@@ -63,14 +63,15 @@ cgfm/scripts/smoke.sh
 ### Stage 1, the go/no-go
 
 Before spending the MPTS-52 budget, check that any coarse-to-fine path beats atomwise at all. This sweeps
-`eta` over `{0, 0.25, 0.5, 0.75}` with the k-medoids arm on smaller datasets at a fifth of the full schedule,
-precomputing their partitions if needed. `eta = 0` runs the atomwise arm, since a grouping has no effect there.
+`eta` over `{0, 0.25, 0.5, 0.75}` with the k-medoids arm on MP-20 at a fifth of the full schedule, precomputing its
+partitions if needed. `eta = 0` runs the atomwise arm, since a grouping has no effect there. Metrics are logged locally
+and to the `cindyz/cgfm-s1` Weights & Biases project.
 
 ```bash
-cgfm/scripts/sweep_eta.sh all
+cgfm/scripts/sweep_eta.sh
 ```
 
-MP-20 is the half that decides: if no `eta` beats atomwise there, stop.
+If no `eta` beats atomwise, stop.
 
 ### Stages 2 to 5, the full experiment
 

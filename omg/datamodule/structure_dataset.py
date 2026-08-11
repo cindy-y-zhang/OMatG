@@ -1,5 +1,6 @@
 import hashlib
 from importlib.resources import files
+import os
 from pathlib import Path
 import pickle
 from typing import Any, Optional, Sequence, Union
@@ -158,10 +159,11 @@ class StructureDataset(Dataset):
 
         if self._lazy_storage:
             # Read structures lazily from this file.
-            self._env = lmdb.Environment(str(self._file_path), subdir=False, readonly=True, lock=False, readahead=False,
-                                         meminit=False)
+            self._env = self._open_lmdb_environment()
+            self._env_pid = os.getpid()
         else:
             self._env = None
+            self._env_pid = None
 
     @staticmethod
     def _get_torch_precision(floating_point_precision: Union[int, str, None] = "64-true") -> torch.dtype:
@@ -725,6 +727,7 @@ class StructureDataset(Dataset):
             raise IndexError(f"Index {idx} out of bounds for dataset of size {self._number_structures}.")
 
         # Read structure from LMDB file.
+        self._ensure_lmdb_environment()
         structure_idx = self._structures[idx]
         with self._env.begin(write=False) as txn:
             lmdb_structure = pickle.loads(txn.get(structure_idx))
@@ -745,6 +748,27 @@ class StructureDataset(Dataset):
 
         return structure
 
+    def _open_lmdb_environment(self) -> lmdb.Environment:
+        """Open this dataset's read-only LMDB environment."""
+        return lmdb.Environment(str(self._file_path), subdir=False, readonly=True, lock=False, readahead=False,
+                                meminit=False)
+
+    def _ensure_lmdb_environment(self) -> None:
+        """
+        Ensure the current process owns the LMDB environment.
+
+        Linux dataloader workers are forked by default. The child inherits the parent's native LMDB handle without
+        invoking ``__getstate__``, but python-lmdb environments are not safe to use or close from a process other than
+        the one that opened them. Reopening lazily on a PID change gives every worker an independent handle.
+        """
+        pid = os.getpid()
+        if self._env is not None and self._env_pid == pid:
+            return
+        if self._env is not None:
+            self._env.close()
+        self._env = self._open_lmdb_environment()
+        self._env_pid = pid
+
     def __getstate__(self) -> dict[str, Any]:
         """
         Return the state of the object for pickling.
@@ -759,6 +783,7 @@ class StructureDataset(Dataset):
         state = self.__dict__.copy()
         # Remove the LMDB environment from the state to avoid pickling issues.
         state["_env"] = None
+        state["_env_pid"] = None
         return state
 
     def __setstate__(self, state: dict[str, Any]) -> None:
@@ -774,15 +799,18 @@ class StructureDataset(Dataset):
         """
         self.__dict__.update(state)
         if self._lazy_storage:
-            self._env = lmdb.Environment(str(self._file_path), subdir=False, readonly=True, lock=False)
+            self._env = self._open_lmdb_environment()
+            self._env_pid = os.getpid()
         else:
             self._env = None
+            self._env_pid = None
 
     def __del__(self) -> None:
         """
         Close the LMDB environment when the object is deleted.
         """
-        if hasattr(self, "_env") and getattr(self, "_env") is not None:
+        if (hasattr(self, "_env") and getattr(self, "_env") is not None
+                and getattr(self, "_env_pid", None) == os.getpid()):
             self._env.close()
 
 
