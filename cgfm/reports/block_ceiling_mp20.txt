@@ -1,0 +1,62 @@
+Rigid-block ceiling, MP-20 validation split.
+
+    python -m cgfm.scripts.block_ceiling --data omg/data/mp_20/val.lmdb \
+        --template-data omg/data/mp_20/train.lmdb --limit 1500 --template-limit 8000 --workers 8 > report.txt
+
+Progress bars go to stderr and the report to stdout, so redirect only stdout to keep the file readable.
+
+=== Current run: polyhedron centres chosen from the composition alone ===
+
+Decomposition of 1500 structures, 0 of 1500 failed CrystalNN.
+  centres chosen by charge balance  54.7 per cent of structures
+  centres chosen by no polar split  25.9 per cent of structures
+  centres chosen by electronegativity 18.7 per cent of structures
+  centres chosen by elemental       0.8 per cent of structures
+  atoms per structure               10.20
+  polyhedra per structure           5.66
+  vertices per polyhedron           7.14 (max 24)
+  singleton blocks per structure    0.048
+  blocks claiming each atom         4.52 (66.0 per cent of atoms shared)
+  degrees of freedom                64656 against 59403 atomwise, a factor 0.92
+
+Templates: 2561 types used, fitted on the training split.
+  rigidity, instance-weighted mean deviation from the type template   0.476 Angstrom
+  rigidity, unweighted median over types                             0.381 Angstrom
+  types whose instances sit within 0.1 Angstrom of the template      25.7 per cent
+  blocks resolved by type template                  5011 (58.5 per cent)
+  blocks resolved by composition-blind template     3405 (39.8 per cent)
+  blocks resolved by own geometry                   74 (0.9 per cent)
+  blocks resolved by singleton block                72 (0.8 per cent)
+
+Ceiling under oracle poses, matched at ltol 0.2, stol 0.3, angle_tol 5.0 degrees.
+   translation   rotation   match rate   mean rmsd   displacement
+    (Angstrom)  (degrees)   (per cent)   (matched)     (Angstrom)
+          0.00        0.0        98.73      0.0544         0.1155
+          0.02        1.0        98.67      0.0557         0.1283
+          0.05        2.0        98.47      0.0598         0.1511
+          0.10        5.0        98.13      0.0715         0.1983
+          0.20       10.0        97.73      0.0999         0.3062
+          0.40       20.0        90.73      0.1575         0.5267
+
+=== Superseded run: centres chosen by bond-valence analysis of the structure ===
+
+Kept only to show what the honest centre rule cost. Bond-valence analysis reads the structure, so it cannot be used at
+inference: the number of centres is the number of poses a model has to emit, and only the composition is available. The
+ceiling barely moved, so nothing was lost by fixing it.
+
+  centres from oxidation states     58.9 per cent of structures, the rest by a dominating set of the bonding graph
+  polyhedra per structure           3.95
+  vertices per polyhedron           6.80
+  blocks claiming each atom         3.03 (59.1 per cent of atoms shared)
+  degrees of freedom                factor 1.21 against atomwise
+  rigidity                          0.420 Angstrom
+  ceiling at oracle poses           98.80 per cent, per-atom displacement 0.1228 Angstrom
+  ceiling at 0.20 A / 10 deg        97.33 per cent
+  ceiling at 0.40 A / 20 deg        88.33 per cent
+
+=== Reference ===
+
+The best validation match rate reached by any arm of the eta sweep, on the full validation split, is 58.31 per cent: the
+atomwise baseline at velocity annealing factor 40. At the factor the sweep was scored under it is 56.15 per cent. The
+parameterization therefore leaves about 40 percentage points unclaimed, so pose prediction is the binding constraint
+rather than what the representation can express.

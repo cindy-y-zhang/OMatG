@@ -32,7 +32,7 @@ from pymatgen.analysis.local_env import CrystalNN
 from pymatgen.core import Composition, Structure as PymatgenStructure
 
 
-def _decorate_with_oxidation_states(structure: PymatgenStructure) -> PymatgenStructure:
+def decorate_with_oxidation_states(structure: PymatgenStructure) -> PymatgenStructure:
     """
     Return a copy of the structure annotated with per-site oxidation states, or the structure itself if that fails.
 
@@ -76,7 +76,7 @@ def _neighbour_indices(structure: PymatgenStructure) -> Optional[list[set[int]]]
     try:
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            decorated = _decorate_with_oxidation_states(structure)
+            decorated = decorate_with_oxidation_states(structure)
             return [{neighbour["site_index"] for neighbour in finder.get_nn_info(decorated, index)} - {index}
                     for index in range(len(decorated))]
     except (ValueError, RuntimeError, IndexError):

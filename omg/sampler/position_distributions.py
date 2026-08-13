@@ -34,6 +34,10 @@ class MirrorPosition(PositionDistribution):
         """
         return pos.detach().clone().cpu().numpy(), pos_is_fractional
 
+    def sample_batch(self, pos: torch.Tensor, pos_is_fractional: bool) -> tuple[torch.Tensor, bool]:
+        """Mirror all positions without leaving their current device."""
+        return pos.detach().clone(), pos_is_fractional
+
 
 class NormalPositionDistribution(PositionDistribution):
     """
@@ -79,6 +83,10 @@ class NormalPositionDistribution(PositionDistribution):
         """
         return np.random.normal(loc=self._loc, scale=self._scale, size=pos.shape), True
 
+    def sample_batch(self, pos: torch.Tensor, pos_is_fractional: bool) -> tuple[torch.Tensor, bool]:
+        """Sample all positions directly on their current device."""
+        return torch.empty_like(pos).normal_(mean=self._loc, std=self._scale), True
+
 
 class UniformPositionDistribution(PositionDistribution):
     """
@@ -106,6 +114,10 @@ class UniformPositionDistribution(PositionDistribution):
         :rtype: tuple[np.ndarray, bool]
         """
         return np.random.uniform(low=0.0, high=1.0, size=pos.shape), True
+
+    def sample_batch(self, pos: torch.Tensor, pos_is_fractional: bool) -> tuple[torch.Tensor, bool]:
+        """Sample all positions directly on their current device."""
+        return torch.rand_like(pos), True
 
 
 class SobolSequence(PositionDistribution):
@@ -138,3 +150,7 @@ class SobolSequence(PositionDistribution):
         assert len(pos.shape) == 2
         assert pos.shape[1] == 3
         return self._sampler.draw(pos.shape[0]).detach().cpu().numpy(), True
+
+    def sample_batch(self, pos: torch.Tensor, pos_is_fractional: bool) -> tuple[torch.Tensor, bool]:
+        """Draw the whole sequence once and transfer it directly to the target tensor."""
+        return self._sampler.draw(pos.shape[0]).to(device=pos.device, dtype=pos.dtype), True

@@ -1,153 +1,230 @@
 # Project state
 
-Last updated: 2026-08-06, after the second implementation pass, which added the Stage 1 sweep and the Stage 5 analysis.
+Last updated: 2026-08-12, after the Stage 1 go/no-go sweep and the rigid-block ceiling measurement.
 
 ## Where this stands
 
-Every stage of the plan is implemented, tested and smoke-tested end to end on CPU. Nothing has been trained. The next
-action is the Stage 1 go/no-go sweep, which decides whether to spend the MPTS-52 budget at all.
+The Stage 1 sweep ran and the answer is no. No coarse-to-fine arm beat the atomwise baseline on MP-20 at any value of
+`eta`, so the kill criterion decided in advance forbids spending the MPTS-52 budget. The reason is now understood, and it
+is not a tuning failure: the path reparameterization cannot express the hypothesis it was built to test.
 
-## Research question
+A replacement was proposed, measured and cleared its first test. Representing each coordination polyhedron as a rigid
+body with a position and an orientation reconstructs 98.7 per cent of MP-20 validation structures, against the 58.3 per
+cent that is the best any arm has achieved. The representation is therefore not the bottleneck, and the direction is
+worth building. Nothing of it is built yet.
 
-Does a learned partition of a crystal into coordination-scale atom groups define a better flow-matching probability path
-than standard atomwise periodic interpolation? Four arms on composition-conditioned MPTS-52 crystal structure
-prediction, three seeds each, identical in everything except the path for fractional coordinates.
+## Research question, and what the sweep answered
 
-## Done
+*Does a learned partition of a crystal into coordination-scale atom groups define a better flow-matching probability path
+than standard atomwise periodic interpolation?*
 
-- Two additive edits to OMatG (`omg/si/abstracts.py`, `omg/si/stochastic_interpolants.py`) that let an interpolant ask
-  for the full data sample. No shipped interpolant changes behaviour.
-- The path: group-mean operator, centred `Delta`, the interpolant, its velocity and its loss.
-- The four arms behind one class, so they cannot differ in anything but the grouping and `eta`.
-- Both fixed partitions, their file format with material identifiers, and the offline precompute pass.
-- The learned grouping network, registered so Lightning trains, moves and checkpoints it.
-- Collapse diagnostics and temperature annealing as Lightning callbacks, with the adjusted Rand index reported against
-  both fixed partitions.
-- Configuration for MPTS-52, one overlay per arm, an MP-20 reduced-budget overlay for the Stage 1 sweep, and one smoke
-  overlay.
-- Scripts to precompute, sweep, launch, evaluate, score, collect, analyse and smoke-test.
-- 60 tests, all passing.
+No. Four arms on composition-conditioned MP-20 structure prediction, identical in everything but the path for fractional
+coordinates, 400 epochs, seed 0. Validation match rate in per cent:
 
-## Verified
+| arm | eta 0 | eta 0.25 | eta 0.5 | eta 0.75 |
+| --- | --- | --- | --- | --- |
+| atomwise | **56.15** | | | |
+| k-medoids | | 56.00 | 53.44 | 48.23 |
+| coordination shells | | 51.81 | 50.99 | 49.59 |
+| learned | | 52.69 | 50.61 | 5.23 |
 
-- All 60 tests in `cgfm/tests` pass.
-- OMatG's own suite (`omg/tests`, nine and a half minutes): 65 passed, 17 failed. None are attributable to the edits:
-  - Fourteen are score-based-diffusion parametrisations, six in `test_integrators_ODE.py` and eight in
-    `test_integrators_SDE.py`. Each fails inside `SingleStochasticInterpolant.__init__` with "the interpolant should not
-    be a ScoreBasedDiffusionModelInterpolantVP ... because it requires antithetic sampling on the level of alpha(t)".
-    The test matrix asks for a combination the constructor refuses outright, so they cannot reach any edited code.
-  - One is a `RuntimeError` in `test_coupled_integrator.py`.
-  - Two are sandbox file-permission errors in `test_analysis.py`.
-  - The ODE failures were separately re-confirmed to fail with that same constructor error, which is the check that
-    matters, since the ODE path is the only one the coarse-to-fine interpolant uses.
-- `cgfm/scripts/smoke.sh` runs clean end to end on a 64-structure split: partitions precomputed, all four arms trained
-  for two epochs under the real `match_rate` validation, the four collapse diagnostics asserted present in the CSV log,
-  two draws generated and scored, and both result tables collected.
-- The four arm configurations were diffed against each other after merging. They differ only in the grouping kind,
-  `eta`, the group file, the grouper hyperparameters and the annealing callback. Denoiser, optimiser, batch size,
-  integrator, `use_min_perm_dist`, both velocity annealing factors and the centre-of-mass correction are identical,
-  which is the Stage 4 invariant the comparison rests on.
-- The learned arm was checked through the real `StochasticInterpolants.losses` path: every parameter of the grouping
-  network receives a non-zero gradient, and every diagnostic is populated with a plausible value. At initialisation the
-  adjusted Rand index sits near 0.18 against both fixed partitions, group extents near 4.5 Angstrom.
+Every coarse-grained arm ties with or loses to atomwise, and the loss grows with `eta`, which is the strength of the
+coarse-to-fine bump. The learned arm at `eta = 0.75` collapsed outright and never recovered. The k-medoids `eta = 0.75`
+run ended at epoch 299 rather than 399; it was already 8 points behind.
+
+One pattern is worth keeping. Six of the nine coarse-grained runs *led* at epoch 49, the learned arms by 2.8 and 2.5
+points, and every lead was gone by convergence. That is the signature of a path that is easier to optimise early rather
+than one that models the data better, which is what the flow-matching literature reports for conditional path
+reparameterizations generally: they buy sampling efficiency, not converged quality.
+
+## Why it failed
+
+Four reasons, in order of how much they explain.
+
+**A partition cannot hold a coordination environment.** Polyhedra share atoms; an anion belongs to several cation
+polyhedra at once, and that sharing is the structural content. `cgfm/shells.py` had to destroy it to produce a partition,
+and its own docstring records the cost. The MP-20 group files hold 2.75 atoms per group with 33 per cent singletons for
+k-medoids and 36 per cent for coordination shells, against the five-atom shells the specification assumed. The shells arm
+was therefore not testing coordination environments; it was testing small geometric neighbourhoods, which is what
+k-medoids already tests. That explains why the two fixed arms behave alike.
+
+**The group never becomes a unit with a pose.** Per atom the path reads
+`x_t = x_0 + (t + eta s(t)) d_g + (t - eta s(t)) delta_i`, where `d_g` is the group's mean displacement and `delta_i` the
+within-group residual. The centroid component does run ahead of the residual, so the schedule story is real, but the
+motif's shape is interpolated out of noise the whole way. There is no time at which a correct polyhedron exists and is
+carried to a site, no orientation variable, and no template. The intention, place the group and then its atoms, is not
+what the algebra does.
+
+**Nothing in the model knows about symmetry.** The motivation is stated in terms of Wyckoff sites, but no space group,
+orbit or multiplicity appears anywhere. A geometric cluster's centroid has no reason to sit at a special position.
+
+**The bias never reaches generation.** Because the bump vanishes at both endpoints, the modelled distribution is
+identical for every `eta`. The grouping network reads the clean target, which does not exist at sampling time, so it
+contributes nothing to generation. The inductive bias entered only as a modified regression target that the denoiser had
+to learn to infer.
+
+## Ruled out: the sampler
+
+Before accepting the result, the obvious confound was tested. Generation multiplies predicted velocities by
+`(1 + factor * t)`, and that factor was tuned for the atomwise path, so a bumped path might simply have been sampled
+wrongly. The factor was exposed per arm and swept from 2 to 50 on the existing checkpoints, no retraining.
+
+Retuning lifted every arm and changed no ordering. On the full validation split the best figures are atomwise 58.31 at
+factor 40, k-medoids `eta = 0.25` 57.44 at factor 32, and k-medoids `eta = 0.5` 54.78 at factor 25. The gains also cost
+geometric precision: match rate keeps climbing past the point where root-mean-square displacement starts to worsen, so
+the high factors are overshooting into the tolerance rather than placing atoms better. The comparison was not confounded.
+
+## The replacement: rigid blocks on SE(3)
+
+Both of the first two failures come from the same source, a hard partition of Euclidean coordinates. Dropping it gives a
+representation in which the motif hypothesis is actually expressible.
+
+- Blocks **overlap**. A structure is a set of cation-centred coordination polyhedra, and an atom may be a vertex of
+  several. Sharing is kept rather than resolved away.
+- A block has a **pose**. It carries a rigid template for its type, a position and an orientation, so placing a motif is
+  one move. This is the parameterization behind MOFFlow and MolCrystalFlow, which cut `3N` coordinates to `6M` pose
+  parameters and beat atom-level baselines on metal-organic and molecular crystals.
+- Atom positions are the **consensus** of the blocks claiming them.
+
+The difference from those two precedents is that their building blocks are disjoint and given, while inorganic polyhedra
+share atoms. Which blocks share which atoms therefore has to be generated, and that is the part with no published
+precedent for inorganic crystals.
+
+### Measured ceiling
+
+`cgfm/scripts/block_ceiling.py` gives away everything a model would have to predict: every polyhedron is replaced by the
+canonical template of its type, placed at its true centre with the best-fitting rotation, and shared atoms are averaged.
+What remains is only what the parameterization cannot hold. 1500 validation structures, templates fitted on the training
+split so nothing is scored against a template fitted to it.
+
+| pose error (translation / rotation) | match rate | per-atom displacement |
+| --- | --- | --- |
+| oracle | **98.73%** | 0.116 A |
+| 0.05 A / 2 deg | 98.47% | 0.151 A |
+| 0.10 A / 5 deg | 98.13% | 0.198 A |
+| 0.20 A / 10 deg | 97.73% | 0.306 A |
+| 0.40 A / 20 deg | 90.73% | 0.527 A |
+
+Three readings.
+
+**The representation is not the limit.** 98.7 per cent against 58.3 per cent achieved leaves about 40 points unclaimed,
+so the binding constraint is pose prediction, not expressiveness.
+
+**Pose precision is affordable.** The curve is flat out to 0.2 Angstrom and 10 degrees. A model does not need extreme
+accuracy to reach 97 per cent.
+
+**Sharing is what makes it work, and this was not expected.** Polyhedra are floppy: an instance sits 0.476 Angstrom from
+its type template on average, far too much to rebuild a structure from any one of them. But each atom is a vertex of 4.5
+blocks, 66 per cent of atoms are shared, and averaging their disagreeing predictions cancels most of the individual
+distortion, leaving 0.116 Angstrom. The overlap that made a partition impossible is precisely what makes rigid templates
+accurate, because the system is over-determined.
+
+### What the measurement also showed, less comfortably
+
+**There is no dimensionality saving on MP-20.** MOFFlow's case rests on `6M` being far below `3N`, which holds for cells
+of hundreds of atoms. MP-20 averages 10.2 atoms in 5.7 heavily shared polyhedra, so the block parameterization carries
+*more* degrees of freedom than the atomwise one, a factor of 0.92. Whatever rigid blocks buy here is the inductive bias
+and the over-determined consensus, not a smaller search space. If the dimensionality is the point, the experiment belongs
+on MPTS-52 or larger cells.
+
+**The type vocabulary does not generalise as keyed.** Central element, coordination number and vertex composition gives
+2561 types for 1500 structures, and 40 per cent of blocks need the composition-blind fallback because their exact type
+never appears in training. The generative vocabulary should be central element and coordination number, with vertex
+composition predicted separately.
+
+**A symmetric polyhedron has no unique pose.** An octahedron has 24 rotational symmetries, so the regression target for
+its orientation is a set, not a point. The SO(3) loss has to be minimised over the template's point group, or the target
+canonicalised. Training against an arbitrary representative would inject noise the size of a whole rotation. This came
+out of a unit test rather than the literature.
 
 ## Decisions that departed from the original specification
 
-Each of these is a judgement call worth revisiting.
+Each is a judgement call worth revisiting.
 
-**Group count comes from chemistry, not from `round(N / 5)`.** CrystalNN coordination shells decide how many groups a
-structure has, and the other coarse-grained arms are given that same number. On MPTS-52 this works out at about
-2.8 atoms per group rather than 5. The reason is that groups are sets of atoms *in the cell*, so neighbours that are
-periodic images of one site count once: mean coordination is about 3.4 distinct sites, and the polyhedron centres form
-an independent set of roughly a third of the atoms. Forcing 5 would mean the shells arm was no longer testing
-coordination shells.
+**Polyhedron centres are chosen from the composition alone.** The first implementation picked centres by bond-valence
+analysis of the structure, which is circular: the number of centres is the number of poses a model must emit, and at
+inference there is only the composition. Centres now come from a charge-balanced assignment of oxidation states where one
+exists (55 per cent of MP-20), from electronegativity ordering where it does not (19 per cent), and otherwise every atom
+becomes a centre (27 per cent, mostly alloys and elemental structures). The rule refuses to split a composition whose
+electronegativity gap is under 0.4, because naming the marginally less electronegative element of an alloy its cation
+puts the centres somewhere arbitrary. Making the rule honest cost nothing: the ceiling moved from 98.80 to 98.73 per
+cent. CrystalNN is still used to find which atoms are a polyhedron's *vertices*, which is not circular, because that only
+ever runs on a known training structure to build a target.
 
-**Overlapping shells are resolved by a dominating set, not by peeling.** Peeling whole shells from the highest
-coordination downwards was tried first and gave one large polyhedron surrounded by more than half singleton groups,
-which is barely a coarse-graining. Centres are now chosen greedily as a dominating set of the bonding graph and every
-other atom joins the nearest centre that actually bonds it. Singletons fell from 55 to 30 per cent, matching what
-k-medoids produces at the same group count, which makes the two fixed arms comparable.
+**Group count came from chemistry, not from `round(N / 5)`.** Coordination shells decided how many groups a structure
+has and the other arms were given that number. This is why groups hold 2.75 atoms rather than five: groups are sets of
+atoms in the cell, so neighbours that are periodic images of one site count once. Forcing five would have stopped the
+shells arm testing coordination shells. In hindsight this was the moment the arm lost its hypothesis, and the fix was not
+a different group count but abandoning the partition.
 
-**Soft assignments, annealed, instead of straight-through Gumbel.** Endpoint exactness needs the bump to vanish at
-`t = 0` and `t = 1`, not the group-mean operator to be a projector, so nothing requires a hard partition during
-training. A tempered softmax is differentiable everywhere with no estimator. Temperature is annealed to 0.1 over the
-first 1000 epochs so that the coarse and fine schedules become exact and the final partition can be named. Anchor
-selection stays discrete, with gradient reaching the scorer through the gating trick from top-k graph pooling.
+**Overlapping shells were resolved by a dominating set, not by peeling.** Peeling whole shells gave one large polyhedron
+and more than half singletons. Greedy dominating-set centres with every other atom joining the nearest centre that bonds
+it brought singletons from 55 to 33 per cent.
 
-**Explicit mean squared error instead of OMatG's loss.** OMatG drops the constant `E||u_t||^2` from the velocity loss,
-which is correct when the target is fixed. It is not fixed once the grouping is learned: the dropped term's absence
-leaves the grouping network minimising `-2 E[b . u_t]`, which is unbounded below and is optimised by inflating the
-target rather than by finding better groups. The arms therefore use `E||b - u_t||^2`, which has identical gradients with
-respect to the denoiser.
+**Soft assignments, annealed, instead of straight-through Gumbel.** Endpoint exactness needs only the bump to vanish at
+`t = 0` and `t = 1`, not the group-mean operator to be a projector, so no hard partition is required during training. A
+tempered softmax is differentiable everywhere. Anchor selection stays discrete, with gradient reaching the scorer through
+the gating trick from top-k graph pooling.
 
-**Multi-sample metrics are computed here, not by `omg csp_metrics`.** The plan assumed `csp_metrics --metre=True` would
-give METRe and cRMSE at five samples per composition. It cannot: `match_rmsds` and `metre_rmsds` both raise when the
-generated list is longer than the reference list, and OMatG's METRe rate counts the fraction of *generated* structures
-matching some reference, so it measures precision and would fall as sampling grew more diverse. `scripts/score.py`
-computes a genuine best-of-n rate on the same `ValidAtoms` validation and the same `StructureMatcher` call, and the
-one-shot numbers still come from OMatG so that they stay comparable with published results. This was confirmed with the
-user before being implemented.
+**Explicit mean squared error instead of OMatG's loss.** OMatG drops the constant `E||u_t||^2`, which is correct when the
+target is fixed. It is not fixed once the grouping is learned: without it the grouping network minimises `-2 E[b . u_t]`,
+unbounded below and optimised by inflating the target rather than by finding better groups. The arms use
+`E||b - u_t||^2`, which has identical gradients with respect to the denoiser.
 
-**Both fixed partitions travel with every batch.** The plan asks for the adjusted Rand index against k-medoids *and*
-against the coordination shells, which needs both on the same batch. `CGOMGDataset` derives the sibling group file from
-the name of the one that defines the arm's path, so the arm overlays still name a single file.
+**Multi-sample metrics are computed here, not by `omg csp_metrics`.** `match_rmsds` and `metre_rmsds` both raise when the
+generated list is longer than the reference list, and OMatG's METRe rate measures precision, so it would fall as sampling
+grew more diverse. `scripts/score.py` computes a genuine best-of-n rate on the same validation and the same
+`StructureMatcher` call.
 
-**Hyperparameters are OMatG's MP-20 values.** OMatG ships no tuned MPTS-52 configuration, so the denoiser, integrator,
-annealing factors, optimiser and batch size come from `omg/conf_examples/csp_linear_ode_mp_20.yaml`. All arms are biased
-identically, so the comparison holds, but the absolute numbers should not be reported as tuned MPTS-52 results.
+**Hyperparameters are OMatG's MP-20 values.** No tuned MPTS-52 configuration ships with OMatG. All arms are biased
+identically so the comparison holds, but the absolute numbers are not tuned MPTS-52 results.
 
-## Bugs found and fixed during the second pass
+## Open items
 
-- **`distance_bias` had an unidentifiable parameter.** The final layer of the grouping network's distance bias carried a
-  bias term whose output is added to logits that are immediately softmaxed over anchors, where a constant cancels.
-  Shifting it by 7.0 changed the assignment by 3e-16. It is now `bias=False`. A test asserting that gradient reaches
-  every parameter caught this, but only intermittently, which is what prompted the investigation.
-- **Test flakiness from an unseeded global generator.** Module constructors draw weights from the global torch
-  generator, so adding an unrelated test file changed the initialisation of another test's network and turned it red.
-  The autouse fixture now seeds the global state.
-- **The sweep pointed at the wrong partitions.** The arm overlay names the MPTS-52 group files, so applying it after the
-  dataset overlay silently paired perov-5 structures with MPTS-52 partitions. The overlay order is now reversed, and the
-  material identifiers now stored in each group file would have caught it at runtime regardless.
-- **Group files could not be checked against their split.** They were positional, validated only by length and atom
-  count. They now store the material identifier of every structure, checked on load, which catches a reordered or
-  filtered split rather than only a differently sized one.
+1. **The shells arm's runtime diagnostic contradicts its own group file.** The MP-20 shells partition holds 36 per cent
+   singletons, and the k-medoids arm's logged `cg_singleton_fraction` of 0.305 matches its file's 33 per cent. The shells
+   arm logged 0.001. Either the diagnostic is computed differently for that arm or the runs were fed a different file, so
+   the shells results should not be quoted until this is resolved.
+2. **Temperature annealing was scheduled over 1000 epochs and Stage 1 ran for 400.** The learned arms never reached a
+   hard partition, so their adjusted Rand index of 0.17 against both fixed partitions describes a soft assignment rather
+   than a partition that could be named.
+3. **The low-step-count claim is untested.** Since the coarse arms led early and reparameterizations are known to buy
+   sampling efficiency, `nfe_curve.sh` on the existing checkpoints could still support a defensible result about cheap
+   sampling. It needs no training.
+4. **CrystalNN returns up to 24 vertices for some sites**, which is not a coordination polyhedron. Worth a cap or a
+   different neighbour rule before Stage A is built.
 
-## Open questions to settle before or during the full run
+## Kill criteria and their outcome
 
-1. **Validation cadence.** `check_val_every_n_epoch: 50` with `validation_mode: "match_rate"` generates and matches the
-   whole 5,000-structure validation split forty times over 2,000 epochs. The matching is CPU-bound and may dominate
-   wall-clock time. If it does, either raise the interval or add a validation subset.
-2. **`eta = 0.5` is unswept for the full runs.** The Stage 1 sweep tunes it on MP-20 at reduced budget, but the value
-   carried into MPTS-52 is currently the specified 0.5 regardless of what the sweep finds. Decide whether to carry the
-   sweep's best value across.
-3. **`max_epochs: 2000`** is OMatG's MP-20 value. MPTS-52 has 27,380 training structures, so at batch 1024 this is
-   roughly 54,000 steps. Worth confirming against the loss curve of the baseline arm.
-4. **Whether the learned grouping deserves its own learning rate.** It currently shares the denoiser's. The
-   specification asked for no auxiliary objective and no separate schedule, and that is what is implemented, but if the
-   grouping is still near its initialisation late in training this is the first thing to change.
-5. **Whether 2.8 atoms per group is too fine to matter.** If every coarse-grained arm ties with atomwise, merging
-   shells to a coarser target is cheaper to test than any other explanation.
+Decided in advance so a null result stays reportable.
 
-## Kill criteria
-
-Decided in advance, so that a null result stays reportable.
-
-- If no `eta` beats atomwise on MP-20 in the Stage 1 sweep, do not scale to MPTS-52.
-- If `cg_ari_vs_kmedoids` climbs above roughly 0.8, the learned arm has rediscovered geometric clustering. Report it as
-  such; do not tune it into looking different.
-- If `cg_fine_energy_fraction` falls below the k-medoids arm's, the grouping is shrinking the residual rather than
-  learning structure. Switch to the target-normalised loss variant.
-- If `cg_singleton_fraction` approaches one, the grouping has collapsed to atomwise and the arm carries no information.
-- If the learned arm does not beat `atomwise` on test match rate, the interesting comparison becomes `shells` against
-  `atomwise`: whether coordination motifs help when supplied, even if they cannot be discovered.
+- *If no `eta` beats atomwise on MP-20, do not scale to MPTS-52.* **Triggered.** Best coarse-grained arm is k-medoids
+  `eta = 0.25` at 56.00 against 56.15, a tie, and everything else is worse. MPTS-52 was not launched.
+- *If `cg_ari_vs_kmedoids` exceeds roughly 0.8, the learned arm has rediscovered geometric clustering.* Not triggered; it
+  sat at 0.17, but see open item 2 before reading that as a finding.
+- *If `cg_singleton_fraction` approaches one, the grouping has collapsed to atomwise.* Not triggered, though the learned
+  `eta = 0.75` run reached 0.59 as it collapsed.
+- *If the learned arm does not beat atomwise, the interesting comparison becomes shells against atomwise: whether
+  coordination motifs help when supplied, even if they cannot be discovered.* Shells lost too, and the ceiling
+  measurement explains why: what was supplied was not coordination motifs.
 
 ## Next actions
 
-1. Run `cgfm/scripts/sweep_eta.sh`. This is the go/no-go and it precomputes the MP-20 partitions itself.
-2. If MP-20 clears, precompute the MPTS-52 partitions and launch the twelve jobs. Check after the first few validation
-   epochs that `cg_fine_energy_fraction` is not already collapsing in the learned arm.
-3. Evaluate every finished run with `evaluate.sh`, then `nfe_curve.sh` for the results-versus-cost curve.
-4. Collect with `collect_results.py` and read the atom-count bins, not just the headline numbers.
-5. Run `analyse_groups.py` on the learned arm and compare its partitions against both fixed ones.
-6. Optionally close Stage 0 by reproducing the published MPTS-52 match rate from the released checkpoint, which is the
-   only external reference number.
+1. Build Stage A, the discrete model: coordination number and environment type per centre, and the sharing graph saying
+   which anions are vertices of which polyhedra. The block count follows from the composition, so only the graph is
+   generated. This is the contribution and the risk.
+2. Build Stage B, the continuous model: flow matching for block translations on the torus and orientations on SO(3), plus
+   the lattice, with atom positions read out by consensus so the sharing constraints hold by construction. Minimise the
+   orientation loss over each template's point group.
+3. Repeat the ceiling measurement on MPTS-52, where the dimensionality argument may hold, before committing to MP-20 as
+   the testbed.
+4. Optionally, run `nfe_curve.sh` on the existing checkpoints to settle open item 3, which is the only claim the
+   completed sweep can still support.
+
+## Code added for the replacement
+
+- `cgfm/blocks.py`: overlapping polyhedral decomposition, composition-only centre rule, species-restricted Kabsch
+  alignment with exact enumeration or assignment fallback, per-type template fitting, consensus reconstruction.
+- `cgfm/scripts/block_ceiling.py`: the ceiling and pose-sensitivity measurement.
+- `cgfm/tests/test_blocks.py`: 21 tests. Full `cgfm` suite is 84 tests, all passing.
+- `cgfm/reports/`: the measurement output.

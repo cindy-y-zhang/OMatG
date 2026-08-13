@@ -7,8 +7,14 @@ make that a property of four files staying in sync by hand, which it would not. 
 class, which builds all three interpolants itself and exposes exactly two knobs that are allowed to differ: which
 grouping is used, and how strong the coarse-to-fine bump is.
 
-The species and cell interpolants, the integrator and the annealing factors are therefore literally the same objects
-across arms. Changing an arm cannot silently change anything else.
+The species and cell interpolants and the integrator are therefore literally the same objects across arms. Changing an
+arm cannot silently change anything else.
+
+The position velocity annealing factor is the one exception: it is a knob of the sampler rather than of the path, and it
+is exposed because the tuned default is only correct for the atomwise arm. The bump raises the terminal slope of the
+within-group schedule to 1 + eta, so a factor tuned at eta = 0 overshoots by that ratio on the component that carries
+most of the displacement. Arms compared against each other must either share this factor or each be reported at its own
+tuned value, and which of the two is being done has to be stated.
 
 The four arms are:
 
@@ -78,6 +84,12 @@ class ArmStochasticInterpolants(StochasticInterpolants):
         Number of Euler steps used for generation.
         Defaults to INTEGRATION_TIME_STEPS.
     :type integration_time_steps: int
+    :param velocity_annealing_factor:
+        Inference-only factor that multiplies predicted position velocities by (1 + factor * t) during generation. The
+        default was tuned for the atomwise path, where the terminal schedule slope is one; a non-zero eta raises the
+        terminal slope of the within-group schedule to 1 + eta, so the tuned value overshoots there.
+        Defaults to POSITION_VELOCITY_ANNEALING_FACTOR.
+    :type velocity_annealing_factor: float
     :param enable_progress_bar:
         Whether the integrator shows a progress bar.
         Defaults to True.
@@ -87,13 +99,14 @@ class ArmStochasticInterpolants(StochasticInterpolants):
     def __init__(self, grouping_kind: str, eta: float = 0.0, bump_power_start: float = 1.0,
                  bump_power_end: float = 1.0, grouper_kwargs: Optional[dict[str, Any]] = None,
                  diagnostics_every: int = 50, integration_time_steps: int = INTEGRATION_TIME_STEPS,
-                 enable_progress_bar: bool = True) -> None:
+                 enable_progress_bar: bool = True,
+                 velocity_annealing_factor: float = POSITION_VELOCITY_ANNEALING_FACTOR) -> None:
         """Construct the collection of stochastic interpolants for one arm."""
         position_interpolant = CoarseToFineStochasticInterpolant(
             eta=eta, grouping=build_grouper(grouping_kind, **(grouper_kwargs or {})),
             bump_power_start=bump_power_start, bump_power_end=bump_power_end,
             integrator_kwargs={"method": "euler"}, correct_center_of_mass_motion=True,
-            velocity_annealing_factor=POSITION_VELOCITY_ANNEALING_FACTOR, diagnostics_every=diagnostics_every)
+            velocity_annealing_factor=velocity_annealing_factor, diagnostics_every=diagnostics_every)
         cell_interpolant = SingleStochasticInterpolant(
             interpolant=LinearInterpolant(), gamma=None, epsilon=None, differential_equation_type="ODE",
             integrator_kwargs={"method": "euler"}, correct_center_of_mass_motion=False,

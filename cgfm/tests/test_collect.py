@@ -8,7 +8,7 @@ epochs, which leaves the cell blank on every other row, and a run can be resumed
 
 import json
 from pathlib import Path
-from cgfm.scripts.collect_results import best_validation_match_rate, collect_test, read_score
+from cgfm.scripts.collect_results import best_validation_match_rate, collect_test, collect_validation, read_score
 
 
 def _write_metrics(path: Path, rows: list[dict[str, str]], columns: list[str]) -> None:
@@ -55,6 +55,17 @@ def test_best_validation_match_rate_is_none_without_a_match_rate(tmp_path):
     assert best_validation_match_rate(tmp_path) is None
 
 
+def test_block_validation_collection_excludes_incomplete_runs(tmp_path):
+    partial = tmp_path / "joint" / "seed0"
+    complete = tmp_path / "joint" / "seed1"
+    _write_metrics(partial / "metrics.csv", [{"match_rate": "0.90"}], ["match_rate"])
+    _write_metrics(complete / "metrics.csv", [{"match_rate": "0.80"}], ["match_rate"])
+    (complete / "COMPLETED.json").write_text('{"complete": true}')
+    collected = collect_validation(tmp_path, require_complete=True)
+    assert collected["joint/seed0"]["validation match"] == []
+    assert collected["joint/seed1"]["validation match"] == [80.0]
+
+
 def test_missing_scores_are_reported_not_dropped(tmp_path):
     """A partial table must say which runs are missing, or it could be mistaken for a complete one."""
     score = {"one_shot": {"match_rate": 0.4, "mean_crmse": 0.2}, "one_shot_metre": {"match_rate": 0.5},
@@ -68,6 +79,23 @@ def test_missing_scores_are_reported_not_dropped(tmp_path):
     assert collected["shells"]["one-shot match"] == [40.0]
     assert collected["atomwise"] == {}
     assert any("atomwise/seed0" in entry for entry in missing)
+
+
+def test_block_arms_are_reported_when_oracle_or_joint_directories_exist(tmp_path):
+    """The MPTS-52 collector must list atomwise, oracle_coord and joint rather than the coarse-to-fine arms."""
+    from cgfm.scripts.collect_results import BLOCK_ARMS, collect_test
+    score = {"one_shot": {"match_rate": 0.4, "mean_crmse": 0.2}, "one_shot_metre": {"match_rate": 0.5},
+             "best_of_n": {"match_rate": 0.6, "mean_crmse": 0.1}}
+    path = tmp_path / "oracle_coord" / "seed0" / "eval" / "nfe210" / "score.json"
+    path.parent.mkdir(parents=True)
+    path.write_text(json.dumps(score))
+    (tmp_path / "atomwise" / "seed0").mkdir(parents=True)
+    (tmp_path / "joint" / "seed0").mkdir(parents=True)
+    collected, missing = collect_test(tmp_path, nfe=210, arms=BLOCK_ARMS)
+    assert list(collected) == list(BLOCK_ARMS)
+    assert collected["oracle_coord"]["one-shot match"] == [40.0]
+    assert any("atomwise/seed0" in entry for entry in missing)
+    assert any("joint/seed0" in entry for entry in missing)
 
 
 def test_read_score_converts_rates_to_percentages(tmp_path):

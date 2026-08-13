@@ -1,0 +1,14 @@
+# Oracle-coordination overlay: true CN is copied into the base state; only poses and the lattice are generated.
+
+model:
+  si:
+    init_args:
+      cn_mode: oracle
+  sampler:
+    init_args:
+      cn_mode: oracle
+
+trainer:
+  logger:
+    init_args:
+      save_dir: "runs-blocks/mpts52/oracle_coord"

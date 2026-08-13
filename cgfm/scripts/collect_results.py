@@ -28,7 +28,10 @@ from typing import Dict, List, Optional
 
 
 ARMS = ("atomwise", "kmedoids", "shells", "learned")
-"""Arms of the experiment, in the order they are reported."""
+"""Arms of the coarse-to-fine experiment, in the order they are reported."""
+
+BLOCK_ARMS = ("atomwise", "oracle_coord", "joint")
+"""Arms of the MPTS-52 rigid-block experiment."""
 
 TEST_COLUMNS = (
     ("one_shot", "match_rate", "one-shot match"),
@@ -120,7 +123,7 @@ def format_table(rows: Dict[str, Dict[str, List[float]]], headings: List[str], l
     return "\n".join(lines)
 
 
-def collect_test(root: Path, nfe: int) -> tuple[Dict[str, Dict[str, List[float]]], List[str]]:
+def collect_test(root: Path, nfe: int, arms: tuple[str, ...] = ARMS) -> tuple[Dict[str, Dict[str, List[float]]], List[str]]:
     """
     Collect the test metrics of every arm at one number of Euler steps.
 
@@ -130,13 +133,17 @@ def collect_test(root: Path, nfe: int) -> tuple[Dict[str, Dict[str, List[float]]
     :param nfe:
         Number of Euler steps to report.
     :type nfe: int
+    :param arms:
+        Arm names to report, in order.
+        Defaults to ARMS.
+    :type arms: tuple[str, ...]
 
     :return:
         The collected values keyed by arm, and the missing run directories.
     :rtype: tuple[Dict[str, Dict[str, List[float]]], List[str]]
     """
     collected, missing = {}, []
-    for arm in ARMS:
+    for arm in arms:
         columns: Dict[str, List[float]] = {}
         for seed_dir in sorted(root.glob(f"{arm}/seed*")):
             score_file = seed_dir / "eval" / f"nfe{nfe}" / "score.json"
@@ -149,7 +156,7 @@ def collect_test(root: Path, nfe: int) -> tuple[Dict[str, Dict[str, List[float]]
     return collected, missing
 
 
-def collect_validation(root: Path) -> Dict[str, Dict[str, List[float]]]:
+def collect_validation(root: Path, require_complete: bool = False) -> Dict[str, Dict[str, List[float]]]:
     """
     Collect the best validation match rate of every run below a directory.
 
@@ -159,6 +166,10 @@ def collect_validation(root: Path) -> Dict[str, Dict[str, List[float]]]:
     :param root:
         Directory holding the runs.
     :type root: Path
+    :param require_complete:
+        Whether runs without a ``COMPLETED.json`` status must be reported as missing.
+        Defaults to False.
+    :type require_complete: bool
 
     :return:
         The collected values keyed by run name.
@@ -166,7 +177,8 @@ def collect_validation(root: Path) -> Dict[str, Dict[str, List[float]]]:
     """
     collected: Dict[str, Dict[str, List[float]]] = {}
     for run_dir in sorted(path for path in root.glob("*/*") if path.is_dir()):
-        rate = best_validation_match_rate(run_dir)
+        rate = (None if require_complete and not (run_dir / "COMPLETED.json").is_file()
+                else best_validation_match_rate(run_dir))
         name = f"{run_dir.parent.name}/{run_dir.name}"
         collected[name] = {"validation match": [] if rate is None else [rate]}
     return collected
@@ -180,14 +192,25 @@ def main() -> None:
                         help="report scored test metrics or the best validation match rate seen during training")
     parser.add_argument("--nfe", type=int, default=210, help="number of Euler steps to report, for --source test")
     parser.add_argument("--json", default=None, help="also write the collected numbers to this JSON file")
+    parser.add_argument("--arms", nargs="*", default=None,
+                        help="arm names to report; defaults to the coarse-to-fine arms, or the block arms when "
+                             "oracle_coord or joint directories are present")
     arguments = parser.parse_args()
 
     root = Path(arguments.runs)
+    if arguments.arms:
+        arms = tuple(arguments.arms)
+    elif any((root / arm).exists() for arm in BLOCK_ARMS[1:]):
+        arms = BLOCK_ARMS
+    else:
+        arms = ARMS
+
     if arguments.source == "validation":
-        collected = collect_validation(root)
+        require_complete = any((root / arm).exists() for arm in BLOCK_ARMS[1:])
+        collected = collect_validation(root, require_complete=require_complete)
         print(format_table(collected, ["validation match"], "run"))
     else:
-        collected, missing = collect_test(root, arguments.nfe)
+        collected, missing = collect_test(root, arguments.nfe, arms=arms)
         headings = [heading for _, _, heading in TEST_COLUMNS]
         print(f"Test metrics at {arguments.nfe} Euler steps. Match rates are percentages.\n")
         print(format_table(collected, headings, "arm"))

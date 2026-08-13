@@ -3,6 +3,7 @@ from omg.si.single_stochastic_interpolant import SingleStochasticInterpolant
 from omg.si.interpolants import *
 from omg.si.gamma import *
 from omg.si.epsilon import *
+from omg.si.sigma import GeometricSigma
 from omg.si.tau import TauConstantSchedule
 from omg.globals import SMALL_TIME, BIG_TIME
 
@@ -19,8 +20,6 @@ interpolants = [
     PeriodicLinearInterpolant(),
     EncoderDecoderInterpolant(),
     MirrorInterpolant(),
-    ScoreBasedDiffusionModelInterpolantVP(tau=TauConstantSchedule()),
-    PeriodicScoreBasedDiffusionModelInterpolantVP(tau=TauConstantSchedule()),
     PeriodicTrigonometricInterpolant(),
     PeriodicEncoderDecoderInterpolant(),
 ]
@@ -34,6 +33,27 @@ gammas = [
 
 def get_name(obj):
     return obj.__class__.__name__ if obj is not None else "None"
+
+
+@pytest.mark.parametrize(
+    "interpolant",
+    [
+        ScoreBasedDiffusionModelInterpolantVP(tau=TauConstantSchedule()),
+        PeriodicScoreBasedDiffusionModelInterpolantVP(tau=TauConstantSchedule()),
+        ScoreBasedDiffusionModelInterpolantVE(sigma=GeometricSigma(sigma_min=0.01, sigma_max=1.0)),
+        PeriodicScoreBasedDiffusionModelInterpolantVE(sigma=GeometricSigma(sigma_min=0.01, sigma_max=1.0)),
+    ],
+    ids=get_name,
+)
+def test_score_based_interpolants_require_one_sided_class(interpolant):
+    with pytest.raises(ValueError, match="requires antithetic sampling"):
+        SingleStochasticInterpolant(
+            interpolant=interpolant,
+            gamma=None,
+            epsilon=None,
+            differential_equation_type="ODE",
+        )
+
 
 @pytest.mark.parametrize(
     "gamma, interpolant", 
@@ -54,8 +74,8 @@ def test_ode_integrator(interpolant, gamma):
     if isinstance(interpolant, MirrorInterpolant):
         x_init = x_final.clone()
 
-    if isinstance(interpolant, (PeriodicLinearInterpolant, PeriodicScoreBasedDiffusionModelInterpolantVP,
-                                PeriodicTrigonometricInterpolant, PeriodicEncoderDecoderInterpolant)):
+    if isinstance(interpolant, (PeriodicLinearInterpolant, PeriodicTrigonometricInterpolant,
+                                PeriodicEncoderDecoderInterpolant)):
         pbc_flag = True
         interpolant_geodesic = SingleStochasticInterpolant(
             interpolant=interpolant, gamma=None,epsilon=None,

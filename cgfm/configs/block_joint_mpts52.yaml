@@ -1,0 +1,14 @@
+# Joint overlay: CN is masked in the base state and generated with the poses.
+
+model:
+  si:
+    init_args:
+      cn_mode: joint
+  sampler:
+    init_args:
+      cn_mode: joint
+
+trainer:
+  logger:
+    init_args:
+      save_dir: "runs-blocks/mpts52/joint"

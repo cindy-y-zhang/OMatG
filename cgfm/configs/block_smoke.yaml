@@ -1,0 +1,33 @@
+# Tiny overlay for end-to-end plumbing checks. Nothing it produces is a result.
+
+data:
+  train_dataset:
+    init_args:
+      file_path: "cgfm/smoke_data/train.lmdb"
+  val_dataset:
+    init_args:
+      file_path: "cgfm/smoke_data/val.lmdb"
+  pred_dataset:
+    init_args:
+      file_path: "cgfm/smoke_data/test.lmdb"
+  block_dir: "cgfm/smoke_blocks"
+  batch_size: 4
+  num_workers: 0
+  persistent_workers: false
+  prefetch_factor: null
+
+model:
+  si:
+    init_args:
+      integration_time_steps: 5
+  number_cpus: 2
+
+trainer:
+  max_epochs: 2
+  max_time: null
+  check_val_every_n_epoch: 1
+  accumulate_grad_batches: 1
+  logger:
+    init_args:
+      save_dir: "cgfm/smoke_runs/blocks"
+      name: ""

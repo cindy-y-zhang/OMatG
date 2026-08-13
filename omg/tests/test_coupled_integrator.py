@@ -18,7 +18,7 @@ eps = 1e-6
 times = torch.linspace(SMALL_TIME, BIG_TIME, 100)
 nrep = 1000
 indices = torch.repeat_interleave(torch.arange(nrep), 3)
-n_atoms = torch.ones(size=(nrep,)) * 3
+n_atoms = torch.full(size=(nrep,), fill_value=3, dtype=torch.long)
 
 def test_coupled_integrator():
     '''
@@ -43,8 +43,8 @@ def test_coupled_integrator():
     )
 
     # Set up data dictionary
-    x_0_pos = torch.rand(size=(1, 3)).repeat(nrep, 1)
-    x_1_pos = torch.rand(size=(1, 3)).repeat(nrep, 1)
+    x_0_pos = torch.rand(size=(1, 3)).repeat(3 * nrep, 1)
+    x_1_pos = torch.rand(size=(1, 3)).repeat(3 * nrep, 1)
     x_0_cell = torch.rand(size=(1, 3, 3)).repeat(nrep, 1, 1)
     x_1_cell = torch.zeros(size=(1, 3, 3)).repeat(nrep, 1, 1)
     x_0_spec = torch.zeros(size=(3 * nrep,)).long()

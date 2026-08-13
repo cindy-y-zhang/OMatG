@@ -30,6 +30,10 @@ class MirrorCell(CellDistribution):
         """
         return cell.detach().clone().cpu().numpy()
 
+    def sample_batch(self, cells: torch.Tensor) -> torch.Tensor:
+        """Mirror a whole batch without per-structure CPU and NumPy conversions."""
+        return cells.detach().clone()
+
 
 class NormalCellDistribution(CellDistribution):
     """
@@ -135,3 +139,26 @@ class InformedLatticeDistribution(CellDistribution):
         assert lengths.shape == (3,)
         assert angles.shape == (3,)
         return cellpar_to_cell(np.concatenate((lengths, angles)))
+
+    def sample_batch(self, cells: torch.Tensor) -> torch.Tensor:
+        """
+        Sample a batch of lower-triangular cells with the same length/angle law as ``__call__``.
+
+        Keeping this path in torch avoids one Python, NumPy and ASE round trip per structure in every training batch.
+        """
+        count = len(cells)
+        lengths = self._length_distribution.sample((count,)).to(dtype=cells.dtype, device=cells.device)
+        angles = torch.rand((count, 3), dtype=cells.dtype, device=cells.device) * 60.0 + 60.0
+        alpha, beta, gamma = torch.deg2rad(angles).unbind(dim=-1)
+        a, b, c = lengths.unbind(dim=-1)
+        cos_alpha, cos_beta, cos_gamma = torch.cos(alpha), torch.cos(beta), torch.cos(gamma)
+        sin_gamma = torch.sin(gamma)
+        c_x = c * cos_beta
+        c_y = c * (cos_alpha - cos_beta * cos_gamma) / sin_gamma
+        c_z = torch.sqrt(torch.clamp(c * c - c_x * c_x - c_y * c_y, min=0.0))
+        zero = torch.zeros_like(a)
+        return torch.stack([
+            torch.stack([a, zero, zero], dim=-1),
+            torch.stack([b * cos_gamma, b * sin_gamma, zero], dim=-1),
+            torch.stack([c_x, c_y, c_z], dim=-1),
+        ], dim=-2)
