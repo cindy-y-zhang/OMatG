@@ -611,13 +611,47 @@ def dataset_identifiers(dataset: StructureDataset) -> list[str]:
     return [str(dataset[index].metadata.get("identifier", index)) for index in range(len(dataset))]
 
 
-def _to_block_data(record_slice: dict[str, np.ndarray]) -> OMGData:
+_BLOCK_FLOAT_FIELDS = (
+    "cell", "pos", "rot", "template_offsets", "template_probs", "stabilizer", "target_frac",
+)
+"""Continuous fields that must follow ``trainer.precision``, matching atomwise ``Structure.to``."""
+
+
+def _dataset_floating_dtype(dataset: StructureDataset) -> torch.dtype:
+    """
+    Return the coordinate dtype the wrapped StructureDataset was constructed with.
+
+    :param dataset:
+        The StructureDataset Lightning instantiated with ``floating_point_precision``.
+    :type dataset: StructureDataset
+
+    :return:
+        The torch dtype applied to that dataset's coordinates.
+    :rtype: torch.dtype
+
+    :raises TypeError:
+        If the dataset has no recorded torch precision.
+    """
+    dtype = getattr(dataset, "_torch_precision", None)
+    if not isinstance(dtype, torch.dtype):
+        raise TypeError("The wrapped StructureDataset has no torch floating-point precision.")
+    return dtype
+
+
+def _to_block_data(record_slice: dict[str, np.ndarray], dtype: Optional[torch.dtype] = None) -> OMGData:
     """
     Convert one structure's block arrays into an ``OMGData`` graph whose nodes are blocks.
+
+    On-disk tables stay float64. When ``dtype`` is set, every continuous field is cast so the graph matches the
+    trainer precision, the same contract atomwise ``StructureDataset`` already honours.
 
     :param record_slice:
         Arrays of one structure, as stored in the table.
     :type record_slice: dict[str, numpy.ndarray]
+    :param dtype:
+        Torch floating-point dtype for continuous fields. ``None`` keeps the numpy dtypes.
+        Defaults to None.
+    :type dtype: Optional[torch.dtype]
 
     :return:
         The graph.
@@ -659,6 +693,11 @@ def _to_block_data(record_slice: dict[str, np.ndarray]) -> OMGData:
     data.target_mask = target_mask
     data.single_anion = torch.tensor(bool(record_slice["single_anion"]))
     data.fallback_count = torch.tensor(int(record_slice["fallback_count"]))
+    if dtype is not None:
+        for name in _BLOCK_FLOAT_FIELDS:
+            value = getattr(data, name)
+            if value.dtype != dtype:
+                setattr(data, name, value.to(dtype))
     return data
 
 
@@ -690,6 +729,7 @@ class BlockDataset(Dataset):
         self._dataset = dataset
         self._table = table
         self.library = library
+        self._dtype = _dataset_floating_dtype(dataset)
 
     def len(self) -> int:
         """Return the number of structures."""
@@ -728,7 +768,7 @@ class BlockDataset(Dataset):
             "single_anion": table.single_anion[idx],
             "fallback_count": table.fallback_count[idx],
             "n_target_atoms": table.n_target_atoms[idx],
-        })
+        }, dtype=self._dtype)
 
 
 class BlockDataModule(OMGDataModule):
@@ -769,6 +809,10 @@ class BlockDataModule(OMGDataModule):
             raise ValueError(
                 f"The block manifest at {manifest_path} has no source hashes; rebuild the block tables.")
         datasets = {"train": train_dataset, "val": val_dataset, "test": pred_dataset}
+        dtypes = {split: _dataset_floating_dtype(dataset) for split, dataset in datasets.items()}
+        if len(set(dtypes.values())) != 1:
+            raise ValueError(
+                f"Train, val and test StructureDatasets disagree on floating-point precision: {dtypes}.")
         for split, dataset in datasets.items():
             source_path = getattr(dataset, "_file_path", None)
             if source_path is None:

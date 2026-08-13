@@ -150,9 +150,13 @@ def test_block_graph_batches_rotations_and_padded_compositions():
     assert batch.centre_atom.shape == (int(first.n_atoms) * 2,)
     assert batch.target_numbers.shape == (2, MAX_STRUCTURE_ATOMS)
     assert batch.target_frac.shape == (2, MAX_STRUCTURE_ATOMS, 3)
-    assert batch.target_frac.dtype == batch.pos.dtype == batch.cell.dtype
+    assert batch.target_frac.dtype == batch.pos.dtype == batch.cell.dtype == batch.rot.dtype
     assert int(batch.n_target_atoms.sum()) == 2 * len(CHAIN)
     assert batch.template_offsets.shape[1] == MAX_VERTICES
+    single = _to_block_data(record, dtype=torch.float32)
+    assert single.rot.dtype == single.pos.dtype == single.cell.dtype == torch.float32
+    assert single.template_offsets.dtype == single.stabilizer.dtype == torch.float32
+    assert single.target_frac.dtype == single.template_probs.dtype == torch.float32
 
 
 def _write_nacl_lmdb(path, count: int) -> None:
@@ -229,6 +233,29 @@ def test_precompute_blocks_then_one_batch_train_and_readout(tmp_path):
 
     datamodule = make_datamodule()
     batch = next(iter(datamodule.train_dataloader()))
+    assert batch.rot.dtype == batch.pos.dtype == batch.cell.dtype == torch.float64
+    kwargs32 = dict(kwargs, floating_point_precision="32-true")
+    datamodule32 = BlockDataModule(
+        StructureDataset(file_path=str(data_dir / "train.lmdb"), **kwargs32),
+        StructureDataset(file_path=str(data_dir / "val.lmdb"), **kwargs32),
+        StructureDataset(file_path=str(data_dir / "test.lmdb"), **kwargs32),
+        block_dir=str(block_dir), batch_size=2, num_workers=0)
+    batch32 = next(iter(datamodule32.train_dataloader()))
+    assert batch32.rot.dtype == batch32.pos.dtype == batch32.cell.dtype == torch.float32
+    assert batch32.target_frac.dtype == batch32.template_offsets.dtype == torch.float32
+    previous = torch.get_default_dtype()
+    torch.set_default_dtype(torch.float32)
+    try:
+        encoder32 = BlockCSPNet(hidden_dim=32, latent_dim=16, num_layers=1, num_freqs=8, am_hidden_dim=8)
+        encoder32.set_cn_mask(torch.from_numpy(datamodule32.library.cn_valid))
+        model32 = Model(encoder=encoder32, head=PassThrough(), time_embedder=SinusoidalTimeEmbeddings(16))
+        sampler32 = BlockSampler(UniformPositionDistribution(), MirrorCell(), cn_mode="oracle")
+        si32 = CoupledBlockInterpolants(cn_mode="oracle", integration_time_steps=3, enable_progress_bar=False)
+        losses32 = si32.losses(
+            model32, torch.full((len(batch32.n_atoms),), 0.4), sampler32.sample_p_0(batch32), batch32)
+        assert all(torch.isfinite(value) for value in losses32.values())
+    finally:
+        torch.set_default_dtype(previous)
     encoder = BlockCSPNet(hidden_dim=32, latent_dim=16, num_layers=1, num_freqs=8, am_hidden_dim=8)
     encoder.set_cn_mask(torch.from_numpy(datamodule.library.cn_valid))
     model = Model(encoder=encoder, head=PassThrough(), time_embedder=SinusoidalTimeEmbeddings(16))
