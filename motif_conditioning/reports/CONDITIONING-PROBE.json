@@ -1,0 +1,64 @@
+{
+  "checkpoint": "motif_conditioning/runs/M_k32_seed0/checkpoints/last.ckpt",
+  "census_dir": "motif_conditioning/artifacts/mpts_52/motif32",
+  "prototypes": 32,
+  "structures": 64,
+  "mixin_weight_norms": [
+    4.696889400482178,
+    7.767698764801025,
+    5.834065914154053,
+    5.1671366691589355,
+    4.348844051361084,
+    4.207742214202881
+  ],
+  "pathway_left_its_zero_initialisation": true,
+  "layers": [
+    {
+      "layer": 0,
+      "node_feature_norm": 200.00909423828125,
+      "residual_spread": 0.21297548711299896,
+      "conditioning_share_of_node_features": 0.0010648290626704693
+    },
+    {
+      "layer": 1,
+      "node_feature_norm": 2208.535888671875,
+      "residual_spread": 0.8855708241462708,
+      "conditioning_share_of_node_features": 0.0004009764234069735
+    },
+    {
+      "layer": 2,
+      "node_feature_norm": 2326.951904296875,
+      "residual_spread": 0.7136602997779846,
+      "conditioning_share_of_node_features": 0.0003066931967623532
+    },
+    {
+      "layer": 3,
+      "node_feature_norm": 2386.2685546875,
+      "residual_spread": 0.556489884853363,
+      "conditioning_share_of_node_features": 0.00023320504988078028
+    },
+    {
+      "layer": 4,
+      "node_feature_norm": 2517.0380859375,
+      "residual_spread": 0.34162911772727966,
+      "conditioning_share_of_node_features": 0.00013572664465755224
+    },
+    {
+      "layer": 5,
+      "node_feature_norm": 2726.0791015625,
+      "residual_spread": 0.6137434840202332,
+      "conditioning_share_of_node_features": 0.00022513781732413918
+    }
+  ],
+  "largest_conditioning_share": 0.0010648290626704693,
+  "prediction_sensitivity": {
+    "pos_b": {
+      "swapping_the_census": 0.0017637662822380662,
+      "removing_the_census": 0.001119451830163598
+    },
+    "cell_b": {
+      "swapping_the_census": 0.014095739461481571,
+      "removing_the_census": 0.010572017170488834
+    }
+  }
+}

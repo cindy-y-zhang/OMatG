@@ -1,0 +1,19 @@
+# Fixed 1,024-composition local evaluation with paired sampler priors.
+
+model:
+  validation_mode: match_rate
+  number_cpus: 8
+
+trainer:
+  callbacks:
+    - class_path: joint_geometry.checkpoint.PairedInferenceSeed
+      init_args:
+        seed: 0
+    - class_path: joint_geometry.checkpoint.ResourceMetrics
+      init_args:
+        filename: RESOURCE-EVAL.json
+  # MPTS-52 validation has 5,000 structures: at batch 256 this is four
+  # leading batches, i.e. the fixed 1,024-composition screen.
+  limit_val_batches: 0.2
+  num_sanity_val_steps: 0
+  enable_progress_bar: false

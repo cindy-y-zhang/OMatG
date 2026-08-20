@@ -1,0 +1,49 @@
+{
+  "settings": {
+    "version": 1,
+    "cutoff": 6.0,
+    "shells": 16,
+    "representation": "cn-rdf8",
+    "species_blind": true,
+    "periodic_images": "complete"
+  },
+  "settings_digest": "cefd569ab20697f6e36b13aabbe1d20e04742e328d034f1f1d468525d6ce32f0",
+  "data_dir": "omg/data/mpts_52",
+  "splits": {
+    "train": "omg/data/mpts_52/train.lmdb",
+    "val": "omg/data/mpts_52/val.lmdb",
+    "test": "omg/data/mpts_52/test.lmdb"
+  },
+  "source_hashes": {
+    "train": "7ac84efdd46de6d34370a0aa018c6bb2351a1fe2372902299a42ad4f8e62aeea",
+    "val": "3ec2efeb6d519b621c3e957d4a7c92b8cb90245cea5b1e6568a25062c5ed5ffb",
+    "test": "e2b97b45593f60b244064e45b59ae99ea24176484dd6167c64081e9b8f99da7e"
+  },
+  "n_structures": {
+    "train": 27380,
+    "val": 5000,
+    "test": 8096
+  },
+  "n_atoms": {
+    "train": 501334,
+    "val": 122203,
+    "test": 202522
+  },
+  "dimension": 8,
+  "explained_variance_ratio": 0.9962438944983594,
+  "fit_sample_atoms": 100000,
+  "fit_seed": 0,
+  "debug_limit": null,
+  "artifact_sha256": {
+    "transform.pkl": "8b369d8bf39ab7576849c1c39ebb59840c8997fc94bba08a1dff6ade23faf981",
+    "geometry_train.npz": "3c477a282eaa755dae7b944b232e6d4323e2d111cd8bfb23d4b0889274d67313",
+    "geometry_val.npz": "3f0b2d26c65595c42ec0e929e1fc06315a5dcf2e8b34eaa044a10b744fcbe10a",
+    "geometry_test.npz": "b4ab832b104cec18d053fe23d4602c25bb2f5a87c400bc4183b93fa88d45a6d4"
+  },
+  "environment": {
+    "python": "3.12.3",
+    "torch": "2.8.0+cu128",
+    "device": "cpu",
+    "gpu": null
+  }
+}

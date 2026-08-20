@@ -1,0 +1,17 @@
+# D: frozen geometry-readable backbone, no descriptor state.
+# Overlay on atomwise_mpts52.yaml and direct_geometry/configs/encoder.yaml.
+model:
+  model:
+    init_args:
+      encoder:
+        class_path: direct_geometry.encoder.DirectGeometryCSPNet
+        init_args:
+          feature_mode: none
+          message_graph: fc
+
+trainer:
+  logger:
+    class_path: lightning.pytorch.loggers.CSVLogger
+    init_args:
+      save_dir: joint_geometry/runs/full/D_seed0
+      name: ""

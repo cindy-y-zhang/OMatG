@@ -1,0 +1,9 @@
+# X: the mismatched control. Same census marginals, wrong crystal.
+#
+# Every structure is conditioned on another structure's census, drawn once by a fixed
+# derangement. The conditioning channel therefore keeps its exact distribution, its exact
+# cost, and its exact place in the network, and loses only its correspondence to the
+# crystal being generated. M minus X is what the census's content is worth; M minus D is
+# what the whole mechanism is worth.
+data:
+  shuffle_structures: true

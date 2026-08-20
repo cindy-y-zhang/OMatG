@@ -1,0 +1,71 @@
+# Global motif-census conditioning, as an overlay on the atomwise MPTS-52 baseline.
+#
+#   python -m motif_conditioning.main fit \
+#       --config cgfm/configs/atomwise_mpts52.yaml \
+#       --config direct_geometry/configs/encoder.yaml \
+#       --config motif_conditioning/configs/census.yaml ...
+#
+# WHY AN OVERLAY
+#
+# The claim this package makes is a comparison against joint_geometry's D arm, so the
+# interpolants, flow weights, optimiser, learning rate, batch size and schedule have to be
+# D's own rather than a transcription of them. They are therefore read from the same
+# baseline D reads, and this file changes exactly three things: the encoder gains a census
+# input, the sampler carries the census onto the sampled state, and the data module loads
+# the census tables. D's backbone settings -- feature_mode none and message_graph fc, the
+# combination the backbone gate selected -- are the defaults inherited here.
+#
+# WHY THE CENSUS IS NOT A STOCHASTIC INTERPOLANT FIELD
+#
+# joint_geometry diffuses its per-site geometry state, so the model reads a channel that is
+# Gaussian noise for most of the trajectory. The paired shuffled-content control measured
+# what that costs: carrying the channel lost about 1.6 match points even when it held the
+# exact answer, while the answer itself was worth about 1.7 against a mismatched one. The
+# census is therefore held fixed along the path instead, which is why "data_fields" below
+# is unchanged and no geometry loss appears.
+
+model:
+  sampler:
+    class_path: motif_conditioning.sampler.MotifCensusSampler
+    init_args:
+      census_dimension: 16
+      structural_sampler:
+        class_path: omg.sampler.IndependentSampler
+        init_args:
+          pos_distribution:
+            class_path: omg.sampler.position_distributions.UniformPositionDistribution
+          cell_distribution:
+            class_path: omg.sampler.cell_distributions.InformedLatticeDistribution
+            init_args:
+              dataset_name: mpts_52
+          species_distribution:
+            class_path: omg.sampler.species_distributions.MirrorSpecies
+  model:
+    class_path: omg.model.model.Model
+    init_args:
+      encoder:
+        class_path: motif_conditioning.encoder.MotifConditionedCSPNet
+        init_args:
+          census_dimension: 16
+          census_embed_dim: 32
+          am_hidden_dim: 128
+          # A fifth of training structures see no census, which is what makes the
+          # unconditional branch of classifier-free guidance a trained path rather than an
+          # extrapolation. Matches the rate hardcoded in the baseline adapter.
+          p_uncond: 0.2
+          # One reproduces the plain conditional model. The guidance sweep overrides it at
+          # evaluation only; training never reads it.
+          guidance_scale: 1.0
+          feature_mode: "none"
+          message_graph: "fc"
+      head:
+        class_path: omg.model.heads.pass_through.PassThrough
+      time_embedder:
+        class_path: omg.model.model_utils.SinusoidalTimeEmbeddings
+        init_args:
+          dim: 256
+
+data:
+  census_dir: motif_conditioning/artifacts/mpts_52/motif16
+  shuffle_structures: false
+  shuffle_seed: 0

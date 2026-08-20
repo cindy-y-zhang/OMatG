@@ -1,0 +1,53 @@
+# The direct-geometry encoder, as an overlay on the atomwise MPTS-52 baseline.
+#
+#   omg fit --config cgfm/configs/atomwise_mpts52.yaml --config direct_geometry/configs/encoder.yaml ...
+#
+# WHY AN OVERLAY RATHER THAN A COPY
+#
+# Every claim this package can make is a comparison against the atomwise baseline, so the interpolants, the flow weights,
+# the sampler, the optimiser, the learning rate and the schedule have to be that baseline's and not a transcription of
+# them. They are therefore read from cgfm/configs/atomwise_mpts52.yaml, and this file changes exactly one thing: which
+# encoder class is built. A copy would drift, and the first symptom of the drift would be a match-rate difference
+# attributed to geometry.
+#
+# WHY THE DEFAULTS HERE ARE THE BASELINE'S BEHAVIOUR
+#
+# `feature_mode: none` and `message_graph: fc` reproduce the stock CSPNetFull exactly: the node projection is bias-free and
+# zero-initialised and is never even evaluated, and no neighbour list is built. So a launcher that forgets to name an arm
+# runs the control rather than silently running an experimental one. The arms are set by the launcher, which passes the
+# class path again before its own init_args -- jsonargparse discards a subclass's arguments when the class itself is named
+# afterwards, so the order matters and the launcher owns it.
+
+model:
+  model:
+    class_path: omg.model.model.Model
+    init_args:
+      encoder:
+        class_path: direct_geometry.encoder.DirectGeometryCSPNet
+        init_args:
+          feature_mode: "none"
+          message_graph: "fc"
+          # Past any first coordination shell, and inside the 7 Angstrom the baseline's own cutoff already names. The
+          # descriptor is a sum over neighbours, so widening it costs a neighbour list and nothing else.
+          descriptor_cutoff: 6.0
+          descriptor_shells: 16
+          descriptor_angular_order: 4
+          # The message graph is specified by its degree rather than by a radius, and the degree is the fully connected
+          # control's own: MPTS-52 averages 25 atoms per structure, and joining every ordered pair within a cell is 31.9
+          # edges per atom. Two reasons, both measured, in the edge budget of direct_geometry/reports/DG0-AUDIT.json.
+          # Validity: a graph with fewer edges than the control would make a B-A or D-A difference attributable to lost
+          # connectivity rather than to periodic multiplicity. Cost: the baseline's cell prior draws cells smaller than
+          # MPTS-52's own, so the noisy end of the path is about twice as dense as a crystal, and any fixed radius that
+          # reaches degree 32 on crystals reaches 91 edges per atom there -- 2.5 times the control's peak memory, which
+          # failed Gate DG0. A density-scaled radius holds the degree within a few per cent at every denoising time.
+          graph_degree: 32.0
+          # Null means "the descriptor's cutoff", so one neighbour list still serves both consumers and every edge stays
+          # inside the span the fixed edge basis covers.
+          graph_max_radius: null
+          edge_basis: 32
+      head:
+        class_path: omg.model.heads.pass_through.PassThrough
+      time_embedder:
+        class_path: omg.model.model_utils.SinusoidalTimeEmbeddings
+        init_args:
+          dim: 256

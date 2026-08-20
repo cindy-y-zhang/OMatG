@@ -1,0 +1,39 @@
+{
+  "settings": {
+    "version": 1,
+    "cutoff": 6.0,
+    "shells": 16,
+    "prototypes": 16,
+    "temperature_scale": 1.0,
+    "fit_sites": 100000,
+    "seed": 0
+  },
+  "data_dir": "omg/data/mpts_52",
+  "dimension": 16,
+  "assignment_temperature": 5.161940454868175,
+  "counts": {
+    "train": {
+      "structures": 27380,
+      "atoms": 501334
+    },
+    "val": {
+      "structures": 5000,
+      "atoms": 122203
+    },
+    "test": {
+      "structures": 8096,
+      "atoms": 202522
+    }
+  },
+  "source_hashes": {
+    "train": "7ac84efdd46de6d34370a0aa018c6bb2351a1fe2372902299a42ad4f8e62aeea",
+    "val": "3ec2efeb6d519b621c3e957d4a7c92b8cb90245cea5b1e6568a25062c5ed5ffb",
+    "test": "e2b97b45593f60b244064e45b59ae99ea24176484dd6167c64081e9b8f99da7e"
+  },
+  "artifact_sha256": {
+    "prototypes.pkl": "39c277d4b83b94ac0579de9033ea0a70ba49aa611cc7208e19e7bfc0b0bb3277",
+    "census_train.npz": "e807838a75071214524dd0f0e8bb557f78b87232af6322cea1621899e5f8845d",
+    "census_val.npz": "bba2b7f2c1a98fe686ac9d5da6c3f7696a6717c337411d091b7292519ca8e453",
+    "census_test.npz": "e67c10c4c65a0e5eac1e76998b4740af33ac20ea21bc5a46cf01f25dea7ffbec"
+  }
+}

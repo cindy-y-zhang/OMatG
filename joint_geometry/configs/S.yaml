@@ -1,0 +1,7 @@
+# S: untouched atomwise reference. Overlay on cgfm/configs/atomwise_mpts52.yaml.
+trainer:
+  logger:
+    class_path: lightning.pytorch.loggers.CSVLogger
+    init_args:
+      save_dir: joint_geometry/runs/full/S_seed0
+      name: ""

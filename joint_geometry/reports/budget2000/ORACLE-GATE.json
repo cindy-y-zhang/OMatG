@@ -1,0 +1,160 @@
+{
+  "established_stock_match_rate": 0.2682,
+  "paired_seeds": [],
+  "contrasts": {
+    "D": null,
+    "P": null,
+    "H": null,
+    "R": null
+  },
+  "oracle_contrast": {
+    "better": "O",
+    "worse": "D",
+    "paired_seed_draws": [
+      "seed0_draw0"
+    ],
+    "difference_points": -1.85546875,
+    "seed_draw_differences_points": [
+      -1.85546875
+    ],
+    "seed_differences_points": {
+      "0": -1.85546875
+    },
+    "bootstrap_ci95": [
+      -4.19921875,
+      0.48828125
+    ],
+    "mcnemar": {
+      "better_only": 67,
+      "worse_only": 86,
+      "two_sided_p": 0.14536554974727234
+    }
+  },
+  "oracle_safeguards": {
+    "metrics": {
+      "position_target_mse": {
+        "O": 0.0314865189372207,
+        "D": 0.03144250143846901,
+        "not_worse": false
+      },
+      "cell_target_mse": {
+        "O": 4.3140811825610985,
+        "D": 4.01719817230488,
+        "not_worse": false
+      }
+    },
+    "passed": false
+  },
+  "oracle_passed": false,
+  "outcome_metrics": {
+    "D": {
+      "compositions": 1024,
+      "match_rate": 0.2705078125,
+      "rmsd_on_matches": 0.1500770199476277,
+      "position_target_mse": 0.03144250143846901,
+      "cell_target_mse": 4.01719817230488
+    },
+    "O": {
+      "compositions": 1024,
+      "match_rate": 0.251953125,
+      "rmsd_on_matches": 0.1704596691482016,
+      "position_target_mse": 0.0314865189372207,
+      "cell_target_mse": 4.3140811825610985
+    }
+  },
+  "endpoint_consistency": {
+    "J": null,
+    "P": null,
+    "relative_improvement": null
+  },
+  "resources": {
+    "D_seed0": {
+      "training": {
+        "elapsed_seconds": 1380.096556650009,
+        "cuda_peak_memory_allocated_bytes": 16117177344,
+        "global_step": 2000
+      },
+      "evaluation": {
+        "elapsed_seconds": 122.66377990692854,
+        "cuda_peak_memory_allocated_bytes": 4359960576,
+        "global_step": 0
+      }
+    },
+    "O_seed0": {
+      "training": {
+        "elapsed_seconds": 1442.9373057869961,
+        "cuda_peak_memory_allocated_bytes": 15542568448,
+        "global_step": 2000
+      },
+      "evaluation": {
+        "elapsed_seconds": 181.21012698009145,
+        "cuda_peak_memory_allocated_bytes": 4365708288,
+        "global_step": 0
+      }
+    }
+  },
+  "sampler_jitter": {
+    "D_seed0": {
+      "draws": [
+        0
+      ],
+      "match_rates": [
+        0.2705078125
+      ],
+      "mean": 0.2705078125,
+      "std": 0.0,
+      "range": 0.0
+    },
+    "O_seed0": {
+      "draws": [
+        0
+      ],
+      "match_rates": [
+        0.251953125
+      ],
+      "mean": 0.251953125,
+      "std": 0.0,
+      "range": 0.0
+    }
+  },
+  "frozen_evidence": {
+    "descriptor": {
+      "path": "joint_geometry/reports/DESCRIPTOR-GATE.json",
+      "sha256": "67c85b55a2a9040aa3bfdd16969a3d4b371ceb7add5056a30dcacbad8ac7f620",
+      "passed": true,
+      "promoted": "radial17"
+    },
+    "backbone": {
+      "path": "joint_geometry/reports/BACKBONE-GATE.json",
+      "sha256": "d3e0e397fab064706e8a5f4e5378aba172a9ed6ebfd894cc86cf8746486ad025",
+      "passed": true,
+      "selected_backbone": "fc"
+    },
+    "geometry_weight": {
+      "path": "joint_geometry/reports/GEOMETRY-WEIGHT.json",
+      "sha256": "73eb41a1e76e63ef62827ce85f4dbd6d82fa32d07007e8b997eee984fc6d8cee",
+      "geometry_weight": 0.036480351498318055
+    }
+  },
+  "verdict": {
+    "protocol_status": "stopped_after_oracle",
+    "complete": true,
+    "promote_to_a100": false,
+    "passed": false,
+    "failures": [
+      "oracle did not improve match rate by at least 2 points without worsening position and cell errors"
+    ],
+    "requirements": {
+      "J_minus_D_points": 1.5,
+      "J_minus_P_points": 1.5,
+      "paired_bootstrap_ci_low_above_zero": true,
+      "J_above_H_and_R": true,
+      "three_seed_direction_agreement": true,
+      "endpoint_consistency_improvement_over_P": 0.25
+    }
+  },
+  "inputs": [
+    "joint_geometry/runs/budget2000/oracle/D_seed0/eval/draw0/OUTCOMES.json",
+    "joint_geometry/runs/budget2000/oracle/O_seed0/eval/draw0/OUTCOMES.json"
+  ]
+}

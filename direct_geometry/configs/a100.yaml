@@ -1,0 +1,40 @@
+# The production sweep: twelve 1,600-epoch runs, one process per GPU across eight A100s.
+#
+# WHY 128 BY 8 RATHER THAN 256 BY 4
+#
+# CSPNet connects every atom of a structure to every other, so activation memory grows with the sum of squared atom counts.
+# MPTS-52 averages 24.2 atoms against MP-20's 10.4, and the baseline's batch of 256 was itself already cut from 1024 for
+# that reason. An 80 GB A100 has less room than the card this was screened on, so the batch is halved again and the
+# accumulation doubled: the effective batch stays at 1024, which is what the learning rate below was tuned at, and the
+# optimisation trajectory stays the one the local runs screened.
+#
+# WHY NOT DDP
+#
+# Twelve runs over eight GPUs is embarrassingly parallel at the granularity of a run. Sharding one run across cards would
+# add gradient synchronisation to every step, change the effective batch, and make a failure on one card a failure of the
+# run. One process per GPU keeps the arms independent, and a crashed run costs one run.
+#
+# WHY THE MATCHER BUDGET IS SMALL PER RUN
+#
+# Every validation generates and structure-matches 5,000 structures across `number_cpus` worker processes, and eight runs
+# share a validation schedule that they will drift into alignment on. Set it to about a sixteenth of the core count; the
+# launcher does this from the machine it finds itself on.
+
+data:
+  batch_size: 128
+  num_workers: 6
+  persistent_workers: true
+  prefetch_factor: 4
+
+trainer:
+  accumulate_grad_batches: 8
+  precision: "32-true"
+  gradient_clip_val: 0.5
+  num_sanity_val_steps: 0
+  max_epochs: 1600
+  check_val_every_n_epoch: 25
+  # Wall-clock rather than epoch-bounded, because a run that has to be compared at a common reached epoch is better
+  # truncated cleanly than killed by a scheduler. The report reads the epoch every arm reached and compares there.
+  max_time:
+    hours: 96
+  enable_progress_bar: false

@@ -1,0 +1,35 @@
+# O: perfect forbidden descriptor trajectory; diagnostic ceiling only.
+# Overlay on joint_geometry/configs/mpts52.yaml.
+model:
+  si:
+    class_path: joint_geometry.interpolants.OracleGeometryInterpolants
+  sampler:
+    class_path: joint_geometry.sampler.OracleGeometrySampler
+    init_args:
+      geometry_dimension: 17
+      structural_sampler:
+        class_path: omg.sampler.IndependentSampler
+        init_args:
+          pos_distribution:
+            class_path: omg.sampler.position_distributions.UniformPositionDistribution
+          cell_distribution:
+            class_path: omg.sampler.cell_distributions.InformedLatticeDistribution
+            init_args:
+              dataset_name: mpts_52
+          species_distribution:
+            class_path: omg.sampler.species_distributions.MirrorSpecies
+  model:
+    init_args:
+      encoder:
+        init_args:
+          geometry_input: true
+
+data:
+  shuffle_within_element: false
+
+trainer:
+  logger:
+    class_path: lightning.pytorch.loggers.CSVLogger
+    init_args:
+      save_dir: joint_geometry/runs/oracle/O_seed0
+      name: ""

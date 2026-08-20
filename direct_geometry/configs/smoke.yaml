@@ -1,0 +1,27 @@
+# Two epochs on a tiny split, including a full sampling and match-rate validation pass. Nothing it produces is a result.
+#
+# Every arm goes through this before anything longer is launched. A shape or configuration error that surfaces after twelve
+# runs have been queued costs a day of A100 time, and nothing here costs more than a minute. The sampling pass is included
+# deliberately: integration exercises the encoder at times the training loss never samples densely, and the periodic
+# neighbour builder is the part of this package most likely to meet a degenerate cell there.
+#
+# Split paths are passed by the launcher rather than set here, so that the smoke and the real runs go through one code path.
+
+data:
+  batch_size: 8
+  num_workers: 0
+  persistent_workers: false
+  prefetch_factor: null
+
+model:
+  si:
+    init_args:
+      integration_time_steps: 5
+  number_cpus: 2
+
+trainer:
+  max_epochs: 2
+  max_time: null
+  check_val_every_n_epoch: 1
+  accumulate_grad_batches: 1
+  enable_progress_bar: false

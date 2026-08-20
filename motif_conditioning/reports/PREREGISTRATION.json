@@ -1,0 +1,71 @@
+{
+  "written_before_any_arm_was_trained": true,
+  "question": "Does a global motif census help crystal structure prediction when supplied as static conditioning, given that the same information delivered as a jointly diffused per-site state made the model worse?",
+  "motivation": {
+    "shuffled_content_control": "joint_geometry/reports/budget2000/GEOMETRY-CONTENT.json",
+    "finding": "The per-site geometry channel costs about 1.6 match points even carrying the exact answer, while the answer itself is worth about 1.7 points against a mismatched one. The payload has value; the diffused delivery destroys it.",
+    "prediction_under_test": "Removing the prior from the delivery path should recover the content's value without paying the channel's cost."
+  },
+  "precheck": {
+    "report": "motif_conditioning/reports/CENSUS-PRECHECK.json",
+    "ran_before_preregistration": true,
+    "census_information_beyond_composition": {"2": 0.189, "4": 0.288, "8": 0.343, "16": 0.434, "32": 0.517, "64": 0.595},
+    "log_volume_r2_composition_only": 0.833,
+    "log_volume_r2_with_census_k32": 0.957,
+    "conclusion": "The census is neither redundant with composition nor a repackaged volume hint, so a null result would be informative rather than expected."
+  },
+  "design": {
+    "task": "MPTS-52 crystal structure prediction, composition given",
+    "baseline_arm": {
+      "name": "D",
+      "source": "joint_geometry/runs/budget2000/oracle/D_seed0/eval/draw0/OUTCOMES.json",
+      "match_rate_percent": 27.05,
+      "reused": "D is reused rather than retrained because the census arms share its backbone, warm start, interpolants, loss weights, optimiser, batch size and step budget exactly, and because the census sampler wraps the structural sampler without consuming randomness before it, so x_0 is bit-identical at a shared seed and every contrast is paired."
+    },
+    "budget_steps": 2000,
+    "seeds": [0],
+    "evaluation": "joint_geometry/configs/evaluate_local.yaml, 1024 fixed validation compositions, draw 0",
+    "measured_noise_floor_points": 0.68,
+    "noise_floor_source": "four independent runs of an identical inference policy on one checkpoint"
+  },
+  "arms": {
+    "M": "conditioned on its own structure's motif census",
+    "X": "conditioned on another structure's census under a fixed derangement; identical channel, identical marginals, wrong crystal",
+    "D": "no census pathway at all"
+  },
+  "stages": [
+    {
+      "stage": 1,
+      "name": "screen",
+      "arms": ["M@K=32"],
+      "criterion": "M minus D is at least +1.5 match points, and neither position nor cell target MSE is more than 5 percent worse than D",
+      "stop_rule": "If M minus D is negative, stop and report that static conditioning fails for the same reason the diffused channel did."
+    },
+    {
+      "stage": 2,
+      "name": "content",
+      "arms": ["X@K=32"],
+      "criterion": "M minus X is at least +1.5 match points",
+      "purpose": "Separates the value of the census's content from the value of merely having a conditioning channel, mirroring the shuffled control that motivated this work."
+    },
+    {
+      "stage": 3,
+      "name": "dose_response",
+      "arms": ["M@K=2", "M@K=8", "M@K=32"],
+      "criterion": "Spearman rank correlation between match rate and the pre-measured information-beyond-composition axis is positive",
+      "purpose": "A gain that tracks information content is evidence the model reads the census, not evidence that any extra input helps."
+    },
+    {
+      "stage": 4,
+      "name": "guidance",
+      "arms": ["best K at guidance scale 0, 0.5, 1.0, 1.5, 2.0, 3.0"],
+      "criterion": "reported, not gated",
+      "purpose": "Evaluation only, so it costs no training. Establishes whether the conditioning can be amplified past its trained strength."
+    }
+  ],
+  "statistics": {
+    "primary": "difference in match rate over 1024 paired compositions",
+    "supporting": "exact McNemar binomial test on discordant pairs, reported but not gated, consistent with the existing joint-geometry protocol",
+    "interpretation_limit": "One seed. Any contrast below about 1.4 points is within twice the measured noise floor and must be described as a screen result, not a finding."
+  }
+}

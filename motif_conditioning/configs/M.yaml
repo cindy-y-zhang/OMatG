@@ -1,0 +1,3 @@
+# M: the census arm. Conditioned on its own structure's motif census.
+data:
+  shuffle_structures: false

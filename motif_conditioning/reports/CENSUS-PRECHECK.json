@@ -1,0 +1,101 @@
+{
+  "descriptor_dir": "joint_geometry/artifacts/mpts_52/radial17",
+  "n_structures": {
+    "train": 27380,
+    "val": 5000
+  },
+  "n_elements": 89,
+  "records": [
+    {
+      "prototypes": 2,
+      "census_variance_explained_by_composition": 0.8114804447922342,
+      "census_information_beyond_composition": 0.18851955520776575,
+      "census_variance_explained_by_composition_and_volume": 0.8323482655170965,
+      "census_information_beyond_composition_and_volume": 0.1676517344829035,
+      "log_volume_r2_composition_only": 0.8333036506455298,
+      "log_volume_r2_composition_plus_census": 0.851842592444681,
+      "log_volume_r2_gain_from_census": 0.018538941799151165,
+      "residual_log_volume_variance_removed": 0.11121384404003457,
+      "occupied_prototypes": 2.0,
+      "assignment_temperature": 14.189654268001188
+    },
+    {
+      "prototypes": 4,
+      "census_variance_explained_by_composition": 0.7124367701498819,
+      "census_information_beyond_composition": 0.28756322985011806,
+      "census_variance_explained_by_composition_and_volume": 0.7247491217856303,
+      "census_information_beyond_composition_and_volume": 0.27525087821436967,
+      "log_volume_r2_composition_only": 0.8333036506455298,
+      "log_volume_r2_composition_plus_census": 0.846532673959985,
+      "log_volume_r2_gain_from_census": 0.01322902331445519,
+      "residual_log_volume_variance_removed": 0.07936000617700652,
+      "occupied_prototypes": 4.0,
+      "assignment_temperature": 10.096979413107869
+    },
+    {
+      "prototypes": 8,
+      "census_variance_explained_by_composition": 0.6569592121554402,
+      "census_information_beyond_composition": 0.3430407878445598,
+      "census_variance_explained_by_composition_and_volume": 0.6714222698100529,
+      "census_information_beyond_composition_and_volume": 0.32857773018994707,
+      "log_volume_r2_composition_only": 0.8333036506455298,
+      "log_volume_r2_composition_plus_census": 0.8785414114154955,
+      "log_volume_r2_gain_from_census": 0.04523776076996566,
+      "residual_log_volume_variance_removed": 0.2713782332075561,
+      "occupied_prototypes": 7.0,
+      "assignment_temperature": 7.128650379134679
+    },
+    {
+      "prototypes": 16,
+      "census_variance_explained_by_composition": 0.5660589622269487,
+      "census_information_beyond_composition": 0.43394103777305126,
+      "census_variance_explained_by_composition_and_volume": 0.5791108459120567,
+      "census_information_beyond_composition_and_volume": 0.42088915408794325,
+      "log_volume_r2_composition_only": 0.8333036506455298,
+      "log_volume_r2_composition_plus_census": 0.9082306129692644,
+      "log_volume_r2_gain_from_census": 0.07492696232373464,
+      "residual_log_volume_variance_removed": 0.44948172298846667,
+      "occupied_prototypes": 14.0,
+      "assignment_temperature": 5.161940232423714
+    },
+    {
+      "prototypes": 32,
+      "census_variance_explained_by_composition": 0.48294338307227513,
+      "census_information_beyond_composition": 0.5170566169277249,
+      "census_variance_explained_by_composition_and_volume": 0.49746846250982235,
+      "census_information_beyond_composition_and_volume": 0.5025315374901776,
+      "log_volume_r2_composition_only": 0.8333036506455298,
+      "log_volume_r2_composition_plus_census": 0.9567853339983763,
+      "log_volume_r2_gain_from_census": 0.12348168335284648,
+      "residual_log_volume_variance_removed": 0.7407581739553863,
+      "occupied_prototypes": 25.0,
+      "assignment_temperature": 3.883453943735509
+    },
+    {
+      "prototypes": 64,
+      "census_variance_explained_by_composition": 0.40502904368476467,
+      "census_information_beyond_composition": 0.5949709563152353,
+      "census_variance_explained_by_composition_and_volume": 0.41726872271080184,
+      "census_information_beyond_composition_and_volume": 0.5827312772891982,
+      "log_volume_r2_composition_only": 0.8333036506455298,
+      "log_volume_r2_composition_plus_census": 0.9580975679837868,
+      "log_volume_r2_gain_from_census": 0.12479391733825695,
+      "residual_log_volume_variance_removed": 0.7486301758947934,
+      "occupied_prototypes": 39.0,
+      "assignment_temperature": 2.9702429796076606
+    },
+    {
+      "prototypes": 128,
+      "census_variance_explained_by_composition": 0.31988235692508415,
+      "census_information_beyond_composition": 0.6801176430749158,
+      "census_variance_explained_by_composition_and_volume": 0.3309866689020393,
+      "census_information_beyond_composition_and_volume": 0.6690133310979607,
+      "log_volume_r2_composition_only": 0.8333036506455298,
+      "log_volume_r2_composition_plus_census": 0.9692905872362243,
+      "log_volume_r2_gain_from_census": 0.1359869365906945,
+      "residual_log_volume_variance_removed": 0.8157763329389182,
+      "occupied_prototypes": 45.0,
+      "assignment_temperature": 2.3066280385948037
+    }
+  ]
+}

@@ -1,0 +1,2 @@
+corr_rmsd,epoch,match_rate,mean_rmsd,step,val_cell_loss_b,val_loss_total,val_pos_loss_b,val_species_loss
+0.409525990486145,0,0.265625,0.15939190983772278,0,-0.002969871275126934,-0.027682850137352943,-0.024712979793548584,0.0

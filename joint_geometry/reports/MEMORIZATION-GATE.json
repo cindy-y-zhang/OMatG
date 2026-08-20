@@ -1,0 +1,10 @@
+{
+  "metrics": "joint_geometry/runs/memorise10/radial17_fc/J_seed0/metrics.csv",
+  "initial_loss": -0.058738109469413755,
+  "final_loss": -0.1068957731127739,
+  "relative_drop": 0.8198708483873985,
+  "minimum_relative_drop": 0.2,
+  "passed": true,
+  "structures": 10,
+  "optimizer_steps": 100
+}

@@ -41,7 +41,7 @@ class StochasticInterpolants(object):
             raise ValueError("The number of stochastic interpolants and data fields must be equal.")
         try:
             self._data_fields = [DataField[data_field.lower()] for data_field in data_fields]
-        except AttributeError:
+        except (AttributeError, KeyError):
             raise ValueError(f"All data fields must be in {[d.name for d in DataField]}.")
 
         if not integration_time_steps > 0:
@@ -112,7 +112,12 @@ class StochasticInterpolants(object):
             assert data_field.name in x_0_dict
             assert data_field.name in x_1_dict
             assert data_field.name in x_t_dict
-            reshaped_t = reshape_t(t, n_atoms, data_field)
+            field_shape = (
+                x_0_dict[data_field.name].shape
+                if data_field == DataField.geometry
+                else None
+            )
+            reshaped_t = reshape_t(t, n_atoms, data_field, field_shape)
             assert reshaped_t.shape == x_0_dict[data_field.name].shape
             # Interpolants whose path couples several atoms of the same structure need the full data sample.
             aux = {"aux": x_1} if stochastic_interpolant.requires_aux else {}
@@ -169,26 +174,43 @@ class StochasticInterpolants(object):
         assert torch.equal(x_0.n_atoms, x_1.n_atoms)
         n_atoms = x_0.n_atoms
         losses = {}
+        # Every ordinary field asks for a prediction at the same interpolated state.
+        # Share that forward pass while retaining separate evaluations for paths that
+        # deliberately perturb their field before asking the model for a prediction.
+        shared_prediction = {}
+
+        def model_prediction_at_x_t() -> Data:
+            if "result" not in shared_prediction:
+                shared_prediction["result"] = model_function(x_t.clone(), t)
+            return shared_prediction["result"]
+
         for stochastic_interpolant, data_field in zip(self._stochastic_interpolants, self._data_fields):
             b_data_field = data_field.name + "_b"
             eta_data_field = data_field.name + "_eta"
             assert data_field.name in x_0_dict
             assert data_field.name in x_1_dict
             assert data_field.name in x_t_dict
-            reshaped_t = reshape_t(t, n_atoms, data_field)
+            field_shape = (
+                x_0_dict[data_field.name].shape
+                if data_field == DataField.geometry
+                else None
+            )
+            reshaped_t = reshape_t(t, n_atoms, data_field, field_shape)
             assert reshaped_t.shape == x_0_dict[data_field.name].shape
             assert reshaped_t.shape == x_1_dict[data_field.name].shape
             assert reshaped_t.shape == x_t_dict[data_field.name].shape
+            unperturbed_x_t = x_t_dict[data_field.name]
 
             def model_prediction_fn(x):
-                # Clone x_t inside the function so that this function can be called several time.
-                # If cloned outside, torch will complain that one of the variables needed for gradient computation has
-                # been modified by an inplace operation.
-                x_t_clone = x_t.clone()
-                x_t_clone_dict = x_t_clone.to_dict()
-                x_t_clone_dict[data_field.name].copy_(x)
-                # TODO: Cache return of model function.
-                model_result = model_function(x_t_clone, t)
+                if x is unperturbed_x_t:
+                    model_result = model_prediction_at_x_t()
+                else:
+                    # Clone for perturbed paths so their in-place field update cannot
+                    # invalidate values retained by another forward's autograd graph.
+                    x_t_clone = x_t.clone()
+                    x_t_clone_dict = x_t_clone.to_dict()
+                    x_t_clone_dict[data_field.name].copy_(x)
+                    model_result = model_function(x_t_clone, t)
                 return model_result[b_data_field], model_result[eta_data_field]
 
             assert data_field.name in z_dict
@@ -292,7 +314,7 @@ class StochasticInterpolants(object):
         """
         try:
             df = DataField[data_field.lower()]
-        except AttributeError:
+        except (AttributeError, KeyError):
             raise ValueError(f"Data field must be in {[d.name for d in DataField]}.")
         index = self._data_fields.index(df)
         return self._stochastic_interpolants[index]

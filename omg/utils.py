@@ -26,9 +26,16 @@ class DataField(Enum):
     """Block orientations as rotation matrices of shape (sum(n_atoms), 3, 3)."""
     block_type = auto()
     """Coordination number encoded as CN + 1, of shape (sum(n_atoms),). Mask token 0."""
+    geometry = auto()
+    """Continuous per-atom geometry state of shape (sum(n_atoms), geometry_dimension)."""
 
 
-def reshape_t(t: torch.Tensor, n_atoms: torch.Tensor, data_field: DataField) -> torch.Tensor:
+def reshape_t(
+    t: torch.Tensor,
+    n_atoms: torch.Tensor,
+    data_field: DataField,
+    field_shape: Sequence[int] | None = None,
+) -> torch.Tensor:
     """
     Reshape the given tensor of times for every configuration of the batch so that it can be used for the given data field.  
     For a batch size of batch_size, the data format for the different data fields is as follows:
@@ -37,6 +44,7 @@ def reshape_t(t: torch.Tensor, n_atoms: torch.Tensor, data_field: DataField) -> 
     - cell: torch.Tensor of shape (batch_size, 3, 3) containing the cell vectors of the configurations
     - pos: torch.Tensor of shape (sum(n_atoms), 3) containing the atomic positions of the atoms in the configurations
     - rot: torch.Tensor of shape (sum(n_atoms), 3, 3) containing the orientation of every block
+    - geometry: torch.Tensor of shape (sum(n_atoms), geometry_dimension) containing a continuous per-atom state
 
     The returned tensor will have the same shape as the tensor of the given data field, and the correct time for every
     element of the data field tensor.
@@ -50,6 +58,9 @@ def reshape_t(t: torch.Tensor, n_atoms: torch.Tensor, data_field: DataField) -> 
     :param data_field:
         Data field for which the tensor of times should be reshaped.
     :type data_field: DataField
+    :param field_shape:
+        Runtime shape of a variable-width data field. Required for geometry and ignored for fixed-width fields.
+    :type field_shape: Sequence[int] or None
    
     :return:
         Tensor of times for the given data field.
@@ -65,6 +76,17 @@ def reshape_t(t: torch.Tensor, n_atoms: torch.Tensor, data_field: DataField) -> 
         return t.repeat_interleave(3 * 3).reshape(batch_size, 3, 3)
     if data_field == DataField.rot:
         return t_per_atom.reshape(sum_n_atoms, 1, 1).expand(sum_n_atoms, 3, 3).contiguous()
+    if data_field == DataField.geometry:
+        if field_shape is None:
+            raise ValueError("field_shape is required for the geometry data field.")
+        shape = tuple(field_shape)
+        if len(shape) < 2 or shape[0] != sum_n_atoms:
+            raise ValueError(
+                "Geometry field shape must begin with sum(n_atoms) and include at least one feature dimension; "
+                f"received {shape} for {sum_n_atoms} atoms."
+            )
+        singleton_shape = (sum_n_atoms,) + (1,) * (len(shape) - 1)
+        return t_per_atom.reshape(singleton_shape).expand(shape).contiguous()
     if data_field in (DataField.species, DataField.block_type):
         return t_per_atom
     raise ValueError(f"Unknown data field {data_field}.")

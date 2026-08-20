@@ -1,0 +1,2234 @@
+{
+  "gate": "JG0",
+  "arguments": {
+    "artifact_root": "joint_geometry/artifacts/mpts_52",
+    "out": "joint_geometry/reports/DESCRIPTOR-GATE.json",
+    "train_structures": 4000,
+    "val_structures": 1000,
+    "steps": 1000,
+    "batch_size": 4096,
+    "hidden": 128,
+    "learning_rate": 0.003,
+    "weight_decay": 0.0001,
+    "evaluate_every": 100,
+    "patience": 5,
+    "train_sample": 100000,
+    "probe_seeds": [
+      0,
+      1,
+      2
+    ],
+    "diffusion_times": [
+      0.5,
+      0.95
+    ],
+    "data_dir": "omg/data/mpts_52",
+    "retrieval_structures": 128,
+    "hard_negatives": 32,
+    "recomputed_report": "direct_geometry/reports/DG1-DG2-PROBES.json",
+    "device": "cpu"
+  },
+  "artifacts": {
+    "cn-rdf4": {
+      "path": "joint_geometry/artifacts/mpts_52/cn-rdf4/manifest.json",
+      "sha256": "408bbddc4f7b22fe6884e682e1e3b38a0d1f605a1d79501a41ed6a9a18c84e03",
+      "settings_digest": "b876d698744bfddad0356f8e7e0bbcb07218df0e7af45ce8aac3adf1d1b3d521",
+      "artifact_sha256": {
+        "transform.pkl": "7aaf2d2a2946235ecbfed023bdceec3a6e2964f45ec88ccc7fcbc236ab8f8d10",
+        "geometry_train.npz": "9044338981f3438e2d9b22616d432c57eb63e94501e8291e17cc453ff7a01f02",
+        "geometry_val.npz": "622008bf9bd1a9ccb02bae744d7051bc00842eae68dcfb8c11ca740d296f7bfb",
+        "geometry_test.npz": "b1748f348bcd54c41960e6f3156c46f24bfcaf0f3432cfe25a13803cc6d2573d"
+      }
+    },
+    "cn-rdf8": {
+      "path": "joint_geometry/artifacts/mpts_52/cn-rdf8/manifest.json",
+      "sha256": "c873cde23f5e0099d0295c96d39d28d75387d966be1ec03d43cea3bfcadbc3bb",
+      "settings_digest": "cefd569ab20697f6e36b13aabbe1d20e04742e328d034f1f1d468525d6ce32f0",
+      "artifact_sha256": {
+        "transform.pkl": "8b369d8bf39ab7576849c1c39ebb59840c8997fc94bba08a1dff6ade23faf981",
+        "geometry_train.npz": "3c477a282eaa755dae7b944b232e6d4323e2d111cd8bfb23d4b0889274d67313",
+        "geometry_val.npz": "3f0b2d26c65595c42ec0e929e1fc06315a5dcf2e8b34eaa044a10b744fcbe10a",
+        "geometry_test.npz": "b4ab832b104cec18d053fe23d4602c25bb2f5a87c400bc4183b93fa88d45a6d4"
+      }
+    },
+    "radial17": {
+      "path": "joint_geometry/artifacts/mpts_52/radial17/manifest.json",
+      "sha256": "ee21c2a3069ee1cf3194273a7b0518502cd2d127b0b487cc6dcce271ea81dbd8",
+      "settings_digest": "8a64c5a7c0918806a69d4c10e403aed5d9c30890a525734dd94619acfa489ea8",
+      "artifact_sha256": {
+        "transform.pkl": "9e029a3ca30ed8b0b849576406d09752bfcfa8c87ed7187cd7ea53cf9f186548",
+        "geometry_train.npz": "3e21b373098fa4450356d001bc89ad9fec317cd53cb690d660dc3cbaa4919c34",
+        "geometry_val.npz": "61c27229e2d61c5dc2221bd09d76a314e50a578315fb0992b96d710e92b37f64",
+        "geometry_test.npz": "1ca8a03527022d7501c84f91e236a04456f5700af2326ebfe37c74f39f19d81e"
+      }
+    }
+  },
+  "tasks": {
+    "coordination": {
+      "floor": {
+        "linear": {
+          "accuracy": 0.3493458625298716,
+          "cross_entropy_bits": 2.650846087729541,
+          "coordination_accuracy": 0.3493458625298716,
+          "shape_given_coordination": NaN,
+          "shape_denominator_share": 0.0,
+          "train_cross_entropy_bits": 2.4143332448899586,
+          "generalisation_gap_bits": 0.23651284283958227,
+          "best_step": 666.6666666666666,
+          "accuracy_std": 0.0015273771829531144,
+          "cross_entropy_bits_std": 0.008145641291409836,
+          "coordination_accuracy_std": 0.0015273771829531144,
+          "shape_given_coordination_std": NaN,
+          "shape_denominator_share_std": 0.0,
+          "train_cross_entropy_bits_std": 0.0026015582097319036,
+          "generalisation_gap_bits_std": 0.010008941800977972,
+          "best_step_std": 47.14045207910317,
+          "probe_seeds": [
+            0,
+            1,
+            2
+          ]
+        },
+        "two_layer": {
+          "accuracy": 0.35232964748133444,
+          "cross_entropy_bits": 2.5651993392299555,
+          "coordination_accuracy": 0.35232964748133444,
+          "shape_given_coordination": NaN,
+          "shape_denominator_share": 0.0,
+          "train_cross_entropy_bits": 2.3716317294603098,
+          "generalisation_gap_bits": 0.19356760976964557,
+          "best_step": 100.0,
+          "accuracy_std": 0.004283506143547636,
+          "cross_entropy_bits_std": 0.005707133023714311,
+          "coordination_accuracy_std": 0.004283506143547636,
+          "shape_given_coordination_std": NaN,
+          "shape_denominator_share_std": 0.0,
+          "train_cross_entropy_bits_std": 0.0016701617716407585,
+          "generalisation_gap_bits_std": 0.004319349716069004,
+          "best_step_std": 0.0,
+          "probe_seeds": [
+            0,
+            1,
+            2
+          ]
+        }
+      },
+      "representations": {
+        "cn-rdf4": {
+          "linear": {
+            "accuracy": 0.3970189153064117,
+            "cross_entropy_bits": 2.5276474167264946,
+            "coordination_accuracy": 0.3970189153064117,
+            "shape_given_coordination": NaN,
+            "shape_denominator_share": 0.0,
+            "train_cross_entropy_bits": 2.2118161046979705,
+            "generalisation_gap_bits": 0.31583131202852394,
+            "best_step": 633.3333333333334,
+            "accuracy_std": 0.000694496666510671,
+            "cross_entropy_bits_std": 0.003609131124686213,
+            "coordination_accuracy_std": 0.000694496666510671,
+            "shape_given_coordination_std": NaN,
+            "shape_denominator_share_std": 0.0,
+            "train_cross_entropy_bits_std": 0.005293766105338926,
+            "generalisation_gap_bits_std": 0.001998796404608611,
+            "best_step_std": 47.14045207910317,
+            "probe_seeds": [
+              0,
+              1,
+              2
+            ],
+            "information_bits": 0.12319867100304638
+          },
+          "two_layer": {
+            "accuracy": 0.4434228468818772,
+            "cross_entropy_bits": 2.3129117308207228,
+            "coordination_accuracy": 0.4434228468818772,
+            "shape_given_coordination": NaN,
+            "shape_denominator_share": 0.0,
+            "train_cross_entropy_bits": 1.8121352874825674,
+            "generalisation_gap_bits": 0.5007764433381555,
+            "best_step": 200.0,
+            "accuracy_std": 0.0014447010516851397,
+            "cross_entropy_bits_std": 0.0028421744066783536,
+            "coordination_accuracy_std": 0.0014447010516851397,
+            "shape_given_coordination_std": NaN,
+            "shape_denominator_share_std": 0.0,
+            "train_cross_entropy_bits_std": 0.002648344264768598,
+            "generalisation_gap_bits_std": 0.005235551591765451,
+            "best_step_std": 0.0,
+            "probe_seeds": [
+              0,
+              1,
+              2
+            ],
+            "information_bits": 0.2522876084092327
+          }
+        },
+        "cn-rdf8": {
+          "linear": {
+            "accuracy": 0.405835257267069,
+            "cross_entropy_bits": 2.4814691433419913,
+            "coordination_accuracy": 0.405835257267069,
+            "shape_given_coordination": NaN,
+            "shape_denominator_share": 0.0,
+            "train_cross_entropy_bits": 2.1425833096031606,
+            "generalisation_gap_bits": 0.3388858337388309,
+            "best_step": 633.3333333333334,
+            "accuracy_std": 0.0016283472956240908,
+            "cross_entropy_bits_std": 0.003703568080053507,
+            "coordination_accuracy_std": 0.0016283472956240908,
+            "shape_given_coordination_std": NaN,
+            "shape_denominator_share_std": 0.0,
+            "train_cross_entropy_bits_std": 0.006151900353660804,
+            "generalisation_gap_bits_std": 0.006922223059042356,
+            "best_step_std": 47.14045207910317,
+            "probe_seeds": [
+              0,
+              1,
+              2
+            ],
+            "information_bits": 0.1693769443875497
+          },
+          "two_layer": {
+            "accuracy": 0.4914874370502383,
+            "cross_entropy_bits": 2.215138634610741,
+            "coordination_accuracy": 0.4914874370502383,
+            "shape_given_coordination": NaN,
+            "shape_denominator_share": 0.0,
+            "train_cross_entropy_bits": 1.5949279045375973,
+            "generalisation_gap_bits": 0.6202107300731435,
+            "best_step": 200.0,
+            "accuracy_std": 0.0017362679131178811,
+            "cross_entropy_bits_std": 0.013234297215712195,
+            "coordination_accuracy_std": 0.0017362679131178811,
+            "shape_given_coordination_std": NaN,
+            "shape_denominator_share_std": 0.0,
+            "train_cross_entropy_bits_std": 0.0039850808735808485,
+            "generalisation_gap_bits_std": 0.00932375455292176,
+            "best_step_std": 0.0,
+            "probe_seeds": [
+              0,
+              1,
+              2
+            ],
+            "information_bits": 0.35006070461921457
+          }
+        },
+        "radial17": {
+          "linear": {
+            "accuracy": 0.40879203963978566,
+            "cross_entropy_bits": 2.469284893510135,
+            "coordination_accuracy": 0.40879203963978566,
+            "shape_given_coordination": NaN,
+            "shape_denominator_share": 0.0,
+            "train_cross_entropy_bits": 2.1317962604177634,
+            "generalisation_gap_bits": 0.33748863309237187,
+            "best_step": 566.6666666666666,
+            "accuracy_std": 0.0011250714437468581,
+            "cross_entropy_bits_std": 0.006955065353656804,
+            "coordination_accuracy_std": 0.0011250714437468581,
+            "shape_given_coordination_std": NaN,
+            "shape_denominator_share_std": 0.0,
+            "train_cross_entropy_bits_std": 0.007515859402140945,
+            "generalisation_gap_bits_std": 0.0027545511238021977,
+            "best_step_std": 47.14045207910317,
+            "probe_seeds": [
+              0,
+              1,
+              2
+            ],
+            "information_bits": 0.1815611942194062
+          },
+          "two_layer": {
+            "accuracy": 0.49628039477770125,
+            "cross_entropy_bits": 2.1637570072443024,
+            "coordination_accuracy": 0.49628039477770125,
+            "shape_given_coordination": NaN,
+            "shape_denominator_share": 0.0,
+            "train_cross_entropy_bits": 1.556424511157229,
+            "generalisation_gap_bits": 0.6073324960870735,
+            "best_step": 200.0,
+            "accuracy_std": 0.0033749442860089495,
+            "cross_entropy_bits_std": 0.0058915676989981436,
+            "coordination_accuracy_std": 0.0033749442860089495,
+            "shape_given_coordination_std": NaN,
+            "shape_denominator_share_std": 0.0,
+            "train_cross_entropy_bits_std": 0.0011018378334115148,
+            "generalisation_gap_bits_std": 0.00569943862456877,
+            "best_step_std": 0.0,
+            "probe_seeds": [
+              0,
+              1,
+              2
+            ],
+            "information_bits": 0.40144233198565304
+          }
+        }
+      },
+      "terminal": {
+        "cn-rdf4": {
+          "linear": {
+            "accuracy": 0.3496833947642,
+            "cross_entropy_bits": 2.643674061617982,
+            "coordination_accuracy": 0.3496833947642,
+            "shape_given_coordination": NaN,
+            "shape_denominator_share": 0.0,
+            "train_cross_entropy_bits": 2.4153918471065032,
+            "generalisation_gap_bits": 0.2282822145114789,
+            "best_step": 633.3333333333334,
+            "accuracy_std": 0.0012920388281172758,
+            "cross_entropy_bits_std": 0.003825028387913796,
+            "coordination_accuracy_std": 0.0012920388281172758,
+            "shape_given_coordination_std": NaN,
+            "shape_denominator_share_std": 0.0,
+            "train_cross_entropy_bits_std": 0.0036430140524383006,
+            "generalisation_gap_bits_std": 0.0022680867575799557,
+            "best_step_std": 47.14045207910317,
+            "probe_seeds": [
+              0,
+              1,
+              2
+            ],
+            "information_bits": 0.007172026111558871
+          },
+          "two_layer": {
+            "accuracy": 0.3512225417527374,
+            "cross_entropy_bits": 2.565019393740794,
+            "coordination_accuracy": 0.3512225417527374,
+            "shape_given_coordination": NaN,
+            "shape_denominator_share": 0.0,
+            "train_cross_entropy_bits": 2.374177617722427,
+            "generalisation_gap_bits": 0.19084177601836702,
+            "best_step": 100.0,
+            "accuracy_std": 0.005370628955263548,
+            "cross_entropy_bits_std": 0.005366239788219311,
+            "coordination_accuracy_std": 0.005370628955263548,
+            "shape_given_coordination_std": NaN,
+            "shape_denominator_share_std": 0.0,
+            "train_cross_entropy_bits_std": 0.0013327995615566779,
+            "generalisation_gap_bits_std": 0.004628640243800892,
+            "best_step_std": 0.0,
+            "probe_seeds": [
+              0,
+              1,
+              2
+            ],
+            "information_bits": 0.00017994548916133724
+          }
+        },
+        "cn-rdf8": {
+          "linear": {
+            "accuracy": 0.3485357851674835,
+            "cross_entropy_bits": 2.6563269305905335,
+            "coordination_accuracy": 0.3485357851674835,
+            "shape_given_coordination": NaN,
+            "shape_denominator_share": 0.0,
+            "train_cross_entropy_bits": 2.4162676597524517,
+            "generalisation_gap_bits": 0.2400592708380819,
+            "best_step": 633.3333333333334,
+            "accuracy_std": 0.0011882668786740846,
+            "cross_entropy_bits_std": 0.0018273076696687575,
+            "coordination_accuracy_std": 0.0011882668786740846,
+            "shape_given_coordination_std": NaN,
+            "shape_denominator_share_std": 0.0,
+            "train_cross_entropy_bits_std": 0.0034725341655491107,
+            "generalisation_gap_bits_std": 0.004148759415890299,
+            "best_step_std": 47.14045207910317,
+            "probe_seeds": [
+              0,
+              1,
+              2
+            ],
+            "information_bits": -0.005480842860992485
+          },
+          "two_layer": {
+            "accuracy": 0.35210012556199116,
+            "cross_entropy_bits": 2.5651308610311196,
+            "coordination_accuracy": 0.35210012556199116,
+            "shape_given_coordination": NaN,
+            "shape_denominator_share": 0.0,
+            "train_cross_entropy_bits": 2.3718570774031122,
+            "generalisation_gap_bits": 0.1932737836280074,
+            "best_step": 100.0,
+            "accuracy_std": 0.0026611585921431946,
+            "cross_entropy_bits_std": 0.006729399108958899,
+            "coordination_accuracy_std": 0.0026611585921431946,
+            "shape_given_coordination_std": NaN,
+            "shape_denominator_share_std": 0.0,
+            "train_cross_entropy_bits_std": 0.0004039372898333338,
+            "generalisation_gap_bits_std": 0.006471468759976489,
+            "best_step_std": 0.0,
+            "probe_seeds": [
+              0,
+              1,
+              2
+            ],
+            "information_bits": 6.847819883581963e-05
+          }
+        },
+        "radial17": {
+          "linear": {
+            "accuracy": 0.3472801652557819,
+            "cross_entropy_bits": 2.647380862607818,
+            "coordination_accuracy": 0.3472801652557819,
+            "shape_given_coordination": NaN,
+            "shape_denominator_share": 0.0,
+            "train_cross_entropy_bits": 2.4138597197647664,
+            "generalisation_gap_bits": 0.2335211428430517,
+            "best_step": 633.3333333333334,
+            "accuracy_std": 0.0010582806346829412,
+            "cross_entropy_bits_std": 0.004228886880580196,
+            "coordination_accuracy_std": 0.0010582806346829412,
+            "shape_given_coordination_std": NaN,
+            "shape_denominator_share_std": 0.0,
+            "train_cross_entropy_bits_std": 0.002979977170677485,
+            "generalisation_gap_bits_std": 0.004695900806164203,
+            "best_step_std": 47.14045207910317,
+            "probe_seeds": [
+              0,
+              1,
+              2
+            ],
+            "information_bits": 0.0034652251217228702
+          },
+          "two_layer": {
+            "accuracy": 0.34919734834676713,
+            "cross_entropy_bits": 2.5695044875038353,
+            "coordination_accuracy": 0.34919734834676713,
+            "shape_given_coordination": NaN,
+            "shape_denominator_share": 0.0,
+            "train_cross_entropy_bits": 2.3683034273815857,
+            "generalisation_gap_bits": 0.2012010601222496,
+            "best_step": 100.0,
+            "accuracy_std": 0.0022685380511815604,
+            "cross_entropy_bits_std": 0.007883538439378395,
+            "coordination_accuracy_std": 0.0022685380511815604,
+            "shape_given_coordination_std": NaN,
+            "shape_denominator_share_std": 0.0,
+            "train_cross_entropy_bits_std": 0.0009682901467536446,
+            "generalisation_gap_bits_std": 0.006922201063741991,
+            "best_step_std": 0.0,
+            "probe_seeds": [
+              0,
+              1,
+              2
+            ],
+            "information_bits": -0.004305148273879844
+          }
+        }
+      },
+      "shuffled": {
+        "cn-rdf4": {
+          "linear": {
+            "accuracy": 0.3495213792917224,
+            "cross_entropy_bits": 2.644348876224059,
+            "coordination_accuracy": 0.3495213792917224,
+            "shape_given_coordination": NaN,
+            "shape_denominator_share": 0.0,
+            "train_cross_entropy_bits": 2.415441033740885,
+            "generalisation_gap_bits": 0.228907842483174,
+            "best_step": 633.3333333333334,
+            "accuracy_std": 0.0016015966761269518,
+            "cross_entropy_bits_std": 0.0031819285697351025,
+            "coordination_accuracy_std": 0.0016015966761269518,
+            "shape_given_coordination_std": NaN,
+            "shape_denominator_share_std": 0.0,
+            "train_cross_entropy_bits_std": 0.0035791461312394916,
+            "generalisation_gap_bits_std": 0.001861957666846432,
+            "best_step_std": 47.14045207910317,
+            "probe_seeds": [
+              0,
+              1,
+              2
+            ],
+            "information_bits": 0.006497211505481992
+          },
+          "two_layer": {
+            "accuracy": 0.3524916629538121,
+            "cross_entropy_bits": 2.565945599423484,
+            "coordination_accuracy": 0.3524916629538121,
+            "shape_given_coordination": NaN,
+            "shape_denominator_share": 0.0,
+            "train_cross_entropy_bits": 2.373866095885765,
+            "generalisation_gap_bits": 0.1920795035377186,
+            "best_step": 100.0,
+            "accuracy_std": 0.00549066083182299,
+            "cross_entropy_bits_std": 0.0049882515447875345,
+            "coordination_accuracy_std": 0.00549066083182299,
+            "shape_given_coordination_std": NaN,
+            "shape_denominator_share_std": 0.0,
+            "train_cross_entropy_bits_std": 0.0010497618088777772,
+            "generalisation_gap_bits_std": 0.004908402744722784,
+            "best_step_std": 0.0,
+            "probe_seeds": [
+              0,
+              1,
+              2
+            ],
+            "information_bits": -0.0007462601935284141
+          }
+        },
+        "cn-rdf8": {
+          "linear": {
+            "accuracy": 0.35015593989225974,
+            "cross_entropy_bits": 2.6585299503339486,
+            "coordination_accuracy": 0.35015593989225974,
+            "shape_given_coordination": NaN,
+            "shape_denominator_share": 0.0,
+            "train_cross_entropy_bits": 2.416154518819331,
+            "generalisation_gap_bits": 0.24237543151461768,
+            "best_step": 633.3333333333334,
+            "accuracy_std": 0.0018879611403230278,
+            "cross_entropy_bits_std": 0.0021747671044352137,
+            "coordination_accuracy_std": 0.0018879611403230278,
+            "shape_given_coordination_std": NaN,
+            "shape_denominator_share_std": 0.0,
+            "train_cross_entropy_bits_std": 0.003446767985434695,
+            "generalisation_gap_bits_std": 0.004645418093086234,
+            "best_step_std": 47.14045207910317,
+            "probe_seeds": [
+              0,
+              1,
+              2
+            ],
+            "information_bits": -0.007683862604407565
+          },
+          "two_layer": {
+            "accuracy": 0.3527346861625285,
+            "cross_entropy_bits": 2.5672205873989067,
+            "coordination_accuracy": 0.3527346861625285,
+            "shape_given_coordination": NaN,
+            "shape_denominator_share": 0.0,
+            "train_cross_entropy_bits": 2.3715663937331524,
+            "generalisation_gap_bits": 0.19565419366575446,
+            "best_step": 100.0,
+            "accuracy_std": 0.0027376007512240445,
+            "cross_entropy_bits_std": 0.006026311783702811,
+            "coordination_accuracy_std": 0.0027376007512240445,
+            "shape_given_coordination_std": NaN,
+            "shape_denominator_share_std": 0.0,
+            "train_cross_entropy_bits_std": 0.0003999855988225299,
+            "generalisation_gap_bits_std": 0.005882843321984132,
+            "best_step_std": 0.0,
+            "probe_seeds": [
+              0,
+              1,
+              2
+            ],
+            "information_bits": -0.0020212481689512174
+          }
+        },
+        "radial17": {
+          "linear": {
+            "accuracy": 0.34998042313040895,
+            "cross_entropy_bits": 2.649195915311388,
+            "coordination_accuracy": 0.34998042313040895,
+            "shape_given_coordination": NaN,
+            "shape_denominator_share": 0.0,
+            "train_cross_entropy_bits": 2.413762111794376,
+            "generalisation_gap_bits": 0.23543380351701235,
+            "best_step": 633.3333333333334,
+            "accuracy_std": 0.0013410525650385712,
+            "cross_entropy_bits_std": 0.006244605741090323,
+            "coordination_accuracy_std": 0.0013410525650385712,
+            "shape_given_coordination_std": NaN,
+            "shape_denominator_share_std": 0.0,
+            "train_cross_entropy_bits_std": 0.0028695182517362613,
+            "generalisation_gap_bits_std": 0.00733849278640488,
+            "best_step_std": 47.14045207910317,
+            "probe_seeds": [
+              0,
+              1,
+              2
+            ],
+            "information_bits": 0.0016501724181527955
+          },
+          "two_layer": {
+            "accuracy": 0.35015593989225974,
+            "cross_entropy_bits": 2.569032520540086,
+            "coordination_accuracy": 0.35015593989225974,
+            "shape_given_coordination": NaN,
+            "shape_denominator_share": 0.0,
+            "train_cross_entropy_bits": 2.3713322254023272,
+            "generalisation_gap_bits": 0.19770029513775844,
+            "best_step": 100.0,
+            "accuracy_std": 0.004461435650147416,
+            "cross_entropy_bits_std": 0.005585583791462098,
+            "coordination_accuracy_std": 0.004461435650147416,
+            "shape_given_coordination_std": NaN,
+            "shape_denominator_share_std": 0.0,
+            "train_cross_entropy_bits_std": 0.00020479419649459724,
+            "generalisation_gap_bits_std": 0.005559531965629473,
+            "best_step_std": 0.0,
+            "probe_seeds": [
+              0,
+              1,
+              2
+            ],
+            "information_bits": -0.003833181310130662
+          }
+        }
+      },
+      "diffused": {
+        "cn-rdf4": {
+          "0.5": {
+            "linear": {
+              "accuracy": 0.3653853943051561,
+              "cross_entropy_bits": 2.5936301178223453,
+              "coordination_accuracy": 0.3653853943051561,
+              "shape_given_coordination": NaN,
+              "shape_denominator_share": 0.0,
+              "train_cross_entropy_bits": 2.33929946867489,
+              "generalisation_gap_bits": 0.2543306491474553,
+              "best_step": 633.3333333333334,
+              "accuracy_std": 0.0007577579867094488,
+              "cross_entropy_bits_std": 0.0037793785872424343,
+              "coordination_accuracy_std": 0.0007577579867094488,
+              "shape_given_coordination_std": NaN,
+              "shape_denominator_share_std": 0.0,
+              "train_cross_entropy_bits_std": 0.003998313003338941,
+              "generalisation_gap_bits_std": 0.0020242895880686856,
+              "best_step_std": 47.14045207910317,
+              "probe_seeds": [
+                0,
+                1,
+                2
+              ],
+              "information_bits": 0.057215969907195685
+            },
+            "two_layer": {
+              "accuracy": 0.3771315160597837,
+              "cross_entropy_bits": 2.4816758714155855,
+              "coordination_accuracy": 0.3771315160597837,
+              "shape_given_coordination": NaN,
+              "shape_denominator_share": 0.0,
+              "train_cross_entropy_bits": 2.165663236291112,
+              "generalisation_gap_bits": 0.3160126351244739,
+              "best_step": 166.66666666666666,
+              "accuracy_std": 0.0008898568622076906,
+              "cross_entropy_bits_std": 0.002644688563276249,
+              "coordination_accuracy_std": 0.0008898568622076906,
+              "shape_given_coordination_std": NaN,
+              "shape_denominator_share_std": 0.0,
+              "train_cross_entropy_bits_std": 0.05688809270670792,
+              "generalisation_gap_bits_std": 0.059437449106567036,
+              "best_step_std": 47.14045207910317,
+              "probe_seeds": [
+                0,
+                1,
+                2
+              ],
+              "information_bits": 0.08352346781436992
+            }
+          },
+          "0.95": {
+            "linear": {
+              "accuracy": 0.3980855171668894,
+              "cross_entropy_bits": 2.527953666449063,
+              "coordination_accuracy": 0.3980855171668894,
+              "shape_given_coordination": NaN,
+              "shape_denominator_share": 0.0,
+              "train_cross_entropy_bits": 2.212953882868172,
+              "generalisation_gap_bits": 0.3149997835808911,
+              "best_step": 633.3333333333334,
+              "accuracy_std": 0.0010470247732642817,
+              "cross_entropy_bits_std": 0.0036060050142811065,
+              "coordination_accuracy_std": 0.0010470247732642817,
+              "shape_given_coordination_std": NaN,
+              "shape_denominator_share_std": 0.0,
+              "train_cross_entropy_bits_std": 0.005275834676062946,
+              "generalisation_gap_bits_std": 0.0020280650413701377,
+              "best_step_std": 47.14045207910317,
+              "probe_seeds": [
+                0,
+                1,
+                2
+              ],
+              "information_bits": 0.12289242128047784
+            },
+            "two_layer": {
+              "accuracy": 0.44223473341704134,
+              "cross_entropy_bits": 2.315621793583069,
+              "coordination_accuracy": 0.44223473341704134,
+              "shape_given_coordination": NaN,
+              "shape_denominator_share": 0.0,
+              "train_cross_entropy_bits": 1.8158203937135189,
+              "generalisation_gap_bits": 0.4998013998695501,
+              "best_step": 200.0,
+              "accuracy_std": 0.001259461177584486,
+              "cross_entropy_bits_std": 0.0027218711535299043,
+              "coordination_accuracy_std": 0.001259461177584486,
+              "shape_given_coordination_std": NaN,
+              "shape_denominator_share_std": 0.0,
+              "train_cross_entropy_bits_std": 0.002788638397549656,
+              "generalisation_gap_bits_std": 0.005333740939757966,
+              "best_step_std": 0.0,
+              "probe_seeds": [
+                0,
+                1,
+                2
+              ],
+              "information_bits": 0.24957754564688628
+            }
+          }
+        },
+        "cn-rdf8": {
+          "0.5": {
+            "linear": {
+              "accuracy": 0.3737156898483805,
+              "cross_entropy_bits": 2.586659189354699,
+              "coordination_accuracy": 0.3737156898483805,
+              "shape_given_coordination": NaN,
+              "shape_denominator_share": 0.0,
+              "train_cross_entropy_bits": 2.3213865577181165,
+              "generalisation_gap_bits": 0.26527263163658255,
+              "best_step": 533.3333333333334,
+              "accuracy_std": 0.0005084091534357612,
+              "cross_entropy_bits_std": 0.0026008673198865753,
+              "coordination_accuracy_std": 0.0005084091534357612,
+              "shape_given_coordination_std": NaN,
+              "shape_denominator_share_std": 0.0,
+              "train_cross_entropy_bits_std": 0.01019350791750771,
+              "generalisation_gap_bits_std": 0.011183232245098207,
+              "best_step_std": 94.28090415820634,
+              "probe_seeds": [
+                0,
+                1,
+                2
+              ],
+              "information_bits": 0.06418689837484193
+            },
+            "two_layer": {
+              "accuracy": 0.3957227915265908,
+              "cross_entropy_bits": 2.4430795042061133,
+              "coordination_accuracy": 0.3957227915265908,
+              "shape_given_coordination": NaN,
+              "shape_denominator_share": 0.0,
+              "train_cross_entropy_bits": 2.0678141904278076,
+              "generalisation_gap_bits": 0.3752653137783059,
+              "best_step": 166.66666666666666,
+              "accuracy_std": 0.005771007655631929,
+              "cross_entropy_bits_std": 0.005228140615146537,
+              "coordination_accuracy_std": 0.005771007655631929,
+              "shape_given_coordination_std": NaN,
+              "shape_denominator_share_std": 0.0,
+              "train_cross_entropy_bits_std": 0.07543614049770081,
+              "generalisation_gap_bits_std": 0.08001996644897008,
+              "best_step_std": 47.14045207910317,
+              "probe_seeds": [
+                0,
+                1,
+                2
+              ],
+              "information_bits": 0.12211983502384216
+            }
+          },
+          "0.95": {
+            "linear": {
+              "accuracy": 0.4064833191569795,
+              "cross_entropy_bits": 2.4823239034372295,
+              "coordination_accuracy": 0.4064833191569795,
+              "shape_given_coordination": NaN,
+              "shape_denominator_share": 0.0,
+              "train_cross_entropy_bits": 2.1442144263437064,
+              "generalisation_gap_bits": 0.33810947709352296,
+              "best_step": 633.3333333333334,
+              "accuracy_std": 0.0008826580867960712,
+              "cross_entropy_bits_std": 0.0036838477494951865,
+              "coordination_accuracy_std": 0.0008826580867960712,
+              "shape_given_coordination_std": NaN,
+              "shape_denominator_share_std": 0.0,
+              "train_cross_entropy_bits_std": 0.006096009814886756,
+              "generalisation_gap_bits_std": 0.006900476842301505,
+              "best_step_std": 47.14045207910317,
+              "probe_seeds": [
+                0,
+                1,
+                2
+              ],
+              "information_bits": 0.16852218429231147
+            },
+            "two_layer": {
+              "accuracy": 0.4904883416366263,
+              "cross_entropy_bits": 2.2189622289730346,
+              "coordination_accuracy": 0.4904883416366263,
+              "shape_given_coordination": NaN,
+              "shape_denominator_share": 0.0,
+              "train_cross_entropy_bits": 1.5991933371729707,
+              "generalisation_gap_bits": 0.619768891800064,
+              "best_step": 200.0,
+              "accuracy_std": 0.0017252091047255344,
+              "cross_entropy_bits_std": 0.013365027384957458,
+              "coordination_accuracy_std": 0.0017252091047255344,
+              "shape_given_coordination_std": NaN,
+              "shape_denominator_share_std": 0.0,
+              "train_cross_entropy_bits_std": 0.004052307576511025,
+              "generalisation_gap_bits_std": 0.009352146019425593,
+              "best_step_std": 0.0,
+              "probe_seeds": [
+                0,
+                1,
+                2
+              ],
+              "information_bits": 0.34623711025692083
+            }
+          }
+        },
+        "radial17": {
+          "0.5": {
+            "linear": {
+              "accuracy": 0.3782791256565002,
+              "cross_entropy_bits": 2.5522595466042843,
+              "coordination_accuracy": 0.3782791256565002,
+              "shape_given_coordination": NaN,
+              "shape_denominator_share": 0.0,
+              "train_cross_entropy_bits": 2.267145484293206,
+              "generalisation_gap_bits": 0.28511406231107833,
+              "best_step": 633.3333333333334,
+              "accuracy_std": 0.0010501538597556316,
+              "cross_entropy_bits_std": 0.005754798839207393,
+              "coordination_accuracy_std": 0.0010501538597556316,
+              "shape_given_coordination_std": NaN,
+              "shape_denominator_share_std": 0.0,
+              "train_cross_entropy_bits_std": 0.007729253366854205,
+              "generalisation_gap_bits_std": 0.004110905991416167,
+              "best_step_std": 94.28090415820634,
+              "probe_seeds": [
+                0,
+                1,
+                2
+              ],
+              "information_bits": 0.09858654112525667
+            },
+            "two_layer": {
+              "accuracy": 0.4071583836256363,
+              "cross_entropy_bits": 2.379759463741637,
+              "coordination_accuracy": 0.4071583836256363,
+              "shape_given_coordination": NaN,
+              "shape_denominator_share": 0.0,
+              "train_cross_entropy_bits": 2.078410232813473,
+              "generalisation_gap_bits": 0.3013492309281645,
+              "best_step": 100.0,
+              "accuracy_std": 0.0007666069675606408,
+              "cross_entropy_bits_std": 0.010238064714224704,
+              "coordination_accuracy_std": 0.0007666069675606408,
+              "shape_given_coordination_std": NaN,
+              "shape_denominator_share_std": 0.0,
+              "train_cross_entropy_bits_std": 0.0015886942487187258,
+              "generalisation_gap_bits_std": 0.008816635649666438,
+              "best_step_std": 0.0,
+              "probe_seeds": [
+                0,
+                1,
+                2
+              ],
+              "information_bits": 0.18543987548831842
+            }
+          },
+          "0.95": {
+            "linear": {
+              "accuracy": 0.40895405511226324,
+              "cross_entropy_bits": 2.470599446667108,
+              "coordination_accuracy": 0.40895405511226324,
+              "shape_given_coordination": NaN,
+              "shape_denominator_share": 0.0,
+              "train_cross_entropy_bits": 2.133856657660644,
+              "generalisation_gap_bits": 0.3367427890064638,
+              "best_step": 566.6666666666666,
+              "accuracy_std": 0.0010216471255697003,
+              "cross_entropy_bits_std": 0.006803018217280261,
+              "coordination_accuracy_std": 0.0010216471255697003,
+              "shape_given_coordination_std": NaN,
+              "shape_denominator_share_std": 0.0,
+              "train_cross_entropy_bits_std": 0.0073927822982487535,
+              "generalisation_gap_bits_std": 0.0026212520515019916,
+              "best_step_std": 47.14045207910317,
+              "probe_seeds": [
+                0,
+                1,
+                2
+              ],
+              "information_bits": 0.18024664106243282
+            },
+            "two_layer": {
+              "accuracy": 0.4939176691374026,
+              "cross_entropy_bits": 2.167086112924119,
+              "coordination_accuracy": 0.4939176691374026,
+              "shape_given_coordination": NaN,
+              "shape_denominator_share": 0.0,
+              "train_cross_entropy_bits": 1.5613318929299582,
+              "generalisation_gap_bits": 0.6057542199941605,
+              "best_step": 200.0,
+              "accuracy_std": 0.0020250133807771633,
+              "cross_entropy_bits_std": 0.005690661926683456,
+              "coordination_accuracy_std": 0.0020250133807771633,
+              "shape_given_coordination_std": NaN,
+              "shape_denominator_share_std": 0.0,
+              "train_cross_entropy_bits_std": 0.00136712471257176,
+              "generalisation_gap_bits_std": 0.0055847473264339234,
+              "best_step_std": 0.0,
+              "probe_seeds": [
+                0,
+                1,
+                2
+              ],
+              "information_bits": 0.3981132263058367
+            }
+          }
+        }
+      }
+    },
+    "geometry": {
+      "floor": {
+        "linear": {
+          "accuracy": 0.2776444751718248,
+          "cross_entropy_bits": 3.584028642640723,
+          "coordination_accuracy": 0.3028861143871921,
+          "shape_given_coordination": 0.6277999162981968,
+          "shape_denominator_share": 0.745007930375371,
+          "train_cross_entropy_bits": 3.1644541935291444,
+          "generalisation_gap_bits": 0.4195744491115783,
+          "best_step": 733.3333333333334,
+          "accuracy_std": 0.0016967464117683786,
+          "cross_entropy_bits_std": 0.00483141449333049,
+          "coordination_accuracy_std": 0.0015773030140520208,
+          "shape_given_coordination_std": 0.0011002213700042865,
+          "shape_denominator_share_std": 0.0,
+          "train_cross_entropy_bits_std": 0.0051613760351771525,
+          "generalisation_gap_bits_std": 0.009919924628292422,
+          "best_step_std": 124.72191289246472,
+          "probe_seeds": [
+            0,
+            1,
+            2
+          ]
+        },
+        "two_layer": {
+          "accuracy": 0.2774140198191603,
+          "cross_entropy_bits": 3.507082648851359,
+          "coordination_accuracy": 0.30567869101359685,
+          "shape_given_coordination": 0.6359881361791947,
+          "shape_denominator_share": 0.745007930375371,
+          "train_cross_entropy_bits": 3.144368013648149,
+          "generalisation_gap_bits": 0.3627146352032103,
+          "best_step": 100.0,
+          "accuracy_std": 0.0025402591872097898,
+          "cross_entropy_bits_std": 0.004207849961245288,
+          "coordination_accuracy_std": 0.008545781996000663,
+          "shape_given_coordination_std": 0.00308839995040153,
+          "shape_denominator_share_std": 0.0,
+          "train_cross_entropy_bits_std": 0.0015046460447376067,
+          "generalisation_gap_bits_std": 0.0045973084842290905,
+          "best_step_std": 0.0,
+          "probe_seeds": [
+            0,
+            1,
+            2
+          ]
+        }
+      },
+      "representations": {
+        "cn-rdf4": {
+          "linear": {
+            "accuracy": 0.33386202502474,
+            "cross_entropy_bits": 3.4512043924527678,
+            "coordination_accuracy": 0.38216275570376995,
+            "shape_given_coordination": 0.6360609203559147,
+            "shape_denominator_share": 0.745007930375371,
+            "train_cross_entropy_bits": 2.9172059137560353,
+            "generalisation_gap_bits": 0.5339984786967324,
+            "best_step": 700.0,
+            "accuracy_std": 0.0007471912253186605,
+            "cross_entropy_bits_std": 0.005234782768188317,
+            "coordination_accuracy_std": 0.00044673789237148346,
+            "shape_given_coordination_std": 0.003922250074875268,
+            "shape_denominator_share_std": 0.0,
+            "train_cross_entropy_bits_std": 0.010848400308514968,
+            "generalisation_gap_bits_std": 0.012650669402449022,
+            "best_step_std": 141.4213562373095,
+            "probe_seeds": [
+              0,
+              1,
+              2
+            ],
+            "information_bits": 0.13282425018795507
+          },
+          "two_layer": {
+            "accuracy": 0.3751542017433269,
+            "cross_entropy_bits": 3.202864624827603,
+            "coordination_accuracy": 0.4316699879349845,
+            "shape_given_coordination": 0.6610258929708682,
+            "shape_denominator_share": 0.745007930375371,
+            "train_cross_entropy_bits": 2.479263055603465,
+            "generalisation_gap_bits": 0.7236015692241383,
+            "best_step": 200.0,
+            "accuracy_std": 0.003846760562845661,
+            "cross_entropy_bits_std": 0.01233201374437509,
+            "coordination_accuracy_std": 0.0047437006268175996,
+            "shape_given_coordination_std": 0.003960890555387164,
+            "shape_denominator_share_std": 0.0,
+            "train_cross_entropy_bits_std": 0.0045852041603468485,
+            "generalisation_gap_bits_std": 0.011833550237195173,
+            "best_step_std": 0.0,
+            "probe_seeds": [
+              0,
+              1,
+              2
+            ],
+            "information_bits": 0.304218024023756
+          }
+        },
+        "cn-rdf8": {
+          "linear": {
+            "accuracy": 0.3494787642170618,
+            "cross_entropy_bits": 3.3703780002673205,
+            "coordination_accuracy": 0.4082177667520707,
+            "shape_given_coordination": 0.6207944392888987,
+            "shape_denominator_share": 0.745007930375371,
+            "train_cross_entropy_bits": 2.8108486296128414,
+            "generalisation_gap_bits": 0.5595293706544795,
+            "best_step": 666.6666666666666,
+            "accuracy_std": 0.0012814729944930694,
+            "cross_entropy_bits_std": 0.0016607088831682507,
+            "coordination_accuracy_std": 0.0016029594170053367,
+            "shape_given_coordination_std": 0.0018572448346817377,
+            "shape_denominator_share_std": 0.0,
+            "train_cross_entropy_bits_std": 0.005203294586727982,
+            "generalisation_gap_bits_std": 0.00683518054802245,
+            "best_step_std": 47.14045207910317,
+            "probe_seeds": [
+              0,
+              1,
+              2
+            ],
+            "information_bits": 0.21365064237340237
+          },
+          "two_layer": {
+            "accuracy": 0.4000433798310898,
+            "cross_entropy_bits": 3.103680120008974,
+            "coordination_accuracy": 0.4663467404123795,
+            "shape_given_coordination": 0.6477791728078316,
+            "shape_denominator_share": 0.745007930375371,
+            "train_cross_entropy_bits": 2.2416568140187203,
+            "generalisation_gap_bits": 0.8620233059902538,
+            "best_step": 200.0,
+            "accuracy_std": 0.002871930851470974,
+            "cross_entropy_bits_std": 0.006213798163415968,
+            "coordination_accuracy_std": 0.0018208753535954084,
+            "shape_given_coordination_std": 0.005350812794530453,
+            "shape_denominator_share_std": 0.0,
+            "train_cross_entropy_bits_std": 0.0015248664759802963,
+            "generalisation_gap_bits_std": 0.004703964473782459,
+            "best_step_std": 0.0,
+            "probe_seeds": [
+              0,
+              1,
+              2
+            ],
+            "information_bits": 0.4034025288423848
+          }
+        },
+        "radial17": {
+          "linear": {
+            "accuracy": 0.35473856873669796,
+            "cross_entropy_bits": 3.34119506354546,
+            "coordination_accuracy": 0.4122846259167378,
+            "shape_given_coordination": 0.6325490838291755,
+            "shape_denominator_share": 0.745007930375371,
+            "train_cross_entropy_bits": 2.7717902094733553,
+            "generalisation_gap_bits": 0.5694048540721046,
+            "best_step": 633.3333333333334,
+            "accuracy_std": 0.0003877167201072303,
+            "cross_entropy_bits_std": 0.005335168447564412,
+            "coordination_accuracy_std": 0.001030092601922952,
+            "shape_given_coordination_std": 0.0020290017151134523,
+            "shape_denominator_share_std": 0.0,
+            "train_cross_entropy_bits_std": 0.006591484052878388,
+            "generalisation_gap_bits_std": 0.008153280246893702,
+            "best_step_std": 47.14045207910317,
+            "probe_seeds": [
+              0,
+              1,
+              2
+            ],
+            "information_bits": 0.24283357909526293
+          },
+          "two_layer": {
+            "accuracy": 0.4073366139330595,
+            "cross_entropy_bits": 3.0715162751892104,
+            "coordination_accuracy": 0.47888622283676985,
+            "shape_given_coordination": 0.6509452844951508,
+            "shape_denominator_share": 0.745007930375371,
+            "train_cross_entropy_bits": 2.1730988000337033,
+            "generalisation_gap_bits": 0.8984174751555071,
+            "best_step": 200.0,
+            "accuracy_std": 0.0012118967364066144,
+            "cross_entropy_bits_std": 0.0038928295256400666,
+            "coordination_accuracy_std": 0.002636114004014397,
+            "shape_given_coordination_std": 0.005930682321652204,
+            "shape_denominator_share_std": 0.0,
+            "train_cross_entropy_bits_std": 0.0017868968856795979,
+            "generalisation_gap_bits_std": 0.0032127129515767414,
+            "best_step_std": 0.0,
+            "probe_seeds": [
+              0,
+              1,
+              2
+            ],
+            "information_bits": 0.43556637366214845
+          }
+        }
+      },
+      "terminal": {
+        "cn-rdf4": {
+          "linear": {
+            "accuracy": 0.2777258123551181,
+            "cross_entropy_bits": 3.587954038470612,
+            "coordination_accuracy": 0.3047704258001545,
+            "shape_given_coordination": 0.6289826591698965,
+            "shape_denominator_share": 0.745007930375371,
+            "train_cross_entropy_bits": 3.165913783060368,
+            "generalisation_gap_bits": 0.4220402554102443,
+            "best_step": 700.0,
+            "accuracy_std": 0.0007145029052613866,
+            "cross_entropy_bits_std": 0.007283288150036306,
+            "coordination_accuracy_std": 0.002152235766165977,
+            "shape_given_coordination_std": 0.002194566645650066,
+            "shape_denominator_share_std": 0.0,
+            "train_cross_entropy_bits_std": 0.006020036873177184,
+            "generalisation_gap_bits_std": 0.010041802293170013,
+            "best_step_std": 141.4213562373095,
+            "probe_seeds": [
+              0,
+              1,
+              2
+            ],
+            "information_bits": -0.0039253958298890446
+          },
+          "two_layer": {
+            "accuracy": 0.2770480024943403,
+            "cross_entropy_bits": 3.510794211375268,
+            "coordination_accuracy": 0.3048110943918012,
+            "shape_given_coordination": 0.6371708790508943,
+            "shape_denominator_share": 0.745007930375371,
+            "train_cross_entropy_bits": 3.1405811492673794,
+            "generalisation_gap_bits": 0.3702130621078892,
+            "best_step": 100.0,
+            "accuracy_std": 0.0020954741514839633,
+            "cross_entropy_bits_std": 0.002421446663194503,
+            "coordination_accuracy_std": 0.008203437286543621,
+            "shape_given_coordination_std": 0.0016317702728638923,
+            "shape_denominator_share_std": 0.0,
+            "train_cross_entropy_bits_std": 0.0015703434889659791,
+            "generalisation_gap_bits_std": 0.001291979732120855,
+            "best_step_std": 0.0,
+            "probe_seeds": [
+              0,
+              1,
+              2
+            ],
+            "information_bits": -0.003711562523909251
+          }
+        },
+        "cn-rdf8": {
+          "linear": {
+            "accuracy": 0.2779020429189204,
+            "cross_entropy_bits": 3.586811684263996,
+            "coordination_accuracy": 0.3081052503151816,
+            "shape_given_coordination": 0.6281820332259767,
+            "shape_denominator_share": 0.745007930375371,
+            "train_cross_entropy_bits": 3.16505022185175,
+            "generalisation_gap_bits": 0.4217614624122465,
+            "best_step": 700.0,
+            "accuracy_std": 0.00046999161748098193,
+            "cross_entropy_bits_std": 0.002098894964100094,
+            "coordination_accuracy_std": 0.001489085171250958,
+            "shape_given_coordination_std": 0.00384354554934942,
+            "shape_denominator_share_std": 0.0,
+            "train_cross_entropy_bits_std": 0.0067021746436214166,
+            "generalisation_gap_bits_std": 0.008064805506958617,
+            "best_step_std": 141.4213562373095,
+            "probe_seeds": [
+              0,
+              1,
+              2
+            ],
+            "information_bits": -0.0027830416232732524
+          },
+          "two_layer": {
+            "accuracy": 0.2784442908075427,
+            "cross_entropy_bits": 3.514166650624706,
+            "coordination_accuracy": 0.3087559477815283,
+            "shape_given_coordination": 0.6344960605564349,
+            "shape_denominator_share": 0.745007930375371,
+            "train_cross_entropy_bits": 3.1388306308344194,
+            "generalisation_gap_bits": 0.3753360197902871,
+            "best_step": 100.0,
+            "accuracy_std": 0.0029563079386283712,
+            "cross_entropy_bits_std": 0.0026128356041304314,
+            "coordination_accuracy_std": 0.009612653467928809,
+            "shape_given_coordination_std": 0.0008222518352672119,
+            "shape_denominator_share_std": 0.0,
+            "train_cross_entropy_bits_std": 0.002295258921838364,
+            "generalisation_gap_bits_std": 0.0009790309994125832,
+            "best_step_std": 0.0,
+            "probe_seeds": [
+              0,
+              1,
+              2
+            ],
+            "information_bits": -0.007084001773347115
+          }
+        },
+        "radial17": {
+          "linear": {
+            "accuracy": 0.2781189420743693,
+            "cross_entropy_bits": 3.59124740752652,
+            "coordination_accuracy": 0.3088372849648217,
+            "shape_given_coordination": 0.6209945957748786,
+            "shape_denominator_share": 0.745007930375371,
+            "train_cross_entropy_bits": 3.16698235096093,
+            "generalisation_gap_bits": 0.4242650565655908,
+            "best_step": 633.3333333333334,
+            "accuracy_std": 0.0006035172716675911,
+            "cross_entropy_bits_std": 0.003162021514231781,
+            "coordination_accuracy_std": 0.0010131840492933056,
+            "shape_given_coordination_std": 0.0013393574044855484,
+            "shape_denominator_share_std": 0.0,
+            "train_cross_entropy_bits_std": 0.0026862789793693845,
+            "generalisation_gap_bits_std": 0.003952538143296387,
+            "best_step_std": 47.14045207910317,
+            "probe_seeds": [
+              0,
+              1,
+              2
+            ],
+            "information_bits": -0.007218764885797313
+          },
+          "two_layer": {
+            "accuracy": 0.2776309189746093,
+            "cross_entropy_bits": 3.513432634760521,
+            "coordination_accuracy": 0.3079561321458104,
+            "shape_given_coordination": 0.6341867278053751,
+            "shape_denominator_share": 0.745007930375371,
+            "train_cross_entropy_bits": 3.1403204377760923,
+            "generalisation_gap_bits": 0.37311219698442794,
+            "best_step": 100.0,
+            "accuracy_std": 0.0030379797883738776,
+            "cross_entropy_bits_std": 0.00034292522913840644,
+            "coordination_accuracy_std": 0.008556613265187325,
+            "shape_given_coordination_std": 0.002110584256600468,
+            "shape_denominator_share_std": 0.0,
+            "train_cross_entropy_bits_std": 0.002609280379177623,
+            "generalisation_gap_bits_std": 0.002459834342804807,
+            "best_step_std": 0.0,
+            "probe_seeds": [
+              0,
+              1,
+              2
+            ],
+            "information_bits": -0.006349985909162026
+          }
+        }
+      },
+      "shuffled": {
+        "cn-rdf4": {
+          "linear": {
+            "accuracy": 0.27757669418574704,
+            "cross_entropy_bits": 3.587287556955296,
+            "coordination_accuracy": 0.3050144373500346,
+            "shape_given_coordination": 0.6297650890696362,
+            "shape_denominator_share": 0.745007930375371,
+            "train_cross_entropy_bits": 3.1660512989901606,
+            "generalisation_gap_bits": 0.4212362579651356,
+            "best_step": 700.0,
+            "accuracy_std": 0.0010295572570958654,
+            "cross_entropy_bits_std": 0.007160411941179935,
+            "coordination_accuracy_std": 0.0024820060695638696,
+            "shape_given_coordination_std": 0.00281974110789292,
+            "shape_denominator_share_std": 0.0,
+            "train_cross_entropy_bits_std": 0.006070959218391407,
+            "generalisation_gap_bits_std": 0.009786479423907623,
+            "best_step_std": 141.4213562373095,
+            "probe_seeds": [
+              0,
+              1,
+              2
+            ],
+            "information_bits": -0.003258914314573147
+          },
+          "two_layer": {
+            "accuracy": 0.27740046362194476,
+            "cross_entropy_bits": 3.509266896100831,
+            "coordination_accuracy": 0.30609893312727915,
+            "shape_given_coordination": 0.6352420983678148,
+            "shape_denominator_share": 0.745007930375371,
+            "train_cross_entropy_bits": 3.1416550856772574,
+            "generalisation_gap_bits": 0.36761181042357344,
+            "best_step": 100.0,
+            "accuracy_std": 0.001995940011454953,
+            "cross_entropy_bits_std": 0.001111828982821225,
+            "coordination_accuracy_std": 0.009867328648227088,
+            "shape_given_coordination_std": 0.0030318126282382974,
+            "shape_denominator_share_std": 0.0,
+            "train_cross_entropy_bits_std": 0.0014134843837847158,
+            "generalisation_gap_bits_std": 0.0010899414505895675,
+            "best_step_std": 0.0,
+            "probe_seeds": [
+              0,
+              1,
+              2
+            ],
+            "information_bits": -0.002184247249472193
+          }
+        },
+        "cn-rdf8": {
+          "linear": {
+            "accuracy": 0.27832228503260265,
+            "cross_entropy_bits": 3.5858121147836672,
+            "coordination_accuracy": 0.3066276248186859,
+            "shape_given_coordination": 0.6287643066397365,
+            "shape_denominator_share": 0.745007930375371,
+            "train_cross_entropy_bits": 3.165093306745089,
+            "generalisation_gap_bits": 0.4207188080385779,
+            "best_step": 700.0,
+            "accuracy_std": 0.00029946618453202277,
+            "cross_entropy_bits_std": 0.0017634651051592809,
+            "coordination_accuracy_std": 0.0021607574805501645,
+            "shape_given_coordination_std": 0.003555732380936432,
+            "shape_denominator_share_std": 0.0,
+            "train_cross_entropy_bits_std": 0.006744866254095521,
+            "generalisation_gap_bits_std": 0.007607204015010164,
+            "best_step_std": 141.4213562373095,
+            "probe_seeds": [
+              0,
+              1,
+              2
+            ],
+            "information_bits": -0.0017834721429443867
+          },
+          "two_layer": {
+            "accuracy": 0.2777258123551181,
+            "cross_entropy_bits": 3.5121114367635164,
+            "coordination_accuracy": 0.30895929073976164,
+            "shape_given_coordination": 0.6356424113397748,
+            "shape_denominator_share": 0.745007930375371,
+            "train_cross_entropy_bits": 3.139841213622215,
+            "generalisation_gap_bits": 0.37227022314130115,
+            "best_step": 100.0,
+            "accuracy_std": 0.0024034644496972366,
+            "cross_entropy_bits_std": 0.0034654061505633793,
+            "coordination_accuracy_std": 0.011937599891317142,
+            "shape_given_coordination_std": 0.0006705433619989613,
+            "shape_denominator_share_std": 0.0,
+            "train_cross_entropy_bits_std": 0.0028901691147855354,
+            "generalisation_gap_bits_std": 0.002845313922294366,
+            "best_step_std": 0.0,
+            "probe_seeds": [
+              0,
+              1,
+              2
+            ],
+            "information_bits": -0.005028787912157551
+          }
+        },
+        "radial17": {
+          "linear": {
+            "accuracy": 0.2776444751718248,
+            "cross_entropy_bits": 3.5881575582730876,
+            "coordination_accuracy": 0.3063429446771591,
+            "shape_given_coordination": 0.6291282275233364,
+            "shape_denominator_share": 0.745007930375371,
+            "train_cross_entropy_bits": 3.1627430398210534,
+            "generalisation_gap_bits": 0.42541451845203476,
+            "best_step": 733.3333333333334,
+            "accuracy_std": 0.000996172980919576,
+            "cross_entropy_bits_std": 0.004190356433644099,
+            "coordination_accuracy_std": 0.002528076315290635,
+            "shape_given_coordination_std": 0.0022783598181897796,
+            "shape_denominator_share_std": 0.0,
+            "train_cross_entropy_bits_std": 0.006041707640425497,
+            "generalisation_gap_bits_std": 0.002615013660343288,
+            "best_step_std": 124.72191289246472,
+            "probe_seeds": [
+              0,
+              1,
+              2
+            ],
+            "information_bits": -0.004128915632364727
+          },
+          "two_layer": {
+            "accuracy": 0.2784307346103271,
+            "cross_entropy_bits": 3.5091807974456546,
+            "coordination_accuracy": 0.3092304146840728,
+            "shape_given_coordination": 0.6345870407773351,
+            "shape_denominator_share": 0.745007930375371,
+            "train_cross_entropy_bits": 3.1446182226673254,
+            "generalisation_gap_bits": 0.36456257477832904,
+            "best_step": 100.0,
+            "accuracy_std": 0.005770674282427842,
+            "cross_entropy_bits_std": 0.0023951753776877455,
+            "coordination_accuracy_std": 0.01463023341183871,
+            "shape_given_coordination_std": 0.0021948683665074147,
+            "shape_denominator_share_std": 0.0,
+            "train_cross_entropy_bits_std": 0.0013518010131195132,
+            "generalisation_gap_bits_std": 0.0021529469382824355,
+            "best_step_std": 0.0,
+            "probe_seeds": [
+              0,
+              1,
+              2
+            ],
+            "information_bits": -0.00209814859429569
+          }
+        }
+      },
+      "diffused": {
+        "cn-rdf4": {
+          "0.5": {
+            "linear": {
+              "accuracy": 0.3073461032711104,
+              "cross_entropy_bits": 3.530202162268821,
+              "coordination_accuracy": 0.34447652744452123,
+              "shape_given_coordination": 0.6278545044307368,
+              "shape_denominator_share": 0.745007930375371,
+              "train_cross_entropy_bits": 3.0726077294619447,
+              "generalisation_gap_bits": 0.4575944328068761,
+              "best_step": 700.0,
+              "accuracy_std": 0.00026839901139022346,
+              "cross_entropy_bits_std": 0.006455739241128454,
+              "coordination_accuracy_std": 0.00021348320723389933,
+              "shape_given_coordination_std": 0.004810849639688519,
+              "shape_denominator_share_std": 0.0,
+              "train_cross_entropy_bits_std": 0.006330124621067237,
+              "generalisation_gap_bits_std": 0.009670591861648394,
+              "best_step_std": 141.4213562373095,
+              "probe_seeds": [
+                0,
+                1,
+                2
+              ],
+              "information_bits": 0.05382648037190174
+            },
+            "two_layer": {
+              "accuracy": 0.3145580001897868,
+              "cross_entropy_bits": 3.414170282089518,
+              "coordination_accuracy": 0.3543183266230157,
+              "shape_given_coordination": 0.6397911094128136,
+              "shape_denominator_share": 0.745007930375371,
+              "train_cross_entropy_bits": 2.949082349949757,
+              "generalisation_gap_bits": 0.46508793213976096,
+              "best_step": 133.33333333333334,
+              "accuracy_std": 0.002884190472399924,
+              "cross_entropy_bits_std": 0.0031644247099580623,
+              "coordination_accuracy_std": 0.006407451015284843,
+              "shape_given_coordination_std": 0.0034937352523371308,
+              "shape_denominator_share_std": 0.0,
+              "train_cross_entropy_bits_std": 0.06963081598246007,
+              "generalisation_gap_bits_std": 0.0677572387905364,
+              "best_step_std": 47.14045207910317,
+              "probe_seeds": [
+                0,
+                1,
+                2
+              ],
+              "information_bits": 0.092912366761841
+            }
+          },
+          "0.95": {
+            "linear": {
+              "accuracy": 0.33310287798066884,
+              "cross_entropy_bits": 3.4516823278447686,
+              "coordination_accuracy": 0.3810240351376632,
+              "shape_given_coordination": 0.6356606073839547,
+              "shape_denominator_share": 0.745007930375371,
+              "train_cross_entropy_bits": 2.9186284905428064,
+              "generalisation_gap_bits": 0.5330538373019622,
+              "best_step": 700.0,
+              "accuracy_std": 0.0009487401253635244,
+              "cross_entropy_bits_std": 0.005287360146178163,
+              "coordination_accuracy_std": 0.0005586074471792689,
+              "shape_given_coordination_std": 0.0033337020165099232,
+              "shape_denominator_share_std": 0.0,
+              "train_cross_entropy_bits_std": 0.010748116675673321,
+              "generalisation_gap_bits_std": 0.01263312186665265,
+              "best_step_std": 141.4213562373095,
+              "probe_seeds": [
+                0,
+                1,
+                2
+              ],
+              "information_bits": 0.13234631479595427
+            },
+            "two_layer": {
+              "accuracy": 0.37374435723290905,
+              "cross_entropy_bits": 3.205899468729015,
+              "coordination_accuracy": 0.4298670137053154,
+              "shape_given_coordination": 0.6608803246174282,
+              "shape_denominator_share": 0.745007930375371,
+              "train_cross_entropy_bits": 2.4839572241194947,
+              "generalisation_gap_bits": 0.7219422446095202,
+              "best_step": 200.0,
+              "accuracy_std": 0.002684743168750097,
+              "cross_entropy_bits_std": 0.012420143455496229,
+              "coordination_accuracy_std": 0.0035042704249942875,
+              "shape_given_coordination_std": 0.00380458354731541,
+              "shape_denominator_share_std": 0.0,
+              "train_cross_entropy_bits_std": 0.004385615515565821,
+              "generalisation_gap_bits_std": 0.011871329763142398,
+              "best_step_std": 0.0,
+              "probe_seeds": [
+                0,
+                1,
+                2
+              ],
+              "information_bits": 0.3011831801223437
+            }
+          }
+        },
+        "cn-rdf8": {
+          "0.5": {
+            "linear": {
+              "accuracy": 0.30942020144509064,
+              "cross_entropy_bits": 3.50277504222125,
+              "coordination_accuracy": 0.351891767321431,
+              "shape_given_coordination": 0.6225958476627181,
+              "shape_denominator_share": 0.745007930375371,
+              "train_cross_entropy_bits": 3.0316688260547284,
+              "generalisation_gap_bits": 0.4711062161665211,
+              "best_step": 633.3333333333334,
+              "accuracy_std": 0.00047697783794268937,
+              "cross_entropy_bits_std": 0.002474301372214777,
+              "coordination_accuracy_std": 0.0007216685864522773,
+              "shape_given_coordination_std": 0.001044649460080232,
+              "shape_denominator_share_std": 0.0,
+              "train_cross_entropy_bits_std": 0.0029034814668116734,
+              "generalisation_gap_bits_std": 0.004184119337433832,
+              "best_step_std": 47.14045207910317,
+              "probe_seeds": [
+                0,
+                1,
+                2
+              ],
+              "information_bits": 0.08125360041947305
+            },
+            "two_layer": {
+              "accuracy": 0.3318285954424065,
+              "cross_entropy_bits": 3.3682708369069996,
+              "coordination_accuracy": 0.37970908400775416,
+              "shape_given_coordination": 0.642374947686373,
+              "shape_denominator_share": 0.745007930375371,
+              "train_cross_entropy_bits": 2.717599831426888,
+              "generalisation_gap_bits": 0.6506710054801115,
+              "best_step": 200.0,
+              "accuracy_std": 0.0008558674809963379,
+              "cross_entropy_bits_std": 0.008331589031859998,
+              "coordination_accuracy_std": 0.0024476351329548213,
+              "shape_given_coordination_std": 0.0014851806996314836,
+              "shape_denominator_share_std": 0.0,
+              "train_cross_entropy_bits_std": 0.0029625129118005804,
+              "generalisation_gap_bits_std": 0.008659679615723698,
+              "best_step_std": 0.0,
+              "probe_seeds": [
+                0,
+                1,
+                2
+              ],
+              "information_bits": 0.13881181194435932
+            }
+          },
+          "0.95": {
+            "linear": {
+              "accuracy": 0.3488958477367929,
+              "cross_entropy_bits": 3.371376271010172,
+              "coordination_accuracy": 0.4077568560467418,
+              "shape_given_coordination": 0.6213221245701185,
+              "shape_denominator_share": 0.745007930375371,
+              "train_cross_entropy_bits": 2.813105735960759,
+              "generalisation_gap_bits": 0.558270535049412,
+              "best_step": 666.6666666666666,
+              "accuracy_std": 0.00032703886783561694,
+              "cross_entropy_bits_std": 0.001667865513168729,
+              "coordination_accuracy_std": 0.0002160502318178782,
+              "shape_given_coordination_std": 0.0024375908686899944,
+              "shape_denominator_share_std": 0.0,
+              "train_cross_entropy_bits_std": 0.005151447882880941,
+              "generalisation_gap_bits_std": 0.006796633070134117,
+              "best_step_std": 47.14045207910317,
+              "probe_seeds": [
+                0,
+                1,
+                2
+              ],
+              "information_bits": 0.21265237163055106
+            },
+            "two_layer": {
+              "accuracy": 0.4008838640584543,
+              "cross_entropy_bits": 3.106137636903137,
+              "coordination_accuracy": 0.46641452139845735,
+              "shape_given_coordination": 0.6492530523864112,
+              "shape_denominator_share": 0.745007930375371,
+              "train_cross_entropy_bits": 2.246360208031343,
+              "generalisation_gap_bits": 0.859777428871794,
+              "best_step": 200.0,
+              "accuracy_std": 0.0018931169954426901,
+              "cross_entropy_bits_std": 0.006002868532703575,
+              "coordination_accuracy_std": 0.00048386319892566876,
+              "shape_given_coordination_std": 0.00495326938048523,
+              "shape_denominator_share_std": 0.0,
+              "train_cross_entropy_bits_std": 0.0017580898921694863,
+              "generalisation_gap_bits_std": 0.0042591933674114004,
+              "best_step_std": 0.0,
+              "probe_seeds": [
+                0,
+                1,
+                2
+              ],
+              "information_bits": 0.4009450119482221
+            }
+          }
+        },
+        "radial17": {
+          "0.5": {
+            "linear": {
+              "accuracy": 0.3202651592175363,
+              "cross_entropy_bits": 3.459190023621318,
+              "coordination_accuracy": 0.3628858432632478,
+              "shape_given_coordination": 0.6275633677238569,
+              "shape_denominator_share": 0.745007930375371,
+              "train_cross_entropy_bits": 2.9697293501141004,
+              "generalisation_gap_bits": 0.4894606735072178,
+              "best_step": 633.3333333333334,
+              "accuracy_std": 0.00092022518190939,
+              "cross_entropy_bits_std": 0.0030652786676756616,
+              "coordination_accuracy_std": 0.001065175554411231,
+              "shape_given_coordination_std": 0.0019904509591534346,
+              "shape_denominator_share_std": 0.0,
+              "train_cross_entropy_bits_std": 0.0032204603913076877,
+              "generalisation_gap_bits_std": 0.001434363860412082,
+              "best_step_std": 47.14045207910317,
+              "probe_seeds": [
+                0,
+                1,
+                2
+              ],
+              "information_bits": 0.12483861901940463
+            },
+            "two_layer": {
+              "accuracy": 0.3372781867230605,
+              "cross_entropy_bits": 3.289231583887965,
+              "coordination_accuracy": 0.3849553323301747,
+              "shape_given_coordination": 0.6490528959004312,
+              "shape_denominator_share": 0.745007930375371,
+              "train_cross_entropy_bits": 2.805039752682923,
+              "generalisation_gap_bits": 0.48419183120504244,
+              "best_step": 100.0,
+              "accuracy_std": 0.0011561775352241785,
+              "cross_entropy_bits_std": 0.0004088294348409039,
+              "coordination_accuracy_std": 0.0013374684598175936,
+              "shape_given_coordination_std": 0.0014073437442123468,
+              "shape_denominator_share_std": 0.0,
+              "train_cross_entropy_bits_std": 0.002823240998881347,
+              "generalisation_gap_bits_std": 0.002455738135153068,
+              "best_step_std": 0.0,
+              "probe_seeds": [
+                0,
+                1,
+                2
+              ],
+              "information_bits": 0.2178510649633938
+            }
+          },
+          "0.95": {
+            "linear": {
+              "accuracy": 0.3554028224002603,
+              "cross_entropy_bits": 3.3426184034253144,
+              "coordination_accuracy": 0.4133148969051202,
+              "shape_given_coordination": 0.6322033589897557,
+              "shape_denominator_share": 0.745007930375371,
+              "train_cross_entropy_bits": 2.7746854061537682,
+              "generalisation_gap_bits": 0.5679329972715458,
+              "best_step": 633.3333333333334,
+              "accuracy_std": 0.00015216793634446993,
+              "cross_entropy_bits_std": 0.005246019014199408,
+              "coordination_accuracy_std": 0.0006973210866437002,
+              "shape_given_coordination_std": 0.0017384603835720429,
+              "shape_denominator_share_std": 0.0,
+              "train_cross_entropy_bits_std": 0.006457545232366524,
+              "generalisation_gap_bits_std": 0.00807553974598853,
+              "best_step_std": 47.14045207910317,
+              "probe_seeds": [
+                0,
+                1,
+                2
+              ],
+              "information_bits": 0.2414102392154085
+            },
+            "two_layer": {
+              "accuracy": 0.40720105196090395,
+              "cross_entropy_bits": 3.073890825677409,
+              "coordination_accuracy": 0.47892689142841655,
+              "shape_given_coordination": 0.6504175992139308,
+              "shape_denominator_share": 0.745007930375371,
+              "train_cross_entropy_bits": 2.178526819015648,
+              "generalisation_gap_bits": 0.8953640066617612,
+              "best_step": 200.0,
+              "accuracy_std": 0.0010919262307320084,
+              "cross_entropy_bits_std": 0.003619005582866741,
+              "coordination_accuracy_std": 0.003195756689627802,
+              "shape_given_coordination_std": 0.006359146480690492,
+              "shape_denominator_share_std": 0.0,
+              "train_cross_entropy_bits_std": 0.0017720332227884443,
+              "generalisation_gap_bits_std": 0.0027725501958491758,
+              "best_step_std": 0.0,
+              "probe_seeds": [
+                0,
+                1,
+                2
+              ],
+              "information_bits": 0.4331918231739498
+            }
+          }
+        }
+      }
+    }
+  },
+  "retrieval": {
+    "cn-rdf4": {
+      "structures": 128,
+      "negatives_per_structure": 32,
+      "top1": 1.0,
+      "mrr": 1.0,
+      "false_collisions": 0,
+      "structural_error_spearman": 0.46184598789125764,
+      "top1_retention": 1.0,
+      "mrr_retention": 1.0
+    },
+    "cn-rdf8": {
+      "structures": 128,
+      "negatives_per_structure": 32,
+      "top1": 1.0,
+      "mrr": 1.0,
+      "false_collisions": 0,
+      "structural_error_spearman": 0.29101118417421157,
+      "top1_retention": 1.0,
+      "mrr_retention": 1.0
+    },
+    "radial17": {
+      "structures": 128,
+      "negatives_per_structure": 32,
+      "top1": 1.0,
+      "mrr": 1.0,
+      "false_collisions": 0,
+      "structural_error_spearman": 0.3547320390739018
+    }
+  },
+  "invariant_audit": {
+    "cn-rdf4": {
+      "translation_max_abs": 1.8477439880371094e-06,
+      "rotation_max_abs": 8.344650268554688e-07,
+      "permutation_max_abs": 4.76837158203125e-07,
+      "unit_cell_max_abs": 1.2218952178955078e-06,
+      "supercell_max_abs": 8.344650268554688e-07,
+      "continuity_max_change_for_1e-5_angstrom": 4.604458808898926e-05,
+      "finite": true,
+      "train_channel_mean": [
+        0.015475998632609844,
+        0.0017826739931479096,
+        -0.007448181975632906,
+        0.01985340006649494
+      ],
+      "train_channel_std": [
+        1.0044478178024292,
+        0.9843205809593201,
+        0.995437741279602,
+        0.9991495013237
+      ],
+      "unit_variance_max_error": 0.01567941904067993
+    },
+    "cn-rdf8": {
+      "translation_max_abs": 2.592802047729492e-06,
+      "rotation_max_abs": 2.2649765014648438e-06,
+      "permutation_max_abs": 8.642673492431641e-07,
+      "unit_cell_max_abs": 2.86102294921875e-06,
+      "supercell_max_abs": 1.3113021850585938e-06,
+      "continuity_max_change_for_1e-5_angstrom": 7.510185241699219e-05,
+      "finite": true,
+      "train_channel_mean": [
+        0.015475998632609844,
+        0.0017826739931479096,
+        -0.007448181975632906,
+        0.01985340006649494,
+        -0.017018914222717285,
+        -0.0038271471858024597,
+        0.006290339399129152,
+        -0.007151204161345959
+      ],
+      "train_channel_std": [
+        1.0044478178024292,
+        0.9843205809593201,
+        0.995437741279602,
+        0.9991495013237,
+        1.0018597841262817,
+        0.9906551241874695,
+        0.9992743134498596,
+        0.9998720288276672
+      ],
+      "unit_variance_max_error": 0.01567941904067993
+    },
+    "radial17": {
+      "translation_max_abs": 1.52587890625e-05,
+      "rotation_max_abs": 1.1444091796875e-05,
+      "permutation_max_abs": 3.814697265625e-06,
+      "unit_cell_max_abs": 6.67572021484375e-06,
+      "supercell_max_abs": 3.814697265625e-06,
+      "continuity_max_change_for_1e-5_angstrom": 0.001461029052734375,
+      "finite": true,
+      "train_channel_mean": [
+        0.010111100040376186,
+        0.013049167580902576,
+        0.019445158541202545,
+        0.02500326558947563,
+        0.021383050829172134,
+        0.007693500258028507,
+        -0.010190028697252274,
+        -0.011077526956796646,
+        -0.0015873125521466136,
+        -0.004114498849958181,
+        -0.00471280375495553,
+        -0.00026499939849600196,
+        -0.0009544204804114997,
+        0.0010924931848421693,
+        0.005460317712277174,
+        0.004873006138950586,
+        0.015475998632609844
+      ],
+      "train_channel_std": [
+        1.058558464050293,
+        1.0233051776885986,
+        1.0212702751159668,
+        1.0252060890197754,
+        1.0114678144454956,
+        0.9989579916000366,
+        0.9918337464332581,
+        0.9912201166152954,
+        0.9929972887039185,
+        0.9851139187812805,
+        0.9832945466041565,
+        0.995222270488739,
+        0.9671567678451538,
+        0.9617396593093872,
+        0.9970454573631287,
+        1.0757732391357422,
+        1.0044478178024292
+      ],
+      "unit_variance_max_error": 0.07577323913574219
+    }
+  },
+  "prior_audit": {
+    "cn-rdf4": {
+      "atoms": 72411,
+      "mean": [
+        0.00011420449537211429,
+        -0.0029082989824186427,
+        -0.0020238258689104665,
+        0.002250492467943754
+      ],
+      "std": [
+        1.0022870997635889,
+        0.9986114055858683,
+        1.0008789900895774,
+        0.9975532935298639
+      ],
+      "max_abs_mean": 0.0029082989824186427,
+      "max_std_error": 0.0024467064701361174,
+      "max_abs_clean_correlation": 0.009196322412637447
+    },
+    "cn-rdf8": {
+      "atoms": 72411,
+      "mean": [
+        -0.0037960571176769422,
+        -0.0001543434535197321,
+        0.0017792423006758947,
+        0.0010189529156534594,
+        -0.004623791381726445,
+        2.514223389828098e-05,
+        0.00020582059145124966,
+        -0.00023298694238548494
+      ],
+      "std": [
+        1.0002169024860548,
+        1.0035636676558433,
+        0.9976070379440131,
+        0.9988292158266117,
+        1.0015077824353855,
+        0.9951039502480974,
+        0.9991041664971174,
+        1.003364903745238
+      ],
+      "max_abs_mean": 0.004623791381726445,
+      "max_std_error": 0.004896049751902609,
+      "max_abs_clean_correlation": 0.008677532092090825
+    },
+    "radial17": {
+      "atoms": 72411,
+      "mean": [
+        0.001439637559127954,
+        0.006077773088619895,
+        -0.001440775077419937,
+        -0.0003614801692561035,
+        -0.0007873860422714933,
+        0.007675883360170782,
+        -0.0006862678748720067,
+        0.005086023283293915,
+        -0.003705753488369328,
+        0.0031952111990575186,
+        -0.0016075794363598075,
+        -0.0009270649245742728,
+        -0.0013808177004599393,
+        0.009534225642933809,
+        0.003684471075230681,
+        -0.002547955987303999,
+        -0.002027629019771533
+      ],
+      "std": [
+        0.9982901672477039,
+        1.0001526225499147,
+        0.9974492371485203,
+        0.9998845220051004,
+        0.9979567854840533,
+        1.0033898069431608,
+        1.001413787463342,
+        1.001448117891708,
+        0.9988260644827596,
+        0.9993232859637868,
+        0.9961233493734228,
+        0.9984112222117977,
+        1.0039444769441448,
+        0.9988963246376994,
+        0.9976892514129674,
+        0.9987233281469933,
+        1.000044722259389
+      ],
+      "max_abs_mean": 0.009534225642933809,
+      "max_std_error": 0.0039444769441447924,
+      "max_abs_clean_correlation": 0.004449099468547864
+    }
+  },
+  "recomputed_from_current_structure": {
+    "path": "direct_geometry/reports/DG1-DG2-PROBES.json",
+    "sha256": "8c8c7556f78f24b10a1c82e668fa748b44ef666380b447e3837a7b10c80f78e4",
+    "summary": {
+      "coordination": {
+        "corruption_angstrom": {
+          "0.5": 2.0387579210969715,
+          "0.8": 0.8805108652742232,
+          "0.9": 0.4538132561196973,
+          "0.95": 0.23051972297142093,
+          "0.99": 0.0467022624386934,
+          "1": 6.623943667062255e-16
+        },
+        "radial_two_layer": {
+          "0.5": {
+            "accuracy": 0.35310822312426343,
+            "best_step": 700.0,
+            "coordination_accuracy": 0.35310822312426343,
+            "cross_entropy_bits": 2.474524189863766,
+            "generalisation_gap_bits": 0.012237678438798305,
+            "information_bits": 0.017321388179906805,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 2.462286511424968
+          },
+          "0.8": {
+            "accuracy": 0.38757856488149794,
+            "best_step": 1300.0,
+            "coordination_accuracy": 0.38757856488149794,
+            "cross_entropy_bits": 2.365007652673436,
+            "generalisation_gap_bits": 0.08079141219769204,
+            "information_bits": 0.12683792537023697,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 2.284216240475744
+          },
+          "0.9": {
+            "accuracy": 0.4585652088516433,
+            "best_step": 1900.0,
+            "coordination_accuracy": 0.4585652088516433,
+            "cross_entropy_bits": 2.1298189259480944,
+            "generalisation_gap_bits": 0.19519880199156514,
+            "information_bits": 0.3620266520955786,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 1.9346201239565293
+          },
+          "0.95": {
+            "accuracy": 0.5348386146392563,
+            "best_step": 1800.0,
+            "coordination_accuracy": 0.5348386146392563,
+            "cross_entropy_bits": 1.8802796940766262,
+            "generalisation_gap_bits": 0.27523513705157576,
+            "information_bits": 0.6115658839670468,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 1.6050445570250504
+          },
+          "0.99": {
+            "accuracy": 0.6098026057352364,
+            "best_step": 3000.0,
+            "coordination_accuracy": 0.6098026057352364,
+            "cross_entropy_bits": 1.691749364287115,
+            "generalisation_gap_bits": 0.39706953719750593,
+            "information_bits": 0.8000962137565579,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 1.2946798270896092
+          },
+          "1": {
+            "accuracy": 0.6072901662956658,
+            "best_step": 2600.0,
+            "coordination_accuracy": 0.6072901662956658,
+            "cross_entropy_bits": 1.6829629924731946,
+            "generalisation_gap_bits": 0.38938868681394156,
+            "information_bits": 0.8088825855704784,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 1.293574305659253
+          }
+        }
+      },
+      "geometry": {
+        "corruption_angstrom": {
+          "0.5": 2.0387579210969715,
+          "0.8": 0.8805108652742232,
+          "0.9": 0.4538132561196973,
+          "0.95": 0.23051972297142093,
+          "0.99": 0.0467022624386934,
+          "1": 6.623943667062255e-16
+        },
+        "radial_two_layer": {
+          "0.5": {
+            "accuracy": 0.28660809590278347,
+            "best_step": 300.0,
+            "coordination_accuracy": 0.31762049429345596,
+            "cross_entropy_bits": 3.3638904645131187,
+            "generalisation_gap_bits": 0.11293588632433726,
+            "information_bits": 0.02256950333257013,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.6519783097703835,
+            "train_cross_entropy_bits": 3.2509545781887814
+          },
+          "0.8": {
+            "accuracy": 0.32528943262993676,
+            "best_step": 500.0,
+            "coordination_accuracy": 0.3625338697758437,
+            "cross_entropy_bits": 3.236892077672076,
+            "generalisation_gap_bits": 0.1844400516596587,
+            "information_bits": 0.14956789017361283,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.6619214761527009,
+            "train_cross_entropy_bits": 3.0524520260124173
+          },
+          "0.9": {
+            "accuracy": 0.3941456605632646,
+            "best_step": 2700.0,
+            "coordination_accuracy": 0.4474669513096313,
+            "cross_entropy_bits": 2.966663281952072,
+            "generalisation_gap_bits": 0.39770063059782235,
+            "information_bits": 0.41979668589361685,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.6758853764819664,
+            "train_cross_entropy_bits": 2.5689626513542496
+          },
+          "0.95": {
+            "accuracy": 0.4586501354791034,
+            "best_step": 2800.0,
+            "coordination_accuracy": 0.5239756958699401,
+            "cross_entropy_bits": 2.700014774474565,
+            "generalisation_gap_bits": 0.5062941164259573,
+            "information_bits": 0.686445193371124,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.692761592210643,
+            "train_cross_entropy_bits": 2.1937206580486075
+          },
+          "0.99": {
+            "accuracy": 0.5109614910912226,
+            "best_step": 2800.0,
+            "coordination_accuracy": 0.5883159536907792,
+            "cross_entropy_bits": 2.4895655111693005,
+            "generalisation_gap_bits": 0.5807289399361086,
+            "information_bits": 0.8968944566763883,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.7120828488530041,
+            "train_cross_entropy_bits": 1.9088365712331918
+          },
+          "1": {
+            "accuracy": 0.5121192216109697,
+            "best_step": 1800.0,
+            "coordination_accuracy": 0.5873060185565318,
+            "cross_entropy_bits": 2.4746357823086353,
+            "generalisation_gap_bits": 0.5316697238958386,
+            "information_bits": 0.9118241855370535,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.7116590417612988,
+            "train_cross_entropy_bits": 1.9429660584127968
+          }
+        }
+      }
+    }
+  },
+  "environment": {
+    "platform": "Linux-6.14.0-1012-aws-x86_64-with-glibc2.39",
+    "torch": "2.8.0+cu128",
+    "device": "cpu",
+    "gpu": null
+  },
+  "verdict": {
+    "promoted": "radial17",
+    "eligibility": {
+      "cn-rdf4": {
+        "nonlinear_information_positive": true,
+        "linear_information_positive": true,
+        "information_retained": false,
+        "retrieval_retained": true,
+        "passed": false
+      },
+      "cn-rdf8": {
+        "nonlinear_information_positive": true,
+        "linear_information_positive": true,
+        "information_retained": false,
+        "retrieval_retained": true,
+        "passed": false
+      },
+      "radial17": {
+        "nonlinear_information_positive": true,
+        "linear_information_positive": true,
+        "information_retained": true,
+        "retrieval_retained": true,
+        "passed": true
+      }
+    },
+    "information_bits": {
+      "cn-rdf4": {
+        "coordination": {
+          "linear": 0.12319867100304638,
+          "two_layer": 0.2522876084092327
+        },
+        "geometry": {
+          "linear": 0.13282425018795507,
+          "two_layer": 0.304218024023756
+        }
+      },
+      "cn-rdf8": {
+        "coordination": {
+          "linear": 0.1693769443875497,
+          "two_layer": 0.35006070461921457
+        },
+        "geometry": {
+          "linear": 0.21365064237340237,
+          "two_layer": 0.4034025288423848
+        }
+      },
+      "radial17": {
+        "coordination": {
+          "linear": 0.1815611942194062,
+          "two_layer": 0.40144233198565304
+        },
+        "geometry": {
+          "linear": 0.24283357909526293,
+          "two_layer": 0.43556637366214845
+        }
+      }
+    },
+    "retention": {
+      "cn-rdf4": {
+        "coordination": 0.6284529266291954,
+        "geometry": 0.6984424014782321
+      },
+      "cn-rdf8": {
+        "coordination": 0.8720074509524453,
+        "geometry": 0.926156272006636
+      },
+      "radial17": {
+        "coordination": 1.0,
+        "geometry": 1.0
+      }
+    },
+    "retrieval_retention": {
+      "cn-rdf4": {
+        "top1": 1.0,
+        "mrr": 1.0
+      },
+      "cn-rdf8": {
+        "top1": 1.0,
+        "mrr": 1.0
+      },
+      "radial17": {
+        "top1": 1.0,
+        "mrr": 1.0
+      }
+    },
+    "shape_given_coordination": {
+      "cn-rdf4": {
+        "linear": {
+          "accuracy": 0.6360609203559147,
+          "chemistry_floor_accuracy": 0.6277999162981968,
+          "gain_points": 0.8261004057717902
+        },
+        "two_layer": {
+          "accuracy": 0.6610258929708682,
+          "chemistry_floor_accuracy": 0.6359881361791947,
+          "gain_points": 2.5037756791673527
+        }
+      },
+      "cn-rdf8": {
+        "linear": {
+          "accuracy": 0.6207944392888987,
+          "chemistry_floor_accuracy": 0.6277999162981968,
+          "gain_points": -0.70054770092981
+        },
+        "two_layer": {
+          "accuracy": 0.6477791728078316,
+          "chemistry_floor_accuracy": 0.6359881361791947,
+          "gain_points": 1.1791036628636897
+        }
+      },
+      "radial17": {
+        "linear": {
+          "accuracy": 0.6325490838291755,
+          "chemistry_floor_accuracy": 0.6277999162981968,
+          "gain_points": 0.47491675309787595
+        },
+        "two_layer": {
+          "accuracy": 0.6509452844951508,
+          "chemistry_floor_accuracy": 0.6359881361791947,
+          "gain_points": 1.495714831595607
+        }
+      }
+    },
+    "retrieval_passed": true,
+    "invariant_audit_passed": true,
+    "terminal_information_bits_absolute_max": {
+      "cn-rdf4": 0.003711562523909251,
+      "cn-rdf8": 0.007084001773347115,
+      "radial17": 0.006349985909162026
+    },
+    "terminal_passed": true,
+    "shuffled_information_bits_absolute_max": {
+      "cn-rdf4": 0.002184247249472193,
+      "cn-rdf8": 0.005028787912157551,
+      "radial17": 0.003833181310130662
+    },
+    "shuffled_passed": true,
+    "prior_passed": true,
+    "passed": true,
+    "thresholds": {
+      "compression_information_retention": 0.9,
+      "retrieval_retention": 0.9,
+      "terminal_information_bits": 0.02,
+      "shuffled_information_bits": 0.02,
+      "prior_moment_tolerance": 0.02,
+      "prior_clean_correlation": 0.02
+    }
+  }
+}

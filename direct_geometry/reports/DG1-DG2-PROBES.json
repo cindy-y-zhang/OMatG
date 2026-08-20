@@ -1,0 +1,1079 @@
+{
+  "arguments": {
+    "batch_size": 8192,
+    "batch_structures": 256,
+    "descriptor_angular_order": 4,
+    "descriptor_cutoff": 6.0,
+    "descriptor_shells": 16,
+    "evaluate_every": 100,
+    "hidden": 128,
+    "learning_rate": 0.003,
+    "out": "direct_geometry/reports/DG1-DG2-PROBES.json",
+    "patience": 8,
+    "seed": 0,
+    "steps": 3000,
+    "times": [
+      0.5,
+      0.8,
+      0.9,
+      0.95,
+      0.99,
+      1.0
+    ],
+    "train_sample": 100000,
+    "train_structures": null,
+    "val_structures": null,
+    "weight_decay": 0.01
+  },
+  "descriptor": {
+    "angular_order": 4,
+    "cutoff": 6.0,
+    "dim": 22,
+    "shells": 16
+  },
+  "environment": {
+    "device": "cuda",
+    "gpu": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+    "platform": "Linux-6.14.0-1012-aws-x86_64-with-glibc2.39",
+    "torch": "2.8.0+cu128"
+  },
+  "failures": [
+    "DG2 fails: angular adds +2.7 shape points (needs +5) and +0.213 bits (needs +0.10) over radial alone, retaining 1.02 of that at 0.95 (needs 0.50), with the linear probe at +4.1 points. Angular channels are dropped and radial is promoted alone."
+  ],
+  "gates": [
+    "DG1",
+    "DG2"
+  ],
+  "results": {
+    "coordination": {
+      "classes": [
+        "CN_0",
+        "CN_1",
+        "CN_2",
+        "CN_3",
+        "CN_4",
+        "CN_5",
+        "CN_6",
+        "CN_7",
+        "CN_8",
+        "CN_9",
+        "CN_10",
+        "CN_11",
+        "CN_12"
+      ],
+      "corruption": {
+        "0.5": 2.0387579210969715,
+        "0.8": 0.8805108652742232,
+        "0.9": 0.4538132561196973,
+        "0.95": 0.23051972297142093,
+        "0.99": 0.0467022624386934,
+        "1": 6.623943667062255e-16
+      },
+      "floors": {
+        "angular/linear": {
+          "accuracy": 0.3468148487626031,
+          "best_step": 2000.0,
+          "coordination_accuracy": 0.3468148487626031,
+          "cross_entropy_bits": 2.5063373956838304,
+          "generalisation_gap_bits": -0.04912382794342518,
+          "shape_denominator_share": 0.0,
+          "shape_given_coordination": NaN,
+          "train_cross_entropy_bits": 2.5554612236272556
+        },
+        "angular/two_layer": {
+          "accuracy": 0.3451207935053031,
+          "best_step": 200.0,
+          "coordination_accuracy": 0.3451207935053031,
+          "cross_entropy_bits": 2.491025559719955,
+          "generalisation_gap_bits": -0.01936141876320141,
+          "shape_denominator_share": 0.0,
+          "shape_given_coordination": NaN,
+          "train_cross_entropy_bits": 2.5103869784831563
+        },
+        "both/linear": {
+          "accuracy": 0.34687213565536207,
+          "best_step": 2000.0,
+          "coordination_accuracy": 0.34687213565536207,
+          "cross_entropy_bits": 2.506669461596697,
+          "generalisation_gap_bits": -0.04850575900975773,
+          "shape_denominator_share": 0.0,
+          "shape_given_coordination": NaN,
+          "train_cross_entropy_bits": 2.5551752206064546
+        },
+        "both/two_layer": {
+          "accuracy": 0.3481569988215268,
+          "best_step": 100.0,
+          "coordination_accuracy": 0.3481569988215268,
+          "cross_entropy_bits": 2.4888168601967346,
+          "generalisation_gap_bits": -0.052311582686214386,
+          "shape_denominator_share": 0.0,
+          "shape_given_coordination": NaN,
+          "train_cross_entropy_bits": 2.541128442882949
+        },
+        "radial/linear": {
+          "accuracy": 0.34703581249181614,
+          "best_step": 2000.0,
+          "coordination_accuracy": 0.34703581249181614,
+          "cross_entropy_bits": 2.506282328086613,
+          "generalisation_gap_bits": -0.05028706566892538,
+          "shape_denominator_share": 0.0,
+          "shape_given_coordination": NaN,
+          "train_cross_entropy_bits": 2.5565693937555385
+        },
+        "radial/two_layer": {
+          "accuracy": 0.3462010606259002,
+          "best_step": 200.0,
+          "coordination_accuracy": 0.3462010606259002,
+          "cross_entropy_bits": 2.491845578043673,
+          "generalisation_gap_bits": -0.01922329926740396,
+          "shape_denominator_share": 0.0,
+          "shape_given_coordination": NaN,
+          "train_cross_entropy_bits": 2.511068877311077
+        }
+      },
+      "times": {
+        "0.5": {
+          "angular/linear": {
+            "accuracy": 0.3456936624328925,
+            "best_step": 2000.0,
+            "coordination_accuracy": 0.3456936624328925,
+            "cross_entropy_bits": 2.502150321244176,
+            "generalisation_gap_bits": -0.049586213190209616,
+            "information_bits": 0.004187074439654381,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 2.5517365344343856
+          },
+          "angular/two_layer": {
+            "accuracy": 0.35353378289904414,
+            "best_step": 700.0,
+            "coordination_accuracy": 0.35353378289904414,
+            "cross_entropy_bits": 2.4736301023933724,
+            "generalisation_gap_bits": 0.008337262466401985,
+            "information_bits": 0.01739545732658243,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 2.4652928399269705
+          },
+          "both/linear": {
+            "accuracy": 0.3453335733926935,
+            "best_step": 2000.0,
+            "coordination_accuracy": 0.3453335733926935,
+            "cross_entropy_bits": 2.501872492763744,
+            "generalisation_gap_bits": -0.04895210061002908,
+            "information_bits": 0.004796968832952775,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 2.550824593373773
+          },
+          "both/two_layer": {
+            "accuracy": 0.350898585832133,
+            "best_step": 200.0,
+            "coordination_accuracy": 0.350898585832133,
+            "cross_entropy_bits": 2.4739802474503843,
+            "generalisation_gap_bits": -0.014204386972066718,
+            "information_bits": 0.014836612746350397,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 2.488184634422451
+          },
+          "radial/linear": {
+            "accuracy": 0.34576731700929686,
+            "best_step": 2000.0,
+            "coordination_accuracy": 0.34576731700929686,
+            "cross_entropy_bits": 2.501567822288689,
+            "generalisation_gap_bits": -0.050560832149388,
+            "information_bits": 0.004714505797924318,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 2.552128654438077
+          },
+          "radial/two_layer": {
+            "accuracy": 0.35310822312426343,
+            "best_step": 700.0,
+            "coordination_accuracy": 0.35310822312426343,
+            "cross_entropy_bits": 2.474524189863766,
+            "generalisation_gap_bits": 0.012237678438798305,
+            "information_bits": 0.017321388179906805,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 2.462286511424968
+          }
+        },
+        "0.8": {
+          "angular/linear": {
+            "accuracy": 0.3638290559120073,
+            "best_step": 2000.0,
+            "coordination_accuracy": 0.3638290559120073,
+            "cross_entropy_bits": 2.459217980572303,
+            "generalisation_gap_bits": -0.034451205571802035,
+            "information_bits": 0.047119415111527285,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 2.493669186144105
+          },
+          "angular/two_layer": {
+            "accuracy": 0.3961224957444022,
+            "best_step": 1300.0,
+            "coordination_accuracy": 0.3961224957444022,
+            "cross_entropy_bits": 2.3437468558805548,
+            "generalisation_gap_bits": 0.07609523410631747,
+            "information_bits": 0.14727870383940012,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 2.2676516217742373
+          },
+          "both/linear": {
+            "accuracy": 0.36950045829514205,
+            "best_step": 2000.0,
+            "coordination_accuracy": 0.36950045829514205,
+            "cross_entropy_bits": 2.4399065029284803,
+            "generalisation_gap_bits": -0.033549060455619895,
+            "information_bits": 0.06676295866821658,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 2.4734555633841
+          },
+          "both/two_layer": {
+            "accuracy": 0.4012128453581249,
+            "best_step": 900.0,
+            "coordination_accuracy": 0.4012128453581249,
+            "cross_entropy_bits": 2.311704893542738,
+            "generalisation_gap_bits": 0.07811056784078607,
+            "information_bits": 0.17711196665399687,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 2.2335943257019517
+          },
+          "radial/linear": {
+            "accuracy": 0.3587550739819301,
+            "best_step": 2000.0,
+            "coordination_accuracy": 0.3587550739819301,
+            "cross_entropy_bits": 2.4636003282168293,
+            "generalisation_gap_bits": -0.03907172582462337,
+            "information_bits": 0.04268199986978383,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 2.5026720540414527
+          },
+          "radial/two_layer": {
+            "accuracy": 0.38757856488149794,
+            "best_step": 1300.0,
+            "coordination_accuracy": 0.38757856488149794,
+            "cross_entropy_bits": 2.365007652673436,
+            "generalisation_gap_bits": 0.08079141219769204,
+            "information_bits": 0.12683792537023697,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 2.284216240475744
+          }
+        },
+        "0.9": {
+          "angular/linear": {
+            "accuracy": 0.40640958491554274,
+            "best_step": 2000.0,
+            "coordination_accuracy": 0.40640958491554274,
+            "cross_entropy_bits": 2.338423839297302,
+            "generalisation_gap_bits": -0.022597878417768502,
+            "information_bits": 0.16791355638652838,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 2.3610217177150705
+          },
+          "angular/two_layer": {
+            "accuracy": 0.45905623936100565,
+            "best_step": 1100.0,
+            "coordination_accuracy": 0.45905623936100565,
+            "cross_entropy_bits": 2.127890453159121,
+            "generalisation_gap_bits": 0.116955030145518,
+            "information_bits": 0.3631351065608337,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 2.010935423013603
+          },
+          "both/linear": {
+            "accuracy": 0.430085439308629,
+            "best_step": 2000.0,
+            "coordination_accuracy": 0.430085439308629,
+            "cross_entropy_bits": 2.258342547028786,
+            "generalisation_gap_bits": -0.020998793090629242,
+            "information_bits": 0.24832691456791078,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 2.2793413401194154
+          },
+          "both/two_layer": {
+            "accuracy": 0.4978230980751604,
+            "best_step": 1900.0,
+            "coordination_accuracy": 0.4978230980751604,
+            "cross_entropy_bits": 1.995103105757222,
+            "generalisation_gap_bits": 0.2171692436379904,
+            "information_bits": 0.4937137544395127,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 1.7779338621192315
+          },
+          "radial/linear": {
+            "accuracy": 0.390410174152154,
+            "best_step": 2000.0,
+            "coordination_accuracy": 0.390410174152154,
+            "cross_entropy_bits": 2.3634859606277248,
+            "generalisation_gap_bits": -0.029306719651472246,
+            "information_bits": 0.14279636745888835,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 2.392792680279197
+          },
+          "radial/two_layer": {
+            "accuracy": 0.4585652088516433,
+            "best_step": 1900.0,
+            "coordination_accuracy": 0.4585652088516433,
+            "cross_entropy_bits": 2.1298189259480944,
+            "generalisation_gap_bits": 0.19519880199156514,
+            "information_bits": 0.3620266520955786,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 1.9346201239565293
+          }
+        },
+        "0.95": {
+          "angular/linear": {
+            "accuracy": 0.43725448474531886,
+            "best_step": 2000.0,
+            "coordination_accuracy": 0.43725448474531886,
+            "cross_entropy_bits": 2.2391079057475793,
+            "generalisation_gap_bits": -0.029255032308145967,
+            "information_bits": 0.26722948993625106,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 2.2683629380557253
+          },
+          "angular/two_layer": {
+            "accuracy": 0.5017922613591724,
+            "best_step": 1800.0,
+            "coordination_accuracy": 0.5017922613591724,
+            "cross_entropy_bits": 1.9890244547411349,
+            "generalisation_gap_bits": 0.20316997142632265,
+            "information_bits": 0.50200110497882,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 1.7858544833148122
+          },
+          "both/linear": {
+            "accuracy": 0.47701158832002094,
+            "best_step": 2000.0,
+            "coordination_accuracy": 0.47701158832002094,
+            "cross_entropy_bits": 2.1192793383547697,
+            "generalisation_gap_bits": -0.019359673874897343,
+            "information_bits": 0.38739012324192723,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 2.138639012229667
+          },
+          "both/two_layer": {
+            "accuracy": 0.572189668718083,
+            "best_step": 1600.0,
+            "coordination_accuracy": 0.572189668718083,
+            "cross_entropy_bits": 1.7533081121764604,
+            "generalisation_gap_bits": 0.2945566644562534,
+            "information_bits": 0.7355087480202742,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 1.458751447720207
+          },
+          "radial/linear": {
+            "accuracy": 0.41886539216970015,
+            "best_step": 2700.0,
+            "coordination_accuracy": 0.41886539216970015,
+            "cross_entropy_bits": 2.287156551971945,
+            "generalisation_gap_bits": -0.031464583912498956,
+            "information_bits": 0.2191257761146681,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 2.318621135884444
+          },
+          "radial/two_layer": {
+            "accuracy": 0.5348386146392563,
+            "best_step": 1800.0,
+            "coordination_accuracy": 0.5348386146392563,
+            "cross_entropy_bits": 1.8802796940766262,
+            "generalisation_gap_bits": 0.27523513705157576,
+            "information_bits": 0.6115658839670468,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 1.6050445570250504
+          }
+        },
+        "0.99": {
+          "angular/linear": {
+            "accuracy": 0.4483108550477936,
+            "best_step": 2000.0,
+            "coordination_accuracy": 0.4483108550477936,
+            "cross_entropy_bits": 2.195931219908155,
+            "generalisation_gap_bits": -0.02330186563559744,
+            "information_bits": 0.3104061757756753,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 2.2192330855437525
+          },
+          "angular/two_layer": {
+            "accuracy": 0.5208687966478984,
+            "best_step": 2000.0,
+            "coordination_accuracy": 0.5208687966478984,
+            "cross_entropy_bits": 1.9265278051290038,
+            "generalisation_gap_bits": 0.25776819957079344,
+            "information_bits": 0.5644977545909511,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 1.6687596055582103
+          },
+          "both/linear": {
+            "accuracy": 0.4999099777399502,
+            "best_step": 2500.0,
+            "coordination_accuracy": 0.4999099777399502,
+            "cross_entropy_bits": 2.0594157869506082,
+            "generalisation_gap_bits": -0.01218890740162859,
+            "information_bits": 0.4472536746460887,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 2.071604694352237
+          },
+          "both/two_layer": {
+            "accuracy": 0.6278397931124787,
+            "best_step": 1600.0,
+            "coordination_accuracy": 0.6278397931124787,
+            "cross_entropy_bits": 1.5812762927866666,
+            "generalisation_gap_bits": 0.3437789234587423,
+            "information_bits": 0.907540567410068,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 1.2374973693279243
+          },
+          "radial/linear": {
+            "accuracy": 0.4326387979573131,
+            "best_step": 2700.0,
+            "coordination_accuracy": 0.4326387979573131,
+            "cross_entropy_bits": 2.2565520660747156,
+            "generalisation_gap_bits": -0.017735051203210173,
+            "information_bits": 0.24973026201189752,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 2.2742871172779258
+          },
+          "radial/two_layer": {
+            "accuracy": 0.6098026057352364,
+            "best_step": 3000.0,
+            "coordination_accuracy": 0.6098026057352364,
+            "cross_entropy_bits": 1.691749364287115,
+            "generalisation_gap_bits": 0.39706953719750593,
+            "information_bits": 0.8000962137565579,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 1.2946798270896092
+          }
+        },
+        "1": {
+          "angular/linear": {
+            "accuracy": 0.448466348042425,
+            "best_step": 2000.0,
+            "coordination_accuracy": 0.448466348042425,
+            "cross_entropy_bits": 2.193776481095776,
+            "generalisation_gap_bits": -0.02274405599473006,
+            "information_bits": 0.3125609145880546,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 2.216520537090506
+          },
+          "angular/two_layer": {
+            "accuracy": 0.5242814586879665,
+            "best_step": 2000.0,
+            "coordination_accuracy": 0.5242814586879665,
+            "cross_entropy_bits": 1.923809568910596,
+            "generalisation_gap_bits": 0.2616537871915048,
+            "information_bits": 0.5672159908093588,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 1.6621557817190913
+          },
+          "both/linear": {
+            "accuracy": 0.5013421500589237,
+            "best_step": 2500.0,
+            "coordination_accuracy": 0.5013421500589237,
+            "cross_entropy_bits": 2.056535668599678,
+            "generalisation_gap_bits": -0.010847508454982169,
+            "information_bits": 0.45013379299701883,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 2.0673831770546602
+          },
+          "both/two_layer": {
+            "accuracy": 0.6345669110907425,
+            "best_step": 1800.0,
+            "coordination_accuracy": 0.6345669110907425,
+            "cross_entropy_bits": 1.564600219364097,
+            "generalisation_gap_bits": 0.36112543125903707,
+            "information_bits": 0.9242166408326375,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 1.20347478810506
+          },
+          "radial/linear": {
+            "accuracy": 0.43372724891973286,
+            "best_step": 2700.0,
+            "coordination_accuracy": 0.43372724891973286,
+            "cross_entropy_bits": 2.256110787372728,
+            "generalisation_gap_bits": -0.014900961320179817,
+            "information_bits": 0.25017154071388514,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 2.271011748692908
+          },
+          "radial/two_layer": {
+            "accuracy": 0.6072901662956658,
+            "best_step": 2600.0,
+            "coordination_accuracy": 0.6072901662956658,
+            "cross_entropy_bits": 1.6829629924731946,
+            "generalisation_gap_bits": 0.38938868681394156,
+            "information_bits": 0.8088825855704784,
+            "shape_denominator_share": 0.0,
+            "shape_given_coordination": NaN,
+            "train_cross_entropy_bits": 1.293574305659253
+          }
+        }
+      },
+      "unlabelled_validation_atoms": 11
+    },
+    "geometry": {
+      "classes": [
+        "CN_1",
+        "L-shaped CN_2",
+        "water-like CN_2",
+        "bent 120 degrees CN_2",
+        "bent 150 degrees CN_2",
+        "linear CN_2",
+        "trigonal planar CN_3",
+        "trigonal non-coplanar CN_3",
+        "T-shaped CN_3",
+        "square co-planar CN_4",
+        "tetrahedral CN_4",
+        "rectangular see-saw-like CN_4",
+        "see-saw-like CN_4",
+        "trigonal pyramidal CN_4",
+        "pentagonal planar CN_5",
+        "square pyramidal CN_5",
+        "trigonal bipyramidal CN_5",
+        "hexagonal planar CN_6",
+        "octahedral CN_6",
+        "pentagonal pyramidal CN_6",
+        "hexagonal pyramidal CN_7",
+        "pentagonal bipyramidal CN_7",
+        "body-centered cubic CN_8",
+        "hexagonal bipyramidal CN_8",
+        "CN_9",
+        "CN_10",
+        "CN_11",
+        "CN_12_or_more"
+      ],
+      "corruption": {
+        "0.5": 2.0387579210969715,
+        "0.8": 0.8805108652742232,
+        "0.9": 0.4538132561196973,
+        "0.95": 0.23051972297142093,
+        "0.99": 0.0467022624386934,
+        "1": 6.623943667062255e-16
+      },
+      "floors": {
+        "angular/linear": {
+          "accuracy": 0.2725264800065687,
+          "best_step": 2200.0,
+          "coordination_accuracy": 0.2997044092290007,
+          "cross_entropy_bits": 3.4117708390361763,
+          "generalisation_gap_bits": 0.07394528064466632,
+          "shape_denominator_share": 0.7555874866573611,
+          "shape_given_coordination": 0.6532388641969943,
+          "train_cross_entropy_bits": 3.33782555839151
+        },
+        "angular/two_layer": {
+          "accuracy": 0.27378274078331555,
+          "best_step": 300.0,
+          "coordination_accuracy": 0.29766811725100584,
+          "cross_entropy_bits": 3.384365489506604,
+          "generalisation_gap_bits": 0.11392235552641417,
+          "shape_denominator_share": 0.7555874866573611,
+          "shape_given_coordination": 0.6510328939504254,
+          "train_cross_entropy_bits": 3.27044313398019
+        },
+        "both/linear": {
+          "accuracy": 0.2726742753920683,
+          "best_step": 2200.0,
+          "coordination_accuracy": 0.3019295508662452,
+          "cross_entropy_bits": 3.411867826191503,
+          "generalisation_gap_bits": 0.07440080005976402,
+          "shape_denominator_share": 0.7555874866573611,
+          "shape_given_coordination": 0.6525433858926573,
+          "train_cross_entropy_bits": 3.337467026131739
+        },
+        "both/two_layer": {
+          "accuracy": 0.27486657361031286,
+          "best_step": 300.0,
+          "coordination_accuracy": 0.29883405862550294,
+          "cross_entropy_bits": 3.3865850886796602,
+          "generalisation_gap_bits": 0.11953995236296455,
+          "shape_denominator_share": 0.7555874866573611,
+          "shape_given_coordination": 0.6498701411603621,
+          "train_cross_entropy_bits": 3.2670451363166957
+        },
+        "radial/linear": {
+          "accuracy": 0.27163149683882093,
+          "best_step": 2200.0,
+          "coordination_accuracy": 0.29949913786025123,
+          "cross_entropy_bits": 3.41375222739071,
+          "generalisation_gap_bits": 0.07476259443808297,
+          "shape_denominator_share": 0.7555874866573611,
+          "shape_given_coordination": 0.6530215272268889,
+          "train_cross_entropy_bits": 3.338989632952627
+        },
+        "radial/two_layer": {
+          "accuracy": 0.27425897035881436,
+          "best_step": 300.0,
+          "coordination_accuracy": 0.2989325888825027,
+          "cross_entropy_bits": 3.386459967845689,
+          "generalisation_gap_bits": 0.11468482058477791,
+          "shape_denominator_share": 0.7555874866573611,
+          "shape_given_coordination": 0.6510763613444465,
+          "train_cross_entropy_bits": 3.271775147260911
+        }
+      },
+      "times": {
+        "0.5": {
+          "angular/linear": {
+            "accuracy": 0.2787667296165531,
+            "best_step": 2200.0,
+            "coordination_accuracy": 0.31165120289022086,
+            "cross_entropy_bits": 3.4063465917575235,
+            "generalisation_gap_bits": 0.07418631645470475,
+            "information_bits": 0.005424247278652761,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.6520978451039414,
+            "train_cross_entropy_bits": 3.3321602753028188
+          },
+          "angular/two_layer": {
+            "accuracy": 0.2865916741932835,
+            "best_step": 300.0,
+            "coordination_accuracy": 0.3161589621479596,
+            "cross_entropy_bits": 3.3623618062767715,
+            "generalisation_gap_bits": 0.11102626642875535,
+            "information_bits": 0.022003683229832482,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.6520326440129098,
+            "train_cross_entropy_bits": 3.251335539848016
+          },
+          "both/linear": {
+            "accuracy": 0.27982592987930044,
+            "best_step": 2200.0,
+            "coordination_accuracy": 0.3129649396502176,
+            "cross_entropy_bits": 3.405510910447788,
+            "generalisation_gap_bits": 0.07473956725347497,
+            "information_bits": 0.00635691574371533,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.6513371657085728,
+            "train_cross_entropy_bits": 3.330771343194313
+          },
+          "both/two_layer": {
+            "accuracy": 0.28747023565153135,
+            "best_step": 300.0,
+            "coordination_accuracy": 0.3169882584777075,
+            "cross_entropy_bits": 3.363539626435023,
+            "generalisation_gap_bits": 0.11893876737475617,
+            "information_bits": 0.023045462244637438,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.6512502309205307,
+            "train_cross_entropy_bits": 3.2446008590602666
+          },
+          "radial/linear": {
+            "accuracy": 0.2787667296165531,
+            "best_step": 2200.0,
+            "coordination_accuracy": 0.311199605878972,
+            "cross_entropy_bits": 3.40822914205682,
+            "generalisation_gap_bits": 0.07572397247078833,
+            "information_bits": 0.005523085333889899,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.6512284972235202,
+            "train_cross_entropy_bits": 3.3325051695860317
+          },
+          "radial/two_layer": {
+            "accuracy": 0.28660809590278347,
+            "best_step": 300.0,
+            "coordination_accuracy": 0.31762049429345596,
+            "cross_entropy_bits": 3.3638904645131187,
+            "generalisation_gap_bits": 0.11293588632433726,
+            "information_bits": 0.02256950333257013,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.6519783097703835,
+            "train_cross_entropy_bits": 3.2509545781887814
+          }
+        },
+        "0.8": {
+          "angular/linear": {
+            "accuracy": 0.30525494703998685,
+            "best_step": 2200.0,
+            "coordination_accuracy": 0.34137449708514656,
+            "cross_entropy_bits": 3.3548432657490252,
+            "generalisation_gap_bits": 0.09458116304605912,
+            "information_bits": 0.056927573287151034,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.6522173804374993,
+            "train_cross_entropy_bits": 3.260262102702966
+          },
+          "angular/two_layer": {
+            "accuracy": 0.3256424993841859,
+            "best_step": 600.0,
+            "coordination_accuracy": 0.3693160357993267,
+            "cross_entropy_bits": 3.2201316237096176,
+            "generalisation_gap_bits": 0.18060445460531405,
+            "information_bits": 0.1642338657969864,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.6615085359095009,
+            "train_cross_entropy_bits": 3.0395271691043035
+          },
+          "both/linear": {
+            "accuracy": 0.3117989982757205,
+            "best_step": 2200.0,
+            "coordination_accuracy": 0.3480909762706298,
+            "cross_entropy_bits": 3.335281104591557,
+            "generalisation_gap_bits": 0.09909701856827668,
+            "information_bits": 0.07658672159994628,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.6522825815285309,
+            "train_cross_entropy_bits": 3.2361840860232802
+          },
+          "both/two_layer": {
+            "accuracy": 0.33653830363740866,
+            "best_step": 600.0,
+            "coordination_accuracy": 0.3829953198127925,
+            "cross_entropy_bits": 3.1784053063000495,
+            "generalisation_gap_bits": 0.20707410635746726,
+            "information_bits": 0.20817978237961077,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.6633232996098801,
+            "train_cross_entropy_bits": 2.971331199942582
+          },
+          "radial/linear": {
+            "accuracy": 0.2989325888825027,
+            "best_step": 2700.0,
+            "coordination_accuracy": 0.33267099105016834,
+            "cross_entropy_bits": 3.3676363157526383,
+            "generalisation_gap_bits": 0.09275103357311121,
+            "information_bits": 0.046115911638071605,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.6501744129185095,
+            "train_cross_entropy_bits": 3.274885282179527
+          },
+          "radial/two_layer": {
+            "accuracy": 0.32528943262993676,
+            "best_step": 500.0,
+            "coordination_accuracy": 0.3625338697758437,
+            "cross_entropy_bits": 3.236892077672076,
+            "generalisation_gap_bits": 0.1844400516596587,
+            "information_bits": 0.14956789017361283,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.6619214761527009,
+            "train_cross_entropy_bits": 3.0524520260124173
+          }
+        },
+        "0.9": {
+          "angular/linear": {
+            "accuracy": 0.34772969866163067,
+            "best_step": 2200.0,
+            "coordination_accuracy": 0.38797930864603003,
+            "cross_entropy_bits": 3.1898186955101364,
+            "generalisation_gap_bits": 0.10938875507507939,
+            "information_bits": 0.22195214352603987,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.6638883757321539,
+            "train_cross_entropy_bits": 3.080429940435057
+          },
+          "angular/two_layer": {
+            "accuracy": 0.3829953198127925,
+            "best_step": 600.0,
+            "coordination_accuracy": 0.4389276623696527,
+            "cross_entropy_bits": 2.95184183073619,
+            "generalisation_gap_bits": 0.23228413380204627,
+            "information_bits": 0.432523658770414,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.6752985666626822,
+            "train_cross_entropy_bits": 2.7195576969341437
+          },
+          "both/linear": {
+            "accuracy": 0.3671647918548321,
+            "best_step": 2200.0,
+            "coordination_accuracy": 0.4103210444207242,
+            "cross_entropy_bits": 3.1003726616897693,
+            "generalisation_gap_bits": 0.11194462382825243,
+            "information_bits": 0.31149516450173387,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.6682351151342599,
+            "train_cross_entropy_bits": 2.988428037861517
+          },
+          "both/two_layer": {
+            "accuracy": 0.4236883159536908,
+            "best_step": 1000.0,
+            "coordination_accuracy": 0.4824780359635438,
+            "cross_entropy_bits": 2.7998663825035766,
+            "generalisation_gap_bits": 0.352833666082808,
+            "information_bits": 0.5867187061760837,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.6867848255327472,
+            "train_cross_entropy_bits": 2.4470327164207686
+          },
+          "radial/linear": {
+            "accuracy": 0.3293455948764266,
+            "best_step": 2500.0,
+            "coordination_accuracy": 0.3671730027095821,
+            "cross_entropy_bits": 3.250684613627533,
+            "generalisation_gap_bits": 0.10277937528789893,
+            "information_bits": 0.16306761376317702,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.653434467470089,
+            "train_cross_entropy_bits": 3.147905238339634
+          },
+          "radial/two_layer": {
+            "accuracy": 0.3941456605632646,
+            "best_step": 2700.0,
+            "coordination_accuracy": 0.4474669513096313,
+            "cross_entropy_bits": 2.966663281952072,
+            "generalisation_gap_bits": 0.39770063059782235,
+            "information_bits": 0.41979668589361685,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.6758853764819664,
+            "train_cross_entropy_bits": 2.5689626513542496
+          }
+        },
+        "0.95": {
+          "angular/linear": {
+            "accuracy": 0.38251087938254374,
+            "best_step": 2200.0,
+            "coordination_accuracy": 0.42595451186468514,
+            "cross_entropy_bits": 3.0270525007974363,
+            "generalisation_gap_bits": 0.09135823528636289,
+            "information_bits": 0.38471833823874,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.6838833769818415,
+            "train_cross_entropy_bits": 2.9356942655110734
+          },
+          "angular/two_layer": {
+            "accuracy": 0.43205517694391987,
+            "best_step": 1000.0,
+            "coordination_accuracy": 0.48930125626077675,
+            "cross_entropy_bits": 2.7510644449149213,
+            "generalisation_gap_bits": 0.324980449461711,
+            "information_bits": 0.6333010445916827,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.7002814513762864,
+            "train_cross_entropy_bits": 2.4260839954532103
+          },
+          "both/linear": {
+            "accuracy": 0.416413498645209,
+            "best_step": 2200.0,
+            "coordination_accuracy": 0.46490680679858776,
+            "cross_entropy_bits": 2.881681988896588,
+            "generalisation_gap_bits": 0.10354433609044822,
+            "information_bits": 0.5301858372949151,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.6918053095421797,
+            "train_cross_entropy_bits": 2.77813765280614
+          },
+          "both/two_layer": {
+            "accuracy": 0.4993677641842516,
+            "best_step": 1800.0,
+            "coordination_accuracy": 0.5633221118318417,
+            "cross_entropy_bits": 2.483700749711873,
+            "generalisation_gap_bits": 0.4990481308031396,
+            "information_bits": 0.9028843389677874,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.7188746291687947,
+            "train_cross_entropy_bits": 1.9846526189087332
+          },
+          "radial/linear": {
+            "accuracy": 0.35446259955661386,
+            "best_step": 2700.0,
+            "coordination_accuracy": 0.39746284588225633,
+            "cross_entropy_bits": 3.1510747331268742,
+            "generalisation_gap_bits": 0.11361422466864424,
+            "information_bits": 0.2626774942638357,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.658639687904111,
+            "train_cross_entropy_bits": 3.03746050845823
+          },
+          "radial/two_layer": {
+            "accuracy": 0.4586501354791034,
+            "best_step": 2800.0,
+            "coordination_accuracy": 0.5239756958699401,
+            "cross_entropy_bits": 2.700014774474565,
+            "generalisation_gap_bits": 0.5062941164259573,
+            "information_bits": 0.686445193371124,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.692761592210643,
+            "train_cross_entropy_bits": 2.1937206580486075
+          }
+        },
+        "0.99": {
+          "angular/linear": {
+            "accuracy": 0.40258641924624355,
+            "best_step": 2200.0,
+            "coordination_accuracy": 0.44479021266113805,
+            "cross_entropy_bits": 2.943653542075713,
+            "generalisation_gap_bits": 0.09400375030370833,
+            "information_bits": 0.4681172969604632,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.697314801734349,
+            "train_cross_entropy_bits": 2.8496497917720047
+          },
+          "angular/two_layer": {
+            "accuracy": 0.4598981854011003,
+            "best_step": 1500.0,
+            "coordination_accuracy": 0.518367682075704,
+            "cross_entropy_bits": 2.6415102344633943,
+            "generalisation_gap_bits": 0.40023829151181145,
+            "information_bits": 0.7428552550432097,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.7170598654684155,
+            "train_cross_entropy_bits": 2.241271942951583
+          },
+          "both/linear": {
+            "accuracy": 0.44738484276213153,
+            "best_step": 1600.0,
+            "coordination_accuracy": 0.49713441169225714,
+            "cross_entropy_bits": 2.768386739545309,
+            "generalisation_gap_bits": 0.09933582355806125,
+            "information_bits": 0.6434810866461942,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.7050519978700976,
+            "train_cross_entropy_bits": 2.6690509159872478
+          },
+          "both/two_layer": {
+            "accuracy": 0.5500697922653748,
+            "best_step": 1800.0,
+            "coordination_accuracy": 0.6200098530257,
+            "cross_entropy_bits": 2.275705224418384,
+            "generalisation_gap_bits": 0.5662063341822958,
+            "information_bits": 1.110879864261276,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.7347076274409658,
+            "train_cross_entropy_bits": 1.7094988902360884
+          },
+          "radial/linear": {
+            "accuracy": 0.3726660645373183,
+            "best_step": 2700.0,
+            "coordination_accuracy": 0.4189752853272026,
+            "cross_entropy_bits": 3.096834481420244,
+            "generalisation_gap_bits": 0.12663241576825746,
+            "information_bits": 0.31691774597046596,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.6658878758571227,
+            "train_cross_entropy_bits": 2.9702020656519865
+          },
+          "radial/two_layer": {
+            "accuracy": 0.5109614910912226,
+            "best_step": 2800.0,
+            "coordination_accuracy": 0.5883159536907792,
+            "cross_entropy_bits": 2.4895655111693005,
+            "generalisation_gap_bits": 0.5807289399361086,
+            "information_bits": 0.8968944566763883,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.7120828488530041,
+            "train_cross_entropy_bits": 1.9088365712331918
+          }
+        },
+        "1": {
+          "angular/linear": {
+            "accuracy": 0.40449954840298874,
+            "best_step": 2200.0,
+            "coordination_accuracy": 0.44658017899663355,
+            "cross_entropy_bits": 2.939105418269848,
+            "generalisation_gap_bits": 0.0948004734926875,
+            "information_bits": 0.4726654207663281,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.6990969648892125,
+            "train_cross_entropy_bits": 2.8443049447771607
+          },
+          "angular/two_layer": {
+            "accuracy": 0.4614089826750965,
+            "best_step": 1500.0,
+            "coordination_accuracy": 0.5203793414894491,
+            "cross_entropy_bits": 2.6352508611449794,
+            "generalisation_gap_bits": 0.4010859946385761,
+            "information_bits": 0.7491146283616246,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.7171685339534681,
+            "train_cross_entropy_bits": 2.2341648665064033
+          },
+          "both/linear": {
+            "accuracy": 0.4495114541423762,
+            "best_step": 1600.0,
+            "coordination_accuracy": 0.4994006076032515,
+            "cross_entropy_bits": 2.762392600184115,
+            "generalisation_gap_bits": 0.10073837040045008,
+            "information_bits": 0.6494752260073882,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.7061060821751084,
+            "train_cross_entropy_bits": 2.661654229783665
+          },
+          "both/two_layer": {
+            "accuracy": 0.5541423762213646,
+            "best_step": 1800.0,
+            "coordination_accuracy": 0.6242712866409393,
+            "cross_entropy_bits": 2.2618172745725245,
+            "generalisation_gap_bits": 0.5691357564464739,
+            "information_bits": 1.1247678141071358,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.7390000326005455,
+            "train_cross_entropy_bits": 1.6926815181260506
+          },
+          "radial/linear": {
+            "accuracy": 0.3733065112078167,
+            "best_step": 2700.0,
+            "coordination_accuracy": 0.41998522046145004,
+            "cross_entropy_bits": 3.094941195901465,
+            "generalisation_gap_bits": 0.1296573678123094,
+            "information_bits": 0.3188110314892447,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.6646925225215435,
+            "train_cross_entropy_bits": 2.965283828089156
+          },
+          "radial/two_layer": {
+            "accuracy": 0.5121192216109697,
+            "best_step": 1800.0,
+            "coordination_accuracy": 0.5873060185565318,
+            "cross_entropy_bits": 2.4746357823086353,
+            "generalisation_gap_bits": 0.5316697238958386,
+            "information_bits": 0.9118241855370535,
+            "shape_denominator_share": 0.7555874866573611,
+            "shape_given_coordination": 0.7116590417612988,
+            "train_cross_entropy_bits": 1.9429660584127968
+          }
+        }
+      },
+      "unlabelled_validation_atoms": 413
+    }
+  },
+  "verdict": {
+    "DG1": {
+      "accuracy_points": 26.108910566976558,
+      "bits": 0.8088825855704784,
+      "linear_accuracy_points": 8.66914364279167,
+      "passed": true
+    },
+    "DG2": {
+      "bits": 0.2129436285700823,
+      "linear_shape_points": 4.141355965356485,
+      "passed": false,
+      "retained_fraction": 1.0164152224231997,
+      "retention_corruption_angstrom": 0.23051972297142093,
+      "retention_time": 0.95,
+      "shape_points": 2.734099083924668
+    },
+    "gate_depth": "two_layer",
+    "promoted": "radial"
+  }
+}

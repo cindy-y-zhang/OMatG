@@ -1,0 +1,18 @@
+# H: descriptor head/loss retained, state-to-structure input disabled.
+# Overlay on joint_geometry/configs/mpts52.yaml.
+model:
+  model:
+    init_args:
+      encoder:
+        init_args:
+          geometry_input: false
+
+data:
+  shuffle_within_element: false
+
+trainer:
+  logger:
+    class_path: lightning.pytorch.loggers.CSVLogger
+    init_args:
+      save_dir: joint_geometry/runs/full/H_seed0
+      name: ""

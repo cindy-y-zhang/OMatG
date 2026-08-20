@@ -1,0 +1,151 @@
+{
+  "preregistration": "motif_conditioning/reports/PREREGISTRATION.json",
+  "baseline": {
+    "path": "joint_geometry/runs/budget2000/oracle/D_seed0/eval/draw0/OUTCOMES.json",
+    "arm": "D",
+    "match_rate_percent": 27.05078125,
+    "position_target_mse": 0.03144250143846901,
+    "cell_target_mse": 4.01719817230488
+  },
+  "noise_floor_points": 0.68,
+  "arms": [
+    {
+      "arm": "M@K=32@w=0",
+      "arm_name": "M",
+      "prototypes": 32,
+      "guidance_scale": 0.0,
+      "match_rate_percent": 26.66015625,
+      "position_target_mse": 0.03161491146659088,
+      "cell_target_mse": 4.168659823808577,
+      "versus_baseline": {
+        "difference_points": -0.390625,
+        "won": 63,
+        "lost": 67,
+        "mcnemar_p": 0.7925825227940955,
+        "exceeds_noise_floor": false
+      },
+      "error_change_versus_baseline": {
+        "position_target_mse": 0.005483343253057212,
+        "cell_target_mse": 0.037703305888142184
+      }
+    },
+    {
+      "arm": "M@K=32@w=1",
+      "arm_name": "M",
+      "prototypes": 32,
+      "guidance_scale": 1.0,
+      "match_rate_percent": 26.5625,
+      "position_target_mse": 0.03165274154036084,
+      "cell_target_mse": 4.114026559935423,
+      "versus_baseline": {
+        "difference_points": -0.48828125,
+        "won": 61,
+        "lost": 66,
+        "mcnemar_p": 0.7227870831457865,
+        "exceeds_noise_floor": false
+      },
+      "error_change_versus_baseline": {
+        "position_target_mse": 0.006686494148795869,
+        "cell_target_mse": 0.024103463030051998
+      }
+    },
+    {
+      "arm": "M@K=32@w=100",
+      "arm_name": "M",
+      "prototypes": 32,
+      "guidance_scale": 100.0,
+      "match_rate_percent": 11.9140625,
+      "position_target_mse": 0.035538768759715116,
+      "cell_target_mse": 91.80094938654271,
+      "versus_baseline": {
+        "difference_points": -15.13671875,
+        "won": 29,
+        "lost": 184,
+        "mcnemar_p": 9.207794106212257e-29,
+        "exceeds_noise_floor": true
+      },
+      "error_change_versus_baseline": {
+        "position_target_mse": 0.13027803558384957,
+        "cell_target_mse": 21.85198425595012
+      }
+    },
+    {
+      "arm": "M@K=32@w=20",
+      "arm_name": "M",
+      "prototypes": 32,
+      "guidance_scale": 20.0,
+      "match_rate_percent": 22.94921875,
+      "position_target_mse": 0.03230028572983043,
+      "cell_target_mse": 11.821423301089462,
+      "versus_baseline": {
+        "difference_points": -4.1015625,
+        "won": 48,
+        "lost": 90,
+        "mcnemar_p": 0.00044058492261106464,
+        "exceeds_noise_floor": true
+      },
+      "error_change_versus_baseline": {
+        "position_target_mse": 0.027281044831628652,
+        "cell_target_mse": 1.942703544621719
+      }
+    },
+    {
+      "arm": "M@K=32@w=5",
+      "arm_name": "M",
+      "prototypes": 32,
+      "guidance_scale": 5.0,
+      "match_rate_percent": 25.5859375,
+      "position_target_mse": 0.031587858715490864,
+      "cell_target_mse": 4.896423979465078,
+      "versus_baseline": {
+        "difference_points": -1.46484375,
+        "won": 53,
+        "lost": 68,
+        "mcnemar_p": 0.20292429055143751,
+        "exceeds_noise_floor": true
+      },
+      "error_change_versus_baseline": {
+        "position_target_mse": 0.004622955247575025,
+        "cell_target_mse": 0.21886543044396028
+      }
+    }
+  ],
+  "verdict": {
+    "stage_1_screen": {
+      "difference_points": -0.48828125,
+      "mcnemar_p": 0.7227870831457865,
+      "error_change": {
+        "position_target_mse": 0.006686494148795869,
+        "cell_target_mse": 0.024103463030051998
+      },
+      "passed": false,
+      "stop_rule_triggered": true
+    },
+    "stage_4_guidance": {
+      "curve": [
+        {
+          "scale": 0.0,
+          "match_rate_percent": 26.66015625
+        },
+        {
+          "scale": 1.0,
+          "match_rate_percent": 26.5625
+        },
+        {
+          "scale": 5.0,
+          "match_rate_percent": 25.5859375
+        },
+        {
+          "scale": 20.0,
+          "match_rate_percent": 22.94921875
+        },
+        {
+          "scale": 100.0,
+          "match_rate_percent": 11.9140625
+        }
+      ],
+      "best_scale": 0.0,
+      "best_match_rate_percent": 26.66015625
+    }
+  }
+}

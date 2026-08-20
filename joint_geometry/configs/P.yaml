@@ -1,0 +1,19 @@
+# P: jointly generated descriptors deterministically shuffled within element.
+# Overlay on joint_geometry/configs/mpts52.yaml.
+model:
+  model:
+    init_args:
+      encoder:
+        init_args:
+          geometry_input: true
+
+data:
+  shuffle_within_element: true
+  shuffle_seed: 0
+
+trainer:
+  logger:
+    class_path: lightning.pytorch.loggers.CSVLogger
+    init_args:
+      save_dir: joint_geometry/runs/full/P_seed0
+      name: ""

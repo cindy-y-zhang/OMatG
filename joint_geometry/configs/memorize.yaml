@@ -1,0 +1,20 @@
+# Fixed-input ten-structure optimization diagnostic.
+
+model:
+  validation_mode: loss
+
+trainer:
+  enable_checkpointing: false
+  callbacks:
+    - class_path: joint_geometry.checkpoint.LoadBackboneCheckpoint
+      init_args:
+        checkpoint_path: cgfm/centre_runs/atomwise/checkpoints/best_match_rate.ckpt
+    - class_path: joint_geometry.checkpoint.FinalCheckpoint
+    - class_path: joint_geometry.checkpoint.ResourceMetrics
+      init_args:
+        filename: RESOURCE-TRAIN.json
+    - class_path: joint_geometry.checkpoint.FixedTrainingSeed
+      init_args:
+        seed: 0
+  check_val_every_n_epoch: 1000
+  limit_val_batches: 1

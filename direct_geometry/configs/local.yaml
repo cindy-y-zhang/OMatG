@@ -1,0 +1,36 @@
+# Short screening runs on the local RTX PRO 6000. Screening evidence, never final evidence.
+#
+# The epoch budget is set by the launcher (100 for the four-arm screen, 200 for the paired seeds), because those two runs
+# differ in nothing else and a second file would be a second thing to keep in step.
+#
+# WHAT A 100- OR 200-EPOCH NUMBER CAN AND CANNOT SAY
+#
+# The atomwise baseline this is compared against reached 26.82 per cent after 1200 epochs. A 200-epoch match rate is
+# therefore a point on a rising curve, and its job is to catch the failures that are already visible there: an arm that
+# cannot optimise, an arm whose channels interfere, an arm whose cost blows the ceiling, an arm whose topology hurts. It
+# cannot rank two arms that are close. That is what the A100 sweep with three shared seeds is for, and Gate DG3 is written
+# as a screen with a deliberately blunt threshold for exactly this reason.
+#
+# One card, so one process at a time. The batch and accumulation are the baseline's, so the effective batch of 1024 the
+# learning rate was tuned at is preserved and the local numbers sit on the same optimisation trajectory as the A100 ones.
+
+data:
+  batch_size: 256
+  num_workers: 6
+  persistent_workers: true
+  prefetch_factor: 4
+
+model:
+  number_cpus: 8
+
+trainer:
+  accumulate_grad_batches: 4
+  precision: "32-true"
+  gradient_clip_val: 0.5
+  num_sanity_val_steps: 0
+  # Validation generates and structure-matches the whole 5,000 structure split, which is far too expensive per epoch. At
+  # 25 a 200-epoch run gets eight points on its curve, which is enough to see a divergence and cheap enough to afford.
+  check_val_every_n_epoch: 25
+  max_time:
+    hours: 20
+  enable_progress_bar: false
